@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "ok": false,
+  "command": "finalize",
+  "status": "fail",
+  "type": "class",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/20-Material-Animations/class-diagram.archify.json",
+    "sha256": "fc8436f1618b1932eaea08e257cd8a2d6d486b9eb561f6158ad4bc280bbc069b",
+    "bytes": 19480
+  },
+  "artifact": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/20-Material-Animations/class-diagram.html",
+    "sha256": "72d862f9d7d03ce8e8eeaeeaeee3a7e7bd8e3e3f1f09d412eb7cc5082b02776e",
+    "bytes": 904145
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "fail"
+  },
+  "failedStage": "browser-check",
+  "diagnostics": [
+    {
+      "code": "viewer/evidence-path-conflict",
+      "severity": "error",
+      "message": "browser-check will not replace the existing unowned evidence path \"/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/20-Material-Animations/class-diagram.browser-check.json\".",
+      "subject": {
+        "artifact": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/20-Material-Animations/class-diagram.html",
+        "evidencePath": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/20-Material-Animations/class-diagram.browser-check.json"
+      },
+      "evidence": {
+        "reason": {
+          "code": "ownership-artifact-mismatch"
+        }
+      },
+      "supportedFixes": [
+        "move the conflicting file aside, or choose a separate --out-dir, then rerun browser-check"
+      ]
+    }
+  ],
+  "diagnosticSummary": {
+    "total": 1,
+    "shown": 1,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/20-Material-Animations/class-diagram.finalize.json",
+    "summaryReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/20-Material-Animations/class-diagram.finalize-summary.json",
+    "browserCheckReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/20-Material-Animations/class-diagram.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-19T14:45:18.953Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 4709,
+  "browserCheck": {
+    "requested": true,
+    "ran": false
+  }
+}

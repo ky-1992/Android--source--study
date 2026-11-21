@@ -1,0 +1,333 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Material-Animations 共享元素跳转流程",
+    "subtitle": "列表点击后用 ActivityOptionsCompat 打包共享元素，目标页读取 EnterTransition 并播放窗口与共享元素动画。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/20-Material-Animations/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/lgvalle/Material-Animations",
+      "provider": "github",
+      "revision": "be755fe9ebe7f9093360e4263c4293de368da1c7"
+    }
+  },
+  "lanes": [
+    {
+      "id": "list",
+      "label": "列表页"
+    },
+    {
+      "id": "helper",
+      "label": "过渡辅助"
+    },
+    {
+      "id": "system",
+      "label": "系统窗口"
+    },
+    {
+      "id": "detail",
+      "label": "详情页"
+    },
+    {
+      "id": "fragment",
+      "label": "Fragment"
+    }
+  ],
+  "phases": [
+    {
+      "id": "trigger",
+      "label": "触发",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "options",
+      "label": "打包选项",
+      "fromCol": 2,
+      "toCol": 2
+    },
+    {
+      "id": "launch",
+      "label": "启动",
+      "fromCol": 3,
+      "toCol": 3
+    },
+    {
+      "id": "play",
+      "label": "播放过渡",
+      "fromCol": 4,
+      "toCol": 4
+    }
+  ],
+  "mainPath": [
+    "click_item",
+    "collect_pairs",
+    "make_options",
+    "start_activity",
+    "read_transition",
+    "shared_anim"
+  ],
+  "nodes": [
+    {
+      "id": "click_item",
+      "lane": "list",
+      "col": 0,
+      "type": "frontend",
+      "label": "点击列表项",
+      "sublabel": "onClick",
+      "width": 140,
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SamplesRecyclerAdapter.java",
+          "line": 36,
+          "end_line": 54
+        }
+      ]
+    },
+    {
+      "id": "collect_pairs",
+      "lane": "helper",
+      "col": 1,
+      "type": "backend",
+      "label": "收集共享元素",
+      "sublabel": "TransitionHelper",
+      "width": 156,
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionHelper.java",
+          "line": 43,
+          "end_line": 64
+        }
+      ]
+    },
+    {
+      "id": "make_options",
+      "lane": "system",
+      "col": 2,
+      "type": "cloud",
+      "label": "构造过渡选项",
+      "sublabel": "ActivityOptions",
+      "width": 156,
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SamplesRecyclerAdapter.java",
+          "line": 78,
+          "end_line": 80
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/BaseDetailActivity.java",
+          "line": 32,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "id": "start_activity",
+      "lane": "system",
+      "col": 3,
+      "type": "cloud",
+      "label": "启动目标页",
+      "sublabel": "startActivity",
+      "width": 148,
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SamplesRecyclerAdapter.java",
+          "line": 76,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "read_transition",
+      "lane": "detail",
+      "col": 3,
+      "type": "backend",
+      "label": "设置入场过渡",
+      "sublabel": "inflateTransition",
+      "width": 156,
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity2.java",
+          "line": 32,
+          "end_line": 41
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity3.java",
+          "line": 34,
+          "end_line": 43
+        }
+      ]
+    },
+    {
+      "id": "shared_anim",
+      "lane": "system",
+      "col": 4,
+      "type": "cloud",
+      "label": "共享元素动画",
+      "sublabel": "ChangeBounds",
+      "width": 148,
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SharedElementActivity.java",
+          "line": 29,
+          "end_line": 47
+        }
+      ]
+    },
+    {
+      "id": "window_anim",
+      "lane": "detail",
+      "col": 4,
+      "type": "backend",
+      "label": "窗口入场动画",
+      "sublabel": "Fade/Slide",
+      "width": 140,
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity1.java",
+          "line": 99,
+          "end_line": 110
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity2.java",
+          "line": 52,
+          "end_line": 56
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity3.java",
+          "line": 54,
+          "end_line": 59
+        }
+      ]
+    },
+    {
+      "id": "return_anim",
+      "lane": "list",
+      "col": 4,
+      "type": "external",
+      "label": "返回过渡",
+      "sublabel": "finishAfter",
+      "width": 140,
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity1.java",
+          "line": 79,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "no_pairs",
+      "lane": "helper",
+      "col": 2,
+      "type": "external",
+      "label": "无共享元素",
+      "sublabel": "普通跳转",
+      "width": 140,
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionHelper.java",
+          "line": 55,
+          "end_line": 63
+        }
+      ]
+    },
+    {
+      "id": "fragment_anim",
+      "lane": "fragment",
+      "col": 4,
+      "type": "backend",
+      "label": "片段共享元素",
+      "sublabel": "addSharedElement",
+      "width": 156,
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SharedElementFragment1.java",
+          "line": 56,
+          "end_line": 75
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_click_collect",
+      "from": "click_item",
+      "to": "collect_pairs",
+      "label": "准备跳转"
+    },
+    {
+      "id": "e_collect_options",
+      "from": "collect_pairs",
+      "to": "make_options",
+      "label": "Pair 数组"
+    },
+    {
+      "id": "e_options_start",
+      "from": "make_options",
+      "to": "start_activity",
+      "label": "toBundle"
+    },
+    {
+      "id": "e_start_read",
+      "from": "start_activity",
+      "to": "read_transition",
+      "label": "onCreate"
+    },
+    {
+      "id": "e_read_shared",
+      "from": "read_transition",
+      "to": "shared_anim",
+      "label": "共享元素映射"
+    },
+    {
+      "id": "e_read_window",
+      "from": "read_transition",
+      "to": "window_anim",
+      "label": "setEnterTransition"
+    },
+    {
+      "id": "e_collect_nopairs",
+      "from": "collect_pairs",
+      "to": "no_pairs",
+      "label": "仅系统栏",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e_start_return",
+      "from": "start_activity",
+      "to": "return_anim",
+      "label": "setReturnTransition",
+      "variant": "dashed",
+      "role": "return"
+    },
+    {
+      "id": "e_read_fragment",
+      "from": "read_transition",
+      "to": "fragment_anim",
+      "label": "替换片段",
+      "role": "branch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两套入口",
+      "items": [
+        "BaseDetailActivity.transitionTo 供详情页按钮复用；SamplesRecyclerAdapter.startActivity 负责列表到详情",
+        "两者都先经 TransitionHelper.createSafeTransitionParticipants，避免系统栏在动画中闪烁"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "动画来源",
+      "items": [
+        "程序化：TransitionActivity1 用 Fade，TransitionActivity2 用 Explode，TransitionActivity3 用 Slide(Gravity.RIGHT)",
+        "XML：TransitionInflater.from(this).inflateTransition(R.transition.xxx)；返回时可由 finishAfterTransition 反向播放"
+      ]
+    }
+  ]
+}

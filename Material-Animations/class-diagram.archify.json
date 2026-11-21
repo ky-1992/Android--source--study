@@ -1,0 +1,733 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Material-Animations 核心类型结构",
+    "subtitle": "MainActivity 列出入场示例；BaseDetailActivity 用 TransitionHelper 与 ActivityOptionsCompat 启动共享元素跳转。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/20-Material-Animations/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/lgvalle/Material-Animations",
+      "provider": "github",
+      "revision": "be755fe9ebe7f9093360e4263c4293de368da1c7"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "main_activity",
+      "label": "MainActivity",
+      "kind": "class",
+      "sublabel": "示例列表入口",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "samples",
+          "type": "List<Sample>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onCreate",
+          "parameters": "savedInstanceState: Bundle",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setupWindowAnimations",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "setupSamples",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "setupLayout",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/MainActivity.java",
+          "line": 15,
+          "end_line": 24
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/MainActivity.java",
+          "line": 28,
+          "end_line": 35
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/MainActivity.java",
+          "line": 52,
+          "end_line": 58
+        }
+      ]
+    },
+    {
+      "id": "samples_adapter",
+      "label": "SamplesRecyclerAdapter",
+      "kind": "class",
+      "sublabel": "列表点击发起跳转",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "activity",
+          "type": "Activity",
+          "visibility": "private"
+        },
+        {
+          "name": "samples",
+          "type": "List<Sample>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onBindViewHolder",
+          "parameters": "viewHolder: SamplesViewHolder, position: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "transitionToActivity",
+          "parameters": "target: Class, viewHolder: SamplesViewHolder, sample: Sample",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "startActivity",
+          "parameters": "target: Class, pairs: Pair[], sample: Sample",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SamplesRecyclerAdapter.java",
+          "line": 17,
+          "end_line": 23
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SamplesRecyclerAdapter.java",
+          "line": 33,
+          "end_line": 55
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SamplesRecyclerAdapter.java",
+          "line": 76,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "sample",
+      "label": "Sample",
+      "kind": "class",
+      "sublabel": "颜色与标题数据",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "color",
+          "type": "int",
+          "visibility": "package"
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setColorTint",
+          "parameters": "view: ImageView, color: int",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "getName",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "getColor",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/Sample.java",
+          "line": 13,
+          "end_line": 17
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/Sample.java",
+          "line": 24,
+          "end_line": 28
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/Sample.java",
+          "line": 30,
+          "end_line": 37
+        }
+      ]
+    },
+    {
+      "id": "samples_view_holder",
+      "label": "SamplesViewHolder",
+      "kind": "class",
+      "sublabel": "行布局与图标引用",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "binding",
+          "type": "RowSampleBinding",
+          "visibility": "package"
+        }
+      ],
+      "methods": [
+        {
+          "name": "SamplesViewHolder",
+          "parameters": "rootView: View",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SamplesRecyclerAdapter.java",
+          "line": 89,
+          "end_line": 97
+        }
+      ]
+    },
+    {
+      "id": "base_detail",
+      "label": "BaseDetailActivity",
+      "kind": "class",
+      "sublabel": "共享元素跳转基类",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "EXTRA_SAMPLE",
+          "type": "String",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "TYPE_PROGRAMMATICALLY",
+          "type": "int",
+          "visibility": "package",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "setupToolbar",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "transitionTo",
+          "parameters": "i: Intent",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "onSupportNavigateUp",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/BaseDetailActivity.java",
+          "line": 13,
+          "end_line": 17
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/BaseDetailActivity.java",
+          "line": 19,
+          "end_line": 24
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/BaseDetailActivity.java",
+          "line": 32,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "id": "transition_helper",
+      "label": "TransitionHelper",
+      "kind": "class",
+      "sublabel": "收集过渡参与元素",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        {
+          "name": "createSafeTransitionParticipants",
+          "parameters": "activity: Activity, includeStatusBar: boolean, otherParticipants: Pair[]",
+          "returns": "Pair<View, String>[]",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "addNonNullViewToTransitionParticipants",
+          "parameters": "view: View, participants: List<Pair>",
+          "returns": "void",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionHelper.java",
+          "line": 32,
+          "end_line": 42
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionHelper.java",
+          "line": 43,
+          "end_line": 64
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionHelper.java",
+          "line": 66,
+          "end_line": 72
+        }
+      ]
+    },
+    {
+      "id": "transition_activity1",
+      "label": "TransitionActivity1",
+      "kind": "class",
+      "sublabel": "Fade 入场与跳转按钮",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "sample",
+          "type": "Sample",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onCreate",
+          "parameters": "savedInstanceState: Bundle",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setupWindowAnimations",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "buildEnterTransition",
+          "parameters": "",
+          "returns": "Visibility",
+          "visibility": "private"
+        },
+        {
+          "name": "buildReturnTransition",
+          "parameters": "",
+          "returns": "Visibility",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity1.java",
+          "line": 13,
+          "end_line": 14
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity1.java",
+          "line": 31,
+          "end_line": 35
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity1.java",
+          "line": 99,
+          "end_line": 110
+        }
+      ]
+    },
+    {
+      "id": "transition_activity2",
+      "label": "TransitionActivity2",
+      "kind": "class",
+      "sublabel": "Explode 或 XML 入场",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "type",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onCreate",
+          "parameters": "savedInstanceState: Bundle",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setupWindowAnimations",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "buildEnterTransition",
+          "parameters": "",
+          "returns": "Transition",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity2.java",
+          "line": 12,
+          "end_line": 14
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity2.java",
+          "line": 32,
+          "end_line": 41
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity2.java",
+          "line": 52,
+          "end_line": 56
+        }
+      ]
+    },
+    {
+      "id": "transition_activity3",
+      "label": "TransitionActivity3",
+      "kind": "class",
+      "sublabel": "右侧 Slide 入场",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "type",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onCreate",
+          "parameters": "savedInstanceState: Bundle",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setupWindowAnimations",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "buildEnterTransition",
+          "parameters": "",
+          "returns": "Visibility",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity3.java",
+          "line": 14,
+          "end_line": 16
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity3.java",
+          "line": 34,
+          "end_line": 43
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/TransitionActivity3.java",
+          "line": 54,
+          "end_line": 59
+        }
+      ]
+    },
+    {
+      "id": "shared_element_activity",
+      "label": "SharedElementActivity",
+      "kind": "class",
+      "sublabel": "承载共享元素 Fragment",
+      "row": 3,
+      "col": 1,
+      "methods": [
+        {
+          "name": "onCreate",
+          "parameters": "savedInstanceState: Bundle",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setupWindowAnimations",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "setupLayout",
+          "parameters": "sample: Sample",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SharedElementActivity.java",
+          "line": 11,
+          "end_line": 12
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SharedElementActivity.java",
+          "line": 29,
+          "end_line": 32
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SharedElementActivity.java",
+          "line": 34,
+          "end_line": 47
+        }
+      ]
+    },
+    {
+      "id": "shared_element_fragment1",
+      "label": "SharedElementFragment1",
+      "kind": "class",
+      "sublabel": "首个片段与图标交互",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "EXTRA_SAMPLE",
+          "type": "String",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "newInstance",
+          "parameters": "sample: Sample",
+          "returns": "SharedElementFragment1",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "onCreateView",
+          "parameters": "inflater, container, savedInstanceState",
+          "returns": "View",
+          "visibility": "public"
+        },
+        {
+          "name": "addNextFragment",
+          "parameters": "sample: Sample, squareBlue: ImageView, overlap: boolean",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SharedElementFragment1.java",
+          "line": 17,
+          "end_line": 19
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SharedElementFragment1.java",
+          "line": 21,
+          "end_line": 29
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SharedElementFragment1.java",
+          "line": 56,
+          "end_line": 75
+        }
+      ]
+    },
+    {
+      "id": "shared_element_fragment2",
+      "label": "SharedElementFragment2",
+      "kind": "class",
+      "sublabel": "第二片段同名共享元素",
+      "row": 4,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "EXTRA_SAMPLE",
+          "type": "String",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "newInstance",
+          "parameters": "sample: Sample",
+          "returns": "SharedElementFragment2",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "onCreateView",
+          "parameters": "inflater, container, savedInstanceState",
+          "returns": "View",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SharedElementFragment2.java",
+          "line": 11,
+          "end_line": 12
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SharedElementFragment2.java",
+          "line": 14,
+          "end_line": 20
+        },
+        {
+          "path": "app/src/main/java/com/lgvalle/material_animations/SharedElementFragment2.java",
+          "line": 22,
+          "end_line": 31
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "main_creates_adapter",
+      "from": "main_activity",
+      "to": "samples_adapter",
+      "kind": "composition",
+      "label": "new"
+    },
+    {
+      "id": "main_holds_samples",
+      "from": "main_activity",
+      "to": "sample",
+      "kind": "aggregation",
+      "label": "构造列表"
+    },
+    {
+      "id": "adapter_holds_holder",
+      "from": "samples_adapter",
+      "to": "samples_view_holder",
+      "kind": "composition",
+      "label": "内部类"
+    },
+    {
+      "id": "adapter_reads_sample",
+      "from": "samples_adapter",
+      "to": "sample",
+      "kind": "association",
+      "label": "列表数据"
+    },
+    {
+      "id": "adapter_starts_transition1",
+      "from": "samples_adapter",
+      "to": "transition_activity1",
+      "kind": "dependency",
+      "label": "startActivity"
+    },
+    {
+      "id": "base_uses_helper",
+      "from": "base_detail",
+      "to": "transition_helper",
+      "kind": "dependency",
+      "label": "收集 Pair"
+    },
+    {
+      "id": "t1_extends_base",
+      "from": "transition_activity1",
+      "to": "base_detail",
+      "kind": "inheritance"
+    },
+    {
+      "id": "t2_extends_base",
+      "from": "transition_activity2",
+      "to": "base_detail",
+      "kind": "inheritance"
+    },
+    {
+      "id": "t3_extends_base",
+      "from": "transition_activity3",
+      "to": "base_detail",
+      "kind": "inheritance"
+    },
+    {
+      "id": "shared_extends_base",
+      "from": "shared_element_activity",
+      "to": "base_detail",
+      "kind": "inheritance"
+    },
+    {
+      "id": "shared_creates_frag1",
+      "from": "shared_element_activity",
+      "to": "shared_element_fragment1",
+      "kind": "composition",
+      "label": "replace"
+    },
+    {
+      "id": "frag1_creates_frag2",
+      "from": "shared_element_fragment1",
+      "to": "shared_element_fragment2",
+      "kind": "dependency",
+      "label": "addSharedElement"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "共享元素链路",
+      "items": [
+        "TransitionHelper 先取 decorView 的 statusBar/navBar，再补调用方传入的 Pair，避免系统栏闪烁",
+        "ActivityOptionsCompat.makeSceneTransitionAnimation 把 Pair 映射写入 Bundle，目标页按同名 transitionName 参与 ChangeBounds"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "窗口过渡配置",
+      "items": [
+        "TransitionActivity1 用 Fade 入场、excludeTarget 排除方块视图；返回时改设 Slide",
+        "TransitionActivity2/3 按 type 在代码里 new Explode/Slide，或交给 TransitionInflater 读 XML"
+      ]
+    }
+  ]
+}
