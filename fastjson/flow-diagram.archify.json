@@ -1,0 +1,160 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "fastjson 解析与序列化主流程",
+    "subtitle": "JSON.parseObject 建解析器，JSONLexer 扫 token，ObjectDeserializer 落成 Bean；反向由 SerializeConfig 选 ObjectSerializer 输出文本。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/19-fastjson/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/alibaba/fastjson",
+      "provider": "github",
+      "revision": "c942c83443117b73af5ad278cc780270998ba3e1"
+    }
+  },
+  "lanes": [
+    { "id": "api", "label": "调用方" },
+    { "id": "parser", "label": "解析器" },
+    { "id": "lexer", "label": "词法层" },
+    { "id": "bean", "label": "对象层" },
+    { "id": "serializer", "label": "序列化层" }
+  ],
+  "phases": [
+    { "id": "enter", "label": "入口", "fromCol": 0, "toCol": 1 },
+    { "id": "token", "label": "取 token", "fromCol": 2, "toCol": 2 },
+    { "id": "build", "label": "填对象", "fromCol": 3, "toCol": 3 },
+    { "id": "write", "label": "写出", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": ["input_json", "new_parser", "get_deserializer", "parse_fields", "java_object", "serialize_out"],
+  "nodes": [
+    {
+      "id": "input_json",
+      "lane": "api",
+      "col": 0,
+      "type": "frontend",
+      "label": "输入 JSON 字符串",
+      "sublabel": "parseObject",
+      "width": 156,
+      "sources": [
+        { "path": "src/main/java/com/alibaba/fastjson/JSON.java", "line": 366, "end_line": 378 }
+      ]
+    },
+    {
+      "id": "new_parser",
+      "lane": "parser",
+      "col": 1,
+      "type": "backend",
+      "label": "构建解析器",
+      "sublabel": "DefaultJSONParser",
+      "width": 156,
+      "sources": [
+        { "path": "src/main/java/com/alibaba/fastjson/parser/DefaultJSONParser.java", "line": 132, "end_line": 160 }
+      ]
+    },
+    {
+      "id": "new_lexer",
+      "lane": "lexer",
+      "col": 2,
+      "type": "backend",
+      "label": "扫描 token",
+      "sublabel": "JSONScanner",
+      "width": 148,
+      "sources": [
+        { "path": "src/main/java/com/alibaba/fastjson/parser/JSONLexerBase.java", "line": 100, "end_line": 120 },
+        { "path": "src/main/java/com/alibaba/fastjson/parser/JSONScanner.java", "line": 40, "end_line": 48 }
+      ]
+    },
+    {
+      "id": "get_deserializer",
+      "lane": "parser",
+      "col": 2,
+      "type": "backend",
+      "label": "取反序列化器",
+      "sublabel": "ParserConfig",
+      "width": 156,
+      "sources": [
+        { "path": "src/main/java/com/alibaba/fastjson/parser/DefaultJSONParser.java", "line": 674, "end_line": 700 },
+        { "path": "src/main/java/com/alibaba/fastjson/parser/ParserConfig.java", "line": 577, "end_line": 600 }
+      ]
+    },
+    {
+      "id": "parse_fields",
+      "lane": "bean",
+      "col": 3,
+      "type": "backend",
+      "label": "逐字段解析",
+      "sublabel": "JavaBeanDeserializer",
+      "width": 156,
+      "sources": [
+        { "path": "src/main/java/com/alibaba/fastjson/parser/deserializer/JavaBeanDeserializer.java", "line": 286, "end_line": 300 }
+      ]
+    },
+    {
+      "id": "java_object",
+      "lane": "api",
+      "col": 3,
+      "type": "frontend",
+      "label": "得到 Java 对象",
+      "sublabel": "handleResovleTask",
+      "width": 156,
+      "sources": [
+        { "path": "src/main/java/com/alibaba/fastjson/JSON.java", "line": 394, "end_line": 400 },
+        { "path": "src/main/java/com/alibaba/fastjson/parser/DefaultJSONParser.java", "line": 1577, "end_line": 1595 }
+      ]
+    },
+    {
+      "id": "serialize_out",
+      "lane": "serializer",
+      "col": 4,
+      "type": "backend",
+      "label": "序列化输出",
+      "sublabel": "ObjectSerializer",
+      "width": 156,
+      "sources": [
+        { "path": "src/main/java/com/alibaba/fastjson/serializer/SerializeConfig.java", "line": 439, "end_line": 448 },
+        { "path": "src/main/java/com/alibaba/fastjson/serializer/JSONSerializer.java", "line": 302, "end_line": 316 }
+      ]
+    },
+    {
+      "id": "custom_deser",
+      "lane": "parser",
+      "col": 3,
+      "type": "external",
+      "label": "自定义解析器",
+      "sublabel": "ObjectDeserializer",
+      "width": 156,
+      "sources": [
+        { "path": "src/main/java/com/alibaba/fastjson/parser/deserializer/ObjectDeserializer.java", "line": 50, "end_line": 65 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_input_parser", "from": "input_json", "to": "new_parser", "label": "new" },
+    { "id": "e_parser_lexer", "from": "new_parser", "to": "new_lexer", "label": "创建 lexer" },
+    { "id": "e_parser_deser", "from": "new_parser", "to": "get_deserializer", "label": "parseObject" },
+    { "id": "e_deser_fields", "from": "get_deserializer", "to": "parse_fields", "label": "deserialze" },
+    { "id": "e_lexer_fields", "from": "new_lexer", "to": "parse_fields", "label": "nextToken", "variant": "dashed", "role": "branch" },
+    { "id": "e_fields_object", "from": "parse_fields", "to": "java_object", "label": "反射设值" },
+    { "id": "e_object_serialize", "from": "java_object", "to": "serialize_out", "label": "toJSONString" },
+    { "id": "e_deser_custom", "from": "get_deserializer", "to": "custom_deser", "label": "自定义类型", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "反序列化折返",
+      "items": [
+        "DefaultJSONParser.parse(Type) 从 config.getDeserializer(type) 取反序列化器，JavaBeanDeserializer 特判后直接 deserialze",
+        "字段值可能递归回到 JSON.parseObject；@type 引用先记 ResolveTask，最后 handleResovleTask 统一解析"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "序列化折返",
+      "items": [
+        "JSON.toJSONString 建 SerializeWriter 与 JSONSerializer，write(object) 按运行期 Class 取 ObjectSerializer 再回调 write",
+        "SerializeConfig 缓存 writer；默认 asm=true 时用 ASMSerializerFactory 生成 JavaBeanSerializer 子类，关闭后走反射"
+      ]
+    }
+  ]
+}
