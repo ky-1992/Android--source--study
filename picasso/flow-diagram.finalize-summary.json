@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "workflow",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/10-picasso/flow-diagram.archify.json",
+    "sha256": "e8b9ab45ea722b18f57d2f0381408efec566c35bfd435442d035de7239513a35",
+    "bytes": 6633
+  },
+  "artifact": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/10-picasso/flow-diagram.html",
+    "sha256": "a4f8eeddd953bcb84f9d8ba52734c4a6b29ce7c24163f7ce00fab336f445d76e",
+    "bytes": 849872
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/10-picasso/flow-diagram.finalize.json",
+    "summaryReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/10-picasso/flow-diagram.finalize-summary.json",
+    "browserCheckReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/10-picasso/flow-diagram.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-19T14:45:18.953Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 6468402,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

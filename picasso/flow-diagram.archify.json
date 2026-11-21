@@ -1,0 +1,181 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Picasso 一次图片加载的调度流程",
+    "subtitle": "load 返回 RequestCreator，into 在主线程组装 Request、查缓存，再经 HandlerDispatcher 交给 BitmapHunter 执行，结果回主线程写回视图。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/10-picasso/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/square/picasso",
+      "provider": "github",
+      "revision": "e94d6116e3fff99b3932103e0ab22ff5b44a1273"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "assemble", "label": "请求组装" },
+    { "id": "dispatch", "label": "消息调度" },
+    { "id": "load", "label": "后台加载" },
+    { "id": "callback", "label": "回调" }
+  ],
+  "phases": [
+    { "id": "p_req", "label": "请求", "fromCol": 0, "toCol": 1 },
+    { "id": "p_submit", "label": "缓存与提交", "fromCol": 2, "toCol": 2 },
+    { "id": "p_dispatch", "label": "调度执行", "fromCol": 3, "toCol": 3 },
+    { "id": "p_done", "label": "回调", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": ["n_load", "n_into", "n_request", "n_cache", "n_submit", "n_dispatch", "n_hunter", "n_handler", "n_target"],
+  "nodes": [
+    {
+      "id": "n_load",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "发起加载",
+      "sublabel": "Picasso.load",
+      "width": 148,
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/Picasso.kt", "line": 272, "end_line": 279 }
+      ]
+    },
+    {
+      "id": "n_into",
+      "lane": "app",
+      "col": 1,
+      "type": "frontend",
+      "label": "绑定目标",
+      "sublabel": "into ImageView",
+      "width": 150,
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/RequestCreator.kt", "line": 583, "end_line": 640 }
+      ]
+    },
+    {
+      "id": "n_request",
+      "lane": "assemble",
+      "col": 1,
+      "type": "backend",
+      "label": "构建请求",
+      "sublabel": "createRequest",
+      "width": 148,
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/RequestCreator.kt", "line": 651, "end_line": 674 }
+      ]
+    },
+    {
+      "id": "n_cache",
+      "lane": "assemble",
+      "col": 2,
+      "type": "database",
+      "label": "查内存缓存",
+      "sublabel": "quickMemoryCacheCheck",
+      "width": 156,
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/Picasso.kt", "line": 432, "end_line": 442 }
+      ]
+    },
+    {
+      "id": "n_submit",
+      "lane": "dispatch",
+      "col": 2,
+      "type": "messagebus",
+      "label": "提交 Action",
+      "sublabel": "enqueueAndSubmit",
+      "width": 156,
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/Picasso.kt", "line": 416, "end_line": 426 }
+      ]
+    },
+    {
+      "id": "n_dispatch",
+      "lane": "dispatch",
+      "col": 3,
+      "type": "messagebus",
+      "label": "消息化调度",
+      "sublabel": "HandlerDispatcher",
+      "width": 156,
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/HandlerDispatcher.kt", "line": 57, "end_line": 76 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/BaseDispatcher.kt", "line": 89, "end_line": 132 }
+      ]
+    },
+    {
+      "id": "n_hunter",
+      "lane": "load",
+      "col": 3,
+      "type": "backend",
+      "label": "合并 Hunter",
+      "sublabel": "hunterMap",
+      "width": 148,
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/BaseDispatcher.kt", "line": 89, "end_line": 132 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/BitmapHunter.kt", "line": 173, "end_line": 203 }
+      ]
+    },
+    {
+      "id": "n_handler",
+      "lane": "load",
+      "col": 4,
+      "type": "backend",
+      "label": "执行加载",
+      "sublabel": "RequestHandler",
+      "width": 150,
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/BitmapHunter.kt", "line": 69, "end_line": 94 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/BitmapHunter.kt", "line": 101, "end_line": 172 }
+      ]
+    },
+    {
+      "id": "n_target",
+      "lane": "callback",
+      "col": 4,
+      "type": "frontend",
+      "label": "回调写入",
+      "sublabel": "setResult",
+      "width": 146,
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/ImageViewAction.kt", "line": 36, "end_line": 44 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/Picasso.kt", "line": 502, "end_line": 530 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_load_into", "from": "n_load", "to": "n_into", "label": "into" },
+    { "id": "e_into_request", "from": "n_into", "to": "n_request", "label": "组装参数" },
+    { "id": "e_request_cache", "from": "n_request", "to": "n_cache", "label": "查缓存" },
+    { "id": "e_cache_submit", "from": "n_cache", "to": "n_submit", "label": "未命中" },
+    { "id": "e_submit_dispatch", "from": "n_submit", "to": "n_dispatch", "label": "dispatchSubmit" },
+    { "id": "e_dispatch_hunter", "from": "n_dispatch", "to": "n_hunter", "label": "performSubmit" },
+    { "id": "e_hunter_handler", "from": "n_hunter", "to": "n_handler", "label": "hunt" },
+    { "id": "e_handler_target", "from": "n_handler", "to": "n_target", "label": "回主线程完成" },
+    { "id": "e_cache_target", "from": "n_cache", "to": "n_target", "label": "命中直用", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "主线程边界",
+      "items": [
+        "into 与 cancelExistingRequest 都要求主线程；submit 只把 Action 投给 Dispatcher，不做阻塞 IO",
+        "HandlerDispatcher 用一个专用 HandlerThread 串行化 submit/cancel/pause，线程池只负责真正加载"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "缓存命中路径",
+      "items": [
+        "RequestCreator.into 在创建 Action 之前先 quickMemoryCacheCheck，命中就直接 setResult 并回调 onSuccess",
+        "图片写回时 PicassoDrawable 负责 fade 过渡与 debug 指示器，noFade 可关闭"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "失败与取消",
+      "items": [
+        "请求失败进入 failedActions，网络恢复（NetworkBroadcastReceiver）时 flushFailedActions 重放",
+        "同一 key 的 hunter 复用，attach/detach 维护 Action 列表；全部取消后 hunter.future 被 cancel"
+      ]
+    }
+  ]
+}

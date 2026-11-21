@@ -1,0 +1,350 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Picasso 3 请求链路核心类型",
+    "subtitle": "Picasso 持有 Dispatcher 与 PlatformLruCache；RequestCreator 组装 Request，Action 经 HandlerDispatcher 进入 BitmapHunter 执行。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/10-picasso/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/square/picasso",
+      "provider": "github",
+      "revision": "e94d6116e3fff99b3932103e0ab22ff5b44a1273"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "picasso",
+      "label": "Picasso",
+      "kind": "class",
+      "sublabel": "全局门面与线程约束",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "dispatcher", "type": "Dispatcher", "visibility": "package" },
+        { "name": "cache", "type": "PlatformLruCache", "visibility": "package" },
+        { "name": "targetToAction", "type": "WeakHashMap<Any, Action>", "visibility": "package" },
+        { "name": "targetToDeferredRequestCreator", "type": "WeakHashMap<ImageView, DeferredRequestCreator>", "visibility": "package" },
+        { "name": "isLoggingEnabled", "type": "Boolean", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "load", "parameters": "uri: Uri?", "returns": "RequestCreator", "visibility": "public" },
+        { "name": "enqueueAndSubmit", "parameters": "action: Action", "returns": "void", "visibility": "package" },
+        { "name": "submit", "parameters": "action: Action", "returns": "void", "visibility": "package" },
+        { "name": "quickMemoryCacheCheck", "parameters": "key: String", "returns": "Bitmap?", "visibility": "package" },
+        { "name": "complete", "parameters": "hunter: BitmapHunter", "returns": "void", "visibility": "package" },
+        { "name": "deliverAction", "parameters": "result: Result?, action: Action, e: Exception?", "returns": "void", "visibility": "private" },
+        { "name": "cancelRequest", "parameters": "view: ImageView", "returns": "void", "visibility": "public" },
+        { "name": "shutdown", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/Picasso.kt", "line": 61, "end_line": 99 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/Picasso.kt", "line": 416, "end_line": 437 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/Picasso.kt", "line": 443, "end_line": 470 }
+      ]
+    },
+    {
+      "id": "request_creator",
+      "label": "RequestCreator",
+      "kind": "class",
+      "sublabel": "链式构建请求并触发",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        { "name": "data", "type": "Request.Builder", "visibility": "private" },
+        { "name": "noFade", "type": "Boolean", "visibility": "private" },
+        { "name": "deferred", "type": "Boolean", "visibility": "private" },
+        { "name": "placeholderResId", "type": "Int", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "into", "parameters": "target: ImageView, callback: Callback?", "returns": "void", "visibility": "public" },
+        { "name": "fetch", "parameters": "callback: Callback?", "returns": "void", "visibility": "public" },
+        { "name": "get", "parameters": "", "returns": "Bitmap?", "visibility": "public" },
+        { "name": "resize", "parameters": "targetWidth: Int, targetHeight: Int", "returns": "RequestCreator", "visibility": "public" },
+        { "name": "centerCrop", "parameters": "", "returns": "RequestCreator", "visibility": "public" },
+        { "name": "createRequest", "parameters": "started: Long", "returns": "Request", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/RequestCreator.kt", "line": 47, "end_line": 66 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/RequestCreator.kt", "line": 583, "end_line": 640 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/RequestCreator.kt", "line": 651, "end_line": 674 }
+      ]
+    },
+    {
+      "id": "request",
+      "label": "Request",
+      "kind": "class",
+      "sublabel": "一次性请求参数快照",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        { "name": "id", "type": "Int", "visibility": "public" },
+        { "name": "started", "type": "Long", "visibility": "public" },
+        { "name": "memoryPolicy", "type": "Int", "visibility": "public" },
+        { "name": "networkPolicy", "type": "Int", "visibility": "public" },
+        { "name": "uri", "type": "Uri?", "visibility": "public" },
+        { "name": "resourceId", "type": "Int", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "build", "parameters": "", "returns": "Request", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/Request.kt", "line": 31, "end_line": 60 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/Request.kt", "line": 561, "end_line": 578 }
+      ]
+    },
+    {
+      "id": "platform_lru_cache",
+      "label": "PlatformLruCache",
+      "kind": "class",
+      "sublabel": "按字节数淘汰的位图缓存",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "cache", "type": "LruCache<String, BitmapAndSize>", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "get", "parameters": "key: String", "returns": "Bitmap?", "visibility": "public" },
+        { "name": "set", "parameters": "key: String, bitmap: Bitmap", "returns": "void", "visibility": "public" },
+        { "name": "clearKeyUri", "parameters": "uri: String", "returns": "void", "visibility": "public" },
+        { "name": "size", "parameters": "", "returns": "Int", "visibility": "public" },
+        { "name": "maxSize", "parameters": "", "returns": "Int", "visibility": "public" },
+        { "name": "evictionCount", "parameters": "", "returns": "Int", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/PlatformLruCache.kt", "line": 24, "end_line": 49 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/PlatformLruCache.kt", "line": 51, "end_line": 68 }
+      ]
+    },
+    {
+      "id": "dispatcher",
+      "label": "Dispatcher",
+      "kind": "interface",
+      "sublabel": "主线程到工作线程的桥",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        { "name": "dispatchSubmit", "parameters": "action: Action", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "dispatchCancel", "parameters": "action: Action", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "dispatchComplete", "parameters": "hunter: BitmapHunter", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "dispatchRetry", "parameters": "hunter: BitmapHunter", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "dispatchSubmit", "parameters": "hunter: BitmapHunter", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "dispatchCompleteMain", "parameters": "hunter: BitmapHunter", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "isShutdown", "parameters": "", "returns": "Boolean", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/Dispatcher.kt", "line": 18, "end_line": 51 }
+      ]
+    },
+    {
+      "id": "action",
+      "label": "Action",
+      "kind": "abstract",
+      "sublabel": "请求与目标绑定的动作",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "picasso", "type": "Picasso", "visibility": "package" },
+        { "name": "request", "type": "Request", "visibility": "package" },
+        { "name": "willReplay", "type": "Boolean", "visibility": "public" },
+        { "name": "cancelled", "type": "Boolean", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "complete", "parameters": "result: Result", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "error", "parameters": "e: Exception", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "getTarget", "parameters": "", "returns": "Any?", "visibility": "public", "abstract": true },
+        { "name": "cancel", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/Action.kt", "line": 20, "end_line": 37 }
+      ]
+    },
+    {
+      "id": "base_dispatcher",
+      "label": "BaseDispatcher",
+      "kind": "abstract",
+      "sublabel": "hunter 表与暂停/重试逻辑",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        { "name": "hunterMap", "type": "MutableMap<String, BitmapHunter>", "visibility": "package" },
+        { "name": "failedActions", "type": "WeakHashMap<Any, Action>", "visibility": "package" },
+        { "name": "pausedActions", "type": "WeakHashMap<Any, Action>", "visibility": "package" },
+        { "name": "pausedTags", "type": "MutableSet<Any>", "visibility": "package" },
+        { "name": "airplaneMode", "type": "Boolean", "visibility": "package" }
+      ],
+      "methods": [
+        { "name": "performSubmit", "parameters": "action: Action, dismissFailed: Boolean", "returns": "void", "visibility": "public" },
+        { "name": "performCancel", "parameters": "action: Action", "returns": "void", "visibility": "public" },
+        { "name": "performRetry", "parameters": "hunter: BitmapHunter", "returns": "void", "visibility": "public" },
+        { "name": "performComplete", "parameters": "hunter: BitmapHunter", "returns": "void", "visibility": "public" },
+        { "name": "performError", "parameters": "hunter: BitmapHunter", "returns": "void", "visibility": "public" },
+        { "name": "deliver", "parameters": "hunter: BitmapHunter", "returns": "void", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/BaseDispatcher.kt", "line": 52, "end_line": 71 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/BaseDispatcher.kt", "line": 89, "end_line": 132 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/BaseDispatcher.kt", "line": 294, "end_line": 307 }
+      ]
+    },
+    {
+      "id": "image_view_action",
+      "label": "ImageViewAction",
+      "kind": "class",
+      "sublabel": "把结果写回 ImageView",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        { "name": "targetReference", "type": "WeakReference<ImageView>", "visibility": "private" },
+        { "name": "errorDrawable", "type": "Drawable?", "visibility": "public" },
+        { "name": "errorResId", "type": "Int", "visibility": "public" },
+        { "name": "noFade", "type": "Boolean", "visibility": "public" },
+        { "name": "callback", "type": "Callback?", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "complete", "parameters": "result: Result", "returns": "void", "visibility": "public" },
+        { "name": "error", "parameters": "e: Exception", "returns": "void", "visibility": "public" },
+        { "name": "getTarget", "parameters": "", "returns": "ImageView?", "visibility": "public" },
+        { "name": "cancel", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/ImageViewAction.kt", "line": 25, "end_line": 66 }
+      ]
+    },
+    {
+      "id": "bitmap_hunter",
+      "label": "BitmapHunter",
+      "kind": "class",
+      "sublabel": "合并同 key 请求并执行",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        { "name": "picasso", "type": "Picasso", "visibility": "public" },
+        { "name": "dispatcher", "type": "Dispatcher", "visibility": "private" },
+        { "name": "cache", "type": "PlatformLruCache", "visibility": "private" },
+        { "name": "requestHandler", "type": "RequestHandler", "visibility": "public" },
+        { "name": "sequence", "type": "Int", "visibility": "public" },
+        { "name": "key", "type": "String", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "run", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "hunt", "parameters": "", "returns": "Bitmap?", "visibility": "public" },
+        { "name": "attach", "parameters": "action: Action", "returns": "void", "visibility": "public" },
+        { "name": "detach", "parameters": "action: Action", "returns": "void", "visibility": "public" },
+        { "name": "cancel", "parameters": "", "returns": "Boolean", "visibility": "public" },
+        { "name": "shouldRetry", "parameters": "airplaneMode: Boolean, info: NetworkInfo?", "returns": "Boolean", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/BitmapHunter.kt", "line": 39, "end_line": 66 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/BitmapHunter.kt", "line": 69, "end_line": 94 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/BitmapHunter.kt", "line": 101, "end_line": 172 }
+      ]
+    },
+    {
+      "id": "handler_dispatcher",
+      "label": "HandlerDispatcher",
+      "kind": "class",
+      "sublabel": "HandlerThread 消息化调度",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        { "name": "service", "type": "ExecutorService", "visibility": "public" },
+        { "name": "dispatcherThread", "type": "DispatcherThread", "visibility": "private" },
+        { "name": "handler", "type": "Handler", "visibility": "private" },
+        { "name": "mainHandler", "type": "Handler", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "dispatchSubmit", "parameters": "action: Action", "returns": "void", "visibility": "public" },
+        { "name": "dispatchSubmit", "parameters": "hunter: BitmapHunter", "returns": "void", "visibility": "public" },
+        { "name": "dispatchCompleteMain", "parameters": "hunter: BitmapHunter", "returns": "void", "visibility": "public" },
+        { "name": "shutdown", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/HandlerDispatcher.kt", "line": 29, "end_line": 46 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/HandlerDispatcher.kt", "line": 57, "end_line": 76 },
+        { "path": "picasso/src/main/java/com/squareup/picasso3/HandlerDispatcher.kt", "line": 99, "end_line": 112 }
+      ]
+    },
+    {
+      "id": "picasso_executor_service",
+      "label": "PicassoExecutorService",
+      "kind": "class",
+      "sublabel": "按优先级排序的线程池",
+      "row": 4,
+      "col": 2,
+      "attributes": [
+        { "name": "DEFAULT_THREAD_COUNT", "type": "Int", "visibility": "private", "static": true }
+      ],
+      "methods": [
+        { "name": "submit", "parameters": "task: Runnable", "returns": "Future<*>", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/PicassoExecutorService.kt", "line": 30, "end_line": 45 }
+      ]
+    },
+    {
+      "id": "request_handler",
+      "label": "RequestHandler",
+      "kind": "abstract",
+      "sublabel": "可扩展的加载策略",
+      "row": 4,
+      "col": 1,
+      "attributes": [
+        { "name": "retryCount", "type": "Int", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "canHandleRequest", "parameters": "data: Request", "returns": "Boolean", "visibility": "public", "abstract": true },
+        { "name": "load", "parameters": "picasso: Picasso, request: Request, callback: Callback", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "shouldRetry", "parameters": "airplaneMode: Boolean, info: NetworkInfo?", "returns": "Boolean", "visibility": "public" },
+        { "name": "supportsReplay", "parameters": "", "returns": "Boolean", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "picasso/src/main/java/com/squareup/picasso3/RequestHandler.kt", "line": 38, "end_line": 97 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "creator_owns_picasso", "from": "request_creator", "to": "picasso", "kind": "composition", "label": "持有" },
+    { "id": "picasso_owns_cache", "from": "picasso", "to": "platform_lru_cache", "kind": "composition", "label": "持有" },
+    { "id": "picasso_owns_dispatcher", "from": "picasso", "to": "dispatcher", "kind": "composition", "label": "持有" },
+    { "id": "creator_builds_request", "from": "request_creator", "to": "request", "kind": "dependency", "label": "Builder 产出" },
+    { "id": "action_owns_request", "from": "action", "to": "request", "kind": "association", "label": "持有" },
+    { "id": "image_action_extends", "from": "image_view_action", "to": "action", "kind": "inheritance", "label": "继承" },
+    { "id": "base_impl_dispatcher", "from": "base_dispatcher", "to": "dispatcher", "kind": "realization", "label": "实现" },
+    { "id": "handler_extends_base", "from": "handler_dispatcher", "to": "base_dispatcher", "kind": "inheritance", "label": "继承" },
+    { "id": "base_delivers_action", "from": "base_dispatcher", "to": "action", "kind": "dependency", "label": "performComplete" },
+    { "id": "base_runs_hunter", "from": "base_dispatcher", "to": "bitmap_hunter", "kind": "dependency", "label": "hunterMap" },
+    { "id": "hunter_uses_handler", "from": "bitmap_hunter", "to": "request_handler", "kind": "dependency", "label": "选中并 load" },
+    { "id": "handler_submits_hunter", "from": "handler_dispatcher", "to": "picasso_executor_service", "kind": "dependency", "label": "service.submit" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "主线程约束",
+      "items": [
+        "into 第一行就是 checkMain()；enqueueAndSubmit 里 cancelExistingRequest 也会再校验主线程",
+        "目标与 Action 的映射放在 Picasso.targetToAction（WeakHashMap），换图即取消旧请求"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "线程模型：消息队列 + 线程池",
+      "items": [
+        "HandlerDispatcher 用专用 HandlerThread 串行处理 submit/cancel/retry，再交给 PicassoExecutorService",
+        "PicassoFutureTask 实现 Comparable：HIGH 优先级排前，同优先级按 hunter.sequence 保证 FIFO"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "两级去重",
+      "items": [
+        "内存命中时 RequestCreator.into 直接 setResult，根本不创建 Action",
+        "同一 key 的 hunter 由 BaseDispatcher.hunterMap 复用，后来的 Action 通过 BitmapHunter.attach 合并"
+      ]
+    }
+  ]
+}

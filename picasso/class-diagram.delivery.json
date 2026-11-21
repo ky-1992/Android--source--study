@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "12e92328-48b7-458d-a14a-17471c08557e",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/10-picasso/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/10-picasso/class-diagram.html",
+  "specification": {
+    "sha256": "aa621443b68d0b3930b194c02fed5217950decfffac36dfedc1f2daebd5d52a3",
+    "bytes": 18998
+  },
+  "artifact": {
+    "sha256": "9f3f304d6c818270f84303b5d572153fc0e3d2c3911b953c72085856b59e727d",
+    "bytes": 934060
+  }
+}
