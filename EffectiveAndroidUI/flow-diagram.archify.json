@@ -1,0 +1,194 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "EffectiveAndroidUI 目录页加载主流程",
+    "subtitle": "Fragment 绑定 Presenter 后触发用例，Interactor 在线程池里取数据，再经 MainThread 回到主线程渲染。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/50-EffectiveAndroidUI/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/pedrovgs/EffectiveAndroidUI",
+      "provider": "github",
+      "revision": "b9e6fcc795de5d01c9f720dec7511cda0bab6c02"
+    }
+  },
+  "lanes": [
+    { "id": "view", "label": "视图层" },
+    { "id": "presenter", "label": "表现层" },
+    { "id": "domain", "label": "领域层" },
+    { "id": "thread", "label": "执行层" }
+  ],
+  "phases": [
+    { "id": "bind", "label": "绑定视图", "fromCol": 0, "toCol": 1 },
+    { "id": "invoke", "label": "触发用例", "fromCol": 2, "toCol": 2 },
+    { "id": "background", "label": "后台执行", "fromCol": 3, "toCol": 3 },
+    { "id": "render", "label": "主线程回写", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "view_init",
+    "presenter_init",
+    "load_shows",
+    "interactor_call",
+    "executor_run",
+    "run_usecase",
+    "post_main",
+    "render",
+    "render_view"
+  ],
+  "nodes": [
+    {
+      "id": "view_init",
+      "lane": "view",
+      "col": 0,
+      "type": "frontend",
+      "label": "创建视图",
+      "sublabel": "onViewCreated",
+      "width": 148,
+      "sources": [
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/fragment/TvShowCatalogFragment.java", "line": 61, "end_line": 66 }
+      ]
+    },
+    {
+      "id": "presenter_init",
+      "lane": "presenter",
+      "col": 1,
+      "type": "backend",
+      "label": "绑定并初始化",
+      "sublabel": "setView",
+      "width": 150,
+      "sources": [
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/fragment/TvShowCatalogFragment.java", "line": 64, "end_line": 65 },
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/presenter/TvShowCatalogPresenter.java", "line": 52, "end_line": 63 }
+      ]
+    },
+    {
+      "id": "load_shows",
+      "lane": "presenter",
+      "col": 2,
+      "type": "backend",
+      "label": "发起加载",
+      "sublabel": "loadTvShows",
+      "width": 150,
+      "sources": [
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/presenter/TvShowCatalogPresenter.java", "line": 102, "end_line": 116 }
+      ]
+    },
+    {
+      "id": "interactor_call",
+      "lane": "domain",
+      "col": 2,
+      "type": "backend",
+      "label": "执行用例",
+      "sublabel": "execute()",
+      "width": 148,
+      "sources": [
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/GetTvShowsInteractor.java", "line": 56, "end_line": 64 }
+      ]
+    },
+    {
+      "id": "executor_run",
+      "lane": "thread",
+      "col": 3,
+      "type": "external",
+      "label": "线程池调度",
+      "sublabel": "Executor.run",
+      "width": 152,
+      "sources": [
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/executor/ThreadExecutor.java", "line": 55, "end_line": 65 }
+      ]
+    },
+    {
+      "id": "run_usecase",
+      "lane": "domain",
+      "col": 3,
+      "type": "backend",
+      "label": "取目录数据",
+      "sublabel": "sleep + Catalog",
+      "width": 156,
+      "sources": [
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/GetTvShowsInteractor.java", "line": 66, "end_line": 75 },
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/tvshow/Catalog.java", "line": 385, "end_line": 387 }
+      ]
+    },
+    {
+      "id": "post_main",
+      "lane": "thread",
+      "col": 4,
+      "type": "external",
+      "label": "切回主线程",
+      "sublabel": "MainThread.post",
+      "width": 152,
+      "sources": [
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/executor/MainThreadImpl.java", "line": 36, "end_line": 38 },
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/GetTvShowsInteractor.java", "line": 102, "end_line": 108 }
+      ]
+    },
+    {
+      "id": "render",
+      "lane": "presenter",
+      "col": 4,
+      "type": "backend",
+      "label": "回调渲染",
+      "sublabel": "onTvShowsLoaded",
+      "width": 152,
+      "sources": [
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/presenter/TvShowCatalogPresenter.java", "line": 106, "end_line": 110 }
+      ]
+    },
+    {
+      "id": "render_view",
+      "lane": "view",
+      "col": 4,
+      "type": "frontend",
+      "label": "刷新列表",
+      "sublabel": "renderVideos",
+      "width": 148,
+      "sources": [
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/fragment/TvShowCatalogFragment.java", "line": 106, "end_line": 110 }
+      ]
+    },
+    {
+      "id": "conn_error",
+      "lane": "domain",
+      "col": 4,
+      "type": "security",
+      "label": "连接错误",
+      "sublabel": "onConnectionError",
+      "width": 150,
+      "sources": [
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/GetTvShowsInteractor.java", "line": 94, "end_line": 100 },
+        { "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/presenter/TvShowCatalogPresenter.java", "line": 118, "end_line": 125 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_bind", "from": "view_init", "to": "presenter_init", "label": "setView" },
+    { "id": "e_init", "from": "presenter_init", "to": "load_shows", "label": "initialize" },
+    { "id": "e_execute", "from": "load_shows", "to": "interactor_call", "label": "execute(cb)" },
+    { "id": "e_submit", "from": "interactor_call", "to": "executor_run", "label": "run(this)" },
+    { "id": "e_run", "from": "executor_run", "to": "run_usecase", "label": "线程内 run" },
+    { "id": "e_post", "from": "run_usecase", "to": "post_main", "label": "post 回调" },
+    { "id": "e_loaded", "from": "post_main", "to": "render", "label": "onTvShowsLoaded" },
+    { "id": "e_render", "from": "render", "to": "render_view", "label": "renderVideos" },
+    { "id": "e_error", "from": "run_usecase", "to": "conn_error", "label": "随机失败", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "生命周期与状态",
+      "items": [
+        "Fragment 在 onViewCreated 里 setView(this) 并 initialize，onResume / onPause 转发给 Presenter",
+        "Presenter 每次回调前都检查 view.isReady()，连接错误时还会看 isAlreadyLoaded 避免覆盖已有数据"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "线程边界",
+      "items": [
+        "Interactor.execute 只把自身交给 Executor，ThreadExecutor 用 3/5 线程池 submit",
+        "run() 里 Thread.sleep(1500) 模拟网络，随后必须经 MainThread.post 才回调 Presenter，回调始终在主线程"
+      ]
+    }
+  ]
+}

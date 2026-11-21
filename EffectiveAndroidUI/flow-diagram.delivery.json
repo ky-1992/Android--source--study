@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "7fa7cae4-4e9f-484f-b942-afbfa9323336",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/50-EffectiveAndroidUI/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/50-EffectiveAndroidUI/flow-diagram.html",
+  "specification": {
+    "sha256": "613a7319bf77385cdebe541cf4839aa8f2424d68f6e52d991230860c0f60c68c",
+    "bytes": 7106
+  },
+  "artifact": {
+    "sha256": "01b96ad31f7e2388ce2a03b26b18b405def32b2a287f2df8962ec1cffd133a2e",
+    "bytes": 851020
+  }
+}

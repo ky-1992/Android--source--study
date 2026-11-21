@@ -1,0 +1,589 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "EffectiveAndroidUI 核心类型结构",
+    "subtitle": "同一份领域代码被 MVP 的 Presenter 与 MVVM 的 ViewModel 两种表现层共用，Dagger 负责装配。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/50-EffectiveAndroidUI/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/pedrovgs/EffectiveAndroidUI",
+      "provider": "github",
+      "revision": "b9e6fcc795de5d01c9f720dec7511cda0bab6c02"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "presenter",
+      "label": "Presenter",
+      "kind": "abstract",
+      "sublabel": "表现层生命周期基类",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        {
+          "name": "initialize",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "resume",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "pause",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/presenter/Presenter.java",
+          "line": 25,
+          "end_line": 43
+        }
+      ]
+    },
+    {
+      "id": "base_activity",
+      "label": "BaseActivity",
+      "kind": "abstract",
+      "sublabel": "Activity 作用域注入",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "activityScopeGraph",
+          "type": "ObjectGraph",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "inject",
+          "parameters": "object: Object",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getModules",
+          "parameters": "",
+          "returns": "List<Object>",
+          "visibility": "protected",
+          "abstract": true
+        },
+        {
+          "name": "injectDependencies",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/activity/BaseActivity.java",
+          "line": 33,
+          "end_line": 41
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/activity/BaseActivity.java",
+          "line": 49,
+          "end_line": 51
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/activity/BaseActivity.java",
+          "line": 67,
+          "end_line": 73
+        }
+      ]
+    },
+    {
+      "id": "catalog_presenter",
+      "label": "TvShowCatalogPresenter",
+      "kind": "class",
+      "sublabel": "目录页 MVP 表现器",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "getTvShowsInteractor",
+          "type": "GetTvShows",
+          "visibility": "private"
+        },
+        {
+          "name": "navigator",
+          "type": "Navigator",
+          "visibility": "private"
+        },
+        {
+          "name": "view",
+          "type": "View",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "initialize",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "loadTvShows",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "getCurrentTvShows",
+          "parameters": "",
+          "returns": "TvShowCollection",
+          "visibility": "public"
+        },
+        {
+          "name": "loadCatalog",
+          "parameters": "collection: TvShowCollection",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onTvShowThumbnailClicked",
+          "parameters": "tvShow: TvShow",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/presenter/TvShowCatalogPresenter.java",
+          "line": 38,
+          "end_line": 51
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/presenter/TvShowCatalogPresenter.java",
+          "line": 102,
+          "end_line": 116
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/presenter/TvShowCatalogPresenter.java",
+          "line": 145,
+          "end_line": 166
+        }
+      ]
+    },
+    {
+      "id": "get_tv_shows_interactor",
+      "label": "GetTvShowsInteractor",
+      "kind": "class",
+      "sublabel": "拉取目录的用例",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "catalog",
+          "type": "Catalog",
+          "visibility": "private"
+        },
+        {
+          "name": "executor",
+          "type": "Executor",
+          "visibility": "private"
+        },
+        {
+          "name": "mainThread",
+          "type": "MainThread",
+          "visibility": "private"
+        },
+        {
+          "name": "callback",
+          "type": "Callback",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "execute",
+          "parameters": "callback: Callback",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "run",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "nofityTvShowsLoaded",
+          "parameters": "tvShows: Collection<TvShow>",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/GetTvShowsInteractor.java",
+          "line": 39,
+          "end_line": 54
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/GetTvShowsInteractor.java",
+          "line": 56,
+          "end_line": 75
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/GetTvShowsInteractor.java",
+          "line": 94,
+          "end_line": 108
+        }
+      ]
+    },
+    {
+      "id": "main_activity",
+      "label": "MainActivity",
+      "kind": "class",
+      "sublabel": "双栏宿主与模块入口",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "tvShowFragment",
+          "type": "TvShowFragment",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onCreate",
+          "parameters": "savedInstanceState: Bundle",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "getModules",
+          "parameters": "",
+          "returns": "List<Object>",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/activity/MainActivity.java",
+          "line": 32,
+          "end_line": 49
+        }
+      ]
+    },
+    {
+      "id": "tv_show_view_model",
+      "label": "TvShowViewModel",
+      "kind": "class",
+      "sublabel": "详情页 MVVM 视图模型",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "getTvShowById",
+          "type": "GetTvShowById",
+          "visibility": "private"
+        },
+        {
+          "name": "listener",
+          "type": "Listener",
+          "visibility": "private"
+        },
+        {
+          "name": "isReady",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "loadTvShow",
+          "parameters": "tvShowId: String",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "notifyTvShowLoaded",
+          "parameters": "tvShow: TvShow",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "getChaptersViewModel",
+          "parameters": "collection: ChapterCollection",
+          "returns": "List<ChapterViewModel>",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/viewmodel/TvShowViewModel.java",
+          "line": 37,
+          "end_line": 50
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/viewmodel/TvShowViewModel.java",
+          "line": 56,
+          "end_line": 72
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/ui/viewmodel/TvShowViewModel.java",
+          "line": 108,
+          "end_line": 118
+        }
+      ]
+    },
+    {
+      "id": "get_tv_show_by_id_interactor",
+      "label": "GetTvShowByIdInteractor",
+      "kind": "class",
+      "sublabel": "按 id 查询单条用例",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "executor",
+          "type": "Executor",
+          "visibility": "private"
+        },
+        {
+          "name": "mainThread",
+          "type": "MainThread",
+          "visibility": "private"
+        },
+        {
+          "name": "catalog",
+          "type": "Catalog",
+          "visibility": "private"
+        },
+        {
+          "name": "callback",
+          "type": "Callback",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "execute",
+          "parameters": "tvShowId: String, callback: Callback",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "run",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "searchTvShow",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/GetTvShowByIdInteractor.java",
+          "line": 40,
+          "end_line": 56
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/GetTvShowByIdInteractor.java",
+          "line": 58,
+          "end_line": 73
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/GetTvShowByIdInteractor.java",
+          "line": 92,
+          "end_line": 100
+        }
+      ]
+    },
+    {
+      "id": "catalog",
+      "label": "Catalog",
+      "kind": "class",
+      "sublabel": "硬编码的内存数据源",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "tvShows",
+          "type": "Set<TvShow>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getTvShows",
+          "parameters": "",
+          "returns": "Collection<TvShow>",
+          "visibility": "public"
+        },
+        {
+          "name": "getTvShowById",
+          "parameters": "tvShowId: String",
+          "returns": "TvShow",
+          "visibility": "public"
+        },
+        {
+          "name": "searchTvShowById",
+          "parameters": "tvShowId: String",
+          "returns": "TvShow",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/tvshow/Catalog.java",
+          "line": 29,
+          "end_line": 39
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/tvshow/Catalog.java",
+          "line": 385,
+          "end_line": 387
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/domain/tvshow/Catalog.java",
+          "line": 399,
+          "end_line": 417
+        }
+      ]
+    },
+    {
+      "id": "tv_shows_application",
+      "label": "TvShowsApplication",
+      "kind": "class",
+      "sublabel": "根 ObjectGraph 持有者",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "objectGraph",
+          "type": "ObjectGraph",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onCreate",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "inject",
+          "parameters": "object: Object",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "plus",
+          "parameters": "modules: List<Object>",
+          "returns": "ObjectGraph",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/TvShowsApplication.java",
+          "line": 33,
+          "end_line": 41
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/TvShowsApplication.java",
+          "line": 67,
+          "end_line": 69
+        },
+        {
+          "path": "app/src/main/java/com/github/pedrovgs/effectiveandroidui/TvShowsApplication.java",
+          "line": 77,
+          "end_line": 89
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "catalog_presenter_extends",
+      "from": "catalog_presenter",
+      "to": "presenter",
+      "kind": "inheritance"
+    },
+    {
+      "id": "main_extends",
+      "from": "main_activity",
+      "to": "base_activity",
+      "kind": "inheritance"
+    },
+    {
+      "id": "base_app",
+      "from": "base_activity",
+      "to": "tv_shows_application",
+      "kind": "dependency",
+      "label": "plus()"
+    },
+    {
+      "id": "presenter_interactor",
+      "from": "catalog_presenter",
+      "to": "get_tv_shows_interactor",
+      "kind": "dependency",
+      "label": "注入 GetTvShows"
+    },
+    {
+      "id": "viewmodel_interactor",
+      "from": "tv_show_view_model",
+      "to": "get_tv_show_by_id_interactor",
+      "kind": "dependency",
+      "label": "注入 GetTvShowById"
+    },
+    {
+      "id": "shows_catalog",
+      "from": "get_tv_shows_interactor",
+      "to": "catalog",
+      "kind": "association",
+      "label": "读取目录"
+    },
+    {
+      "id": "byid_catalog",
+      "from": "get_tv_show_by_id_interactor",
+      "to": "catalog",
+      "kind": "association",
+      "label": "按标题查找"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两种表现层模式",
+      "items": [
+        "TvShowCatalogPresenter 与 TvShowPresenter 走 MVP：Presenter 持有 View 接口并直接调用视图方法",
+        "TvShowViewModel 走 MVVM：通过 Listener 回调把状态变化推给 TvShowFragment，并用 ActionCommand 封装点击"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Dagger 装配",
+      "items": [
+        "TvShowsApplication.onCreate 创建 RootModule 根图；BaseActivity 用 getModules 做 plus 形成 Activity 作用域",
+        "TvShowsModule 用 @Provides 把 Interactor 实例以 GetTvShows / GetTvShowById 接口暴露，Presenter 只依赖接口"
+      ]
+    }
+  ]
+}

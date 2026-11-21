@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "dd61ba5f-9de8-4bd0-9fe1-f05b34af7f78",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/50-EffectiveAndroidUI/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/50-EffectiveAndroidUI/class-diagram.html",
+  "specification": {
+    "sha256": "cdfe5aef2c0ddcb2f5c5d44bd1523d3c5eb374bcf45ad2d02db88674ce8f2754",
+    "bytes": 15618
+  },
+  "artifact": {
+    "sha256": "3d7dbe455399edd6652897408dbc1a6420298348370879b541c2e61c284144c4",
+    "bytes": 883587
+  }
+}
