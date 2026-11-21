@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "RxJava-Android-Samples 核心类型结构",
+    "subtitle": "MainActivity 持有 RxBus 单例，MainFragment 以 replace 方式装载各示例 Fragment；网络示例由 GithubService 工厂产出 GithubApi。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/48-RxJava-Android-Samples/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/kaushikgopal/RxJava-Android-Samples",
+      "provider": "github",
+      "revision": "b84865252c203498c1f0a2fa0f751f3c9127a781"
+    }
+  },
+  "layout": {
+    "mode": "grid",
+    "gapX": 110
+  },
+  "types": [
+    {
+      "id": "main_activity",
+      "label": "MainActivity",
+      "kind": "class",
+      "sublabel": "宿主 Activity 与 RxBus 单例",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "_rxBus", "type": "RxBus", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onCreate", "parameters": "savedInstanceState: Bundle", "returns": "void", "visibility": "protected" },
+        { "name": "getRxBusSingleton", "parameters": "", "returns": "RxBus", "visibility": "public" },
+        { "name": "onBackPressed", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/MainActivity.java", "line": 11, "end_line": 31 },
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/MainActivity.java", "line": 34, "end_line": 40 }
+      ]
+    },
+    {
+      "id": "rx_bus",
+      "label": "RxBus",
+      "kind": "class",
+      "sublabel": "基于 PublishRelay 的事件总线",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        { "name": "_bus", "type": "Relay<Object>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "send", "parameters": "o: Object", "returns": "void", "visibility": "public" },
+        { "name": "asFlowable", "parameters": "", "returns": "Flowable<Object>", "visibility": "public" },
+        { "name": "hasObservers", "parameters": "", "returns": "boolean", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/rxbus/RxBus.java", "line": 10, "end_line": 25 }
+      ]
+    },
+    {
+      "id": "main_fragment",
+      "label": "MainFragment",
+      "kind": "class",
+      "sublabel": "示例列表与 Fragment 跳转",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        { "name": "unbinder", "type": "Unbinder", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onCreateView", "parameters": "inflater, container, savedInstanceState", "returns": "View", "visibility": "public" },
+        { "name": "clickedOn", "parameters": "fragment: Fragment", "returns": "void", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/MainFragment.java", "line": 19, "end_line": 35 },
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/MainFragment.java", "line": 130, "end_line": 138 }
+      ]
+    },
+    {
+      "id": "base_fragment",
+      "label": "BaseFragment",
+      "kind": "class",
+      "sublabel": "销毁时交给 LeakCanary 观测",
+      "row": 1,
+      "col": 1,
+      "methods": [
+        { "name": "onDestroy", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/BaseFragment.java", "line": 7, "end_line": 15 }
+      ]
+    },
+    {
+      "id": "github_service",
+      "label": "GithubService",
+      "kind": "class",
+      "sublabel": "Retrofit + RxJava2 工厂",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        { "name": "createGithubService", "parameters": "githubToken: String", "returns": "GithubApi", "visibility": "public", "static": true }
+      ],
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/retrofit/GithubService.java", "line": 14, "end_line": 45 }
+      ]
+    },
+    {
+      "id": "debounce_fragment",
+      "label": "DebounceSearchEmitterFragment",
+      "kind": "class",
+      "sublabel": "文本变更流去抖搜索",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        { "name": "_disposable", "type": "Disposable", "visibility": "private" },
+        { "name": "_inputSearchText", "type": "EditText", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onActivityCreated", "parameters": "savedInstanceState: Bundle", "returns": "void", "visibility": "public" },
+        { "name": "_getSearchObserver", "parameters": "", "returns": "DisposableObserver<TextViewTextChangeEvent>", "visibility": "private" },
+        { "name": "onDestroy", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/DebounceSearchEmitterFragment.java", "line": 35, "end_line": 54 },
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/DebounceSearchEmitterFragment.java", "line": 70, "end_line": 105 }
+      ]
+    },
+    {
+      "id": "retrofit_fragment",
+      "label": "RetrofitFragment",
+      "kind": "class",
+      "sublabel": "网络请求与 flatMap 组合",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "_githubService", "type": "GithubApi", "visibility": "private" },
+        { "name": "_disposables", "type": "CompositeDisposable", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onCreate", "parameters": "savedInstanceState: Bundle", "returns": "void", "visibility": "public" },
+        { "name": "onListContributorsClicked", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "onListContributorsWithFullUserInfoClicked", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/RetrofitFragment.java", "line": 37, "end_line": 60 },
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/RetrofitFragment.java", "line": 89, "end_line": 125 },
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/RetrofitFragment.java", "line": 127, "end_line": 183 }
+      ]
+    },
+    {
+      "id": "github_api",
+      "label": "GithubApi",
+      "kind": "interface",
+      "sublabel": "GitHub REST 的 Observable 声明",
+      "row": 2,
+      "col": 2,
+      "methods": [
+        { "name": "contributors", "parameters": "owner: String, repo: String", "returns": "Observable<List<Contributor>>", "visibility": "public", "abstract": true },
+        { "name": "user", "parameters": "user: String", "returns": "Observable<User>", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/retrofit/GithubApi.java", "line": 9, "end_line": 26 }
+      ]
+    },
+    {
+      "id": "polling_fragment",
+      "label": "PollingFragment",
+      "kind": "class",
+      "sublabel": "interval 与 repeatWhen 轮询",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        { "name": "POLLING_INTERVAL", "type": "int", "visibility": "private", "static": true },
+        { "name": "_disposables", "type": "CompositeDisposable", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onStartSimplePollingClicked", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "onStartIncreasinglyDelayedPolling", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/PollingFragment.java", "line": 30, "end_line": 43 },
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/PollingFragment.java", "line": 73, "end_line": 121 },
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/PollingFragment.java", "line": 191, "end_line": 229 }
+      ]
+    },
+    {
+      "id": "network_fragment",
+      "label": "NetworkDetectorFragment",
+      "kind": "class",
+      "sublabel": "广播转 PublishProcessor 判网",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        { "name": "publishProcessor", "type": "PublishProcessor<Boolean>", "visibility": "private" },
+        { "name": "broadcastReceiver", "type": "BroadcastReceiver", "visibility": "private" },
+        { "name": "disposable", "type": "Disposable", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onStart", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "listenToNetworkConnectivity", "parameters": "", "returns": "void", "visibility": "private" },
+        { "name": "getConnectivityStatus", "parameters": "context: Context", "returns": "boolean", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/NetworkDetectorFragment.java", "line": 29, "end_line": 45 },
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/NetworkDetectorFragment.java", "line": 55, "end_line": 104 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "activity_owns_bus", "from": "main_activity", "to": "rx_bus", "kind": "composition", "label": "懒加载" },
+    { "id": "activity_loads_main", "from": "main_activity", "to": "main_fragment", "kind": "dependency", "label": "onCreate 装载" },
+    { "id": "main_extends_base", "from": "main_fragment", "to": "base_fragment", "kind": "inheritance" },
+    { "id": "main_opens_debounce", "from": "main_fragment", "to": "debounce_fragment", "kind": "dependency", "label": "new 示例" },
+    { "id": "debounce_extends_base", "from": "debounce_fragment", "to": "base_fragment", "kind": "inheritance" },
+    { "id": "polling_extends_base", "from": "polling_fragment", "to": "base_fragment", "kind": "inheritance" },
+    { "id": "network_extends_base", "from": "network_fragment", "to": "base_fragment", "kind": "inheritance" },
+    { "id": "retrofit_uses_service", "from": "retrofit_fragment", "to": "github_service", "kind": "dependency", "label": "create" },
+    { "id": "retrofit_calls_api", "from": "retrofit_fragment", "to": "github_api", "kind": "dependency", "label": "contributors" },
+    { "id": "service_creates_api", "from": "github_service", "to": "github_api", "kind": "dependency", "label": "Retrofit.create" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "示例组织方式",
+      "items": [
+        "MainFragment 每个 @OnClick 直接 new 一个示例 Fragment，用 addToBackStack 后 replace 进 android.R.id.content",
+        "示例之间不共享状态；需要跨页面通信时才走 MainActivity 暴露的 RxBus 单例"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "网络与线程",
+      "items": [
+        "GithubService 用 RxJava2CallAdapterFactory + GsonConverterFactory 构建 Retrofit，token 交给 OkHttp 拦截器注入",
+        "示例统一 subscribeOn(Schedulers.io()) + observeOn(AndroidSchedulers.mainThread())，销毁时 dispose CompositeDisposable"
+      ]
+    }
+  ]
+}

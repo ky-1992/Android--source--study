@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "bf62c87b-897f-454d-84b8-8e93edb2263a",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/48-RxJava-Android-Samples/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/48-RxJava-Android-Samples/class-diagram.html",
+  "specification": {
+    "sha256": "7a9a00590fc232ed00e5479cf219ec8376226cdcc3146d2e200f808ad63e79ac",
+    "bytes": 11300
+  },
+  "artifact": {
+    "sha256": "410837127151449367dac556d6d85fc56a6b07790bd4ce1ddd27e3929ab802b2",
+    "bytes": 879394
+  }
+}

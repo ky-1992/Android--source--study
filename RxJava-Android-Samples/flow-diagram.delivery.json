@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "d4d3f69b-6346-4b50-840d-692f7d87418c",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/48-RxJava-Android-Samples/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/48-RxJava-Android-Samples/flow-diagram.html",
+  "specification": {
+    "sha256": "9e971c610e419a0c800e0399b3cbbd4e6d32beac865425af866585637490625c",
+    "bytes": 5870
+  },
+  "artifact": {
+    "sha256": "aa93c27227168ee60d95e54effa8469b5ddb24abc8baa2721ceffa49d3714ead",
+    "bytes": 846866
+  }
+}

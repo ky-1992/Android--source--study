@@ -1,0 +1,175 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Debounce 搜索示例的输入到日志流程",
+    "subtitle": "RxTextView.textChangeEvents 发出文本变更流，debounce 400ms 后过滤空串，切主线程在 onNext 中记录搜索词。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/48-RxJava-Android-Samples/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/kaushikgopal/RxJava-Android-Samples",
+      "provider": "github",
+      "revision": "b84865252c203498c1f0a2fa0f751f3c9127a781"
+    }
+  },
+  "lanes": [
+    { "id": "lifecycle", "label": "生命周期" },
+    { "id": "ui", "label": "界面输入" },
+    { "id": "rx", "label": "Rx 操作链" },
+    { "id": "observer", "label": "观察者" }
+  ],
+  "phases": [
+    { "id": "setup", "label": "装配", "fromCol": 0, "toCol": 0 },
+    { "id": "debounce", "label": "去抖过滤", "fromCol": 1, "toCol": 2 },
+    { "id": "switch", "label": "切线程", "fromCol": 3, "toCol": 3 },
+    { "id": "consume", "label": "消费", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "n_create",
+    "n_input",
+    "n_events",
+    "n_debounce",
+    "n_filter",
+    "n_main",
+    "n_next"
+  ],
+  "nodes": [
+    {
+      "id": "n_create",
+      "lane": "lifecycle",
+      "col": 0,
+      "type": "external",
+      "label": "进入页面",
+      "sublabel": "onActivity 创建",
+      "width": 148,
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/DebounceSearchEmitterFragment.java", "line": 70, "end_line": 75 }
+      ]
+    },
+    {
+      "id": "n_input",
+      "lane": "ui",
+      "col": 0,
+      "type": "frontend",
+      "label": "输入搜索词",
+      "sublabel": "EditText",
+      "width": 148,
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/DebounceSearchEmitterFragment.java", "line": 76, "end_line": 81 }
+      ]
+    },
+    {
+      "id": "n_events",
+      "lane": "rx",
+      "col": 1,
+      "type": "backend",
+      "label": "文本变更流",
+      "sublabel": "textChange",
+      "width": 156,
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/DebounceSearchEmitterFragment.java", "line": 76, "end_line": 78 }
+      ]
+    },
+    {
+      "id": "n_debounce",
+      "lane": "rx",
+      "col": 2,
+      "type": "backend",
+      "label": "防抖搜索",
+      "sublabel": "debounce 400ms",
+      "width": 156,
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/DebounceSearchEmitterFragment.java", "line": 78, "end_line": 78 }
+      ]
+    },
+    {
+      "id": "n_filter",
+      "lane": "rx",
+      "col": 3,
+      "type": "backend",
+      "label": "过滤空串",
+      "sublabel": "filter",
+      "width": 148,
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/DebounceSearchEmitterFragment.java", "line": 79, "end_line": 79 }
+      ]
+    },
+    {
+      "id": "n_main",
+      "lane": "observer",
+      "col": 3,
+      "type": "backend",
+      "label": "切回主线程",
+      "sublabel": "observeOn",
+      "width": 148,
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/DebounceSearchEmitterFragment.java", "line": 80, "end_line": 81 }
+      ]
+    },
+    {
+      "id": "n_next",
+      "lane": "ui",
+      "col": 4,
+      "type": "frontend",
+      "label": "记录日志",
+      "sublabel": "onNext",
+      "width": 144,
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/DebounceSearchEmitterFragment.java", "line": 100, "end_line": 103 }
+      ]
+    },
+    {
+      "id": "n_err",
+      "lane": "observer",
+      "col": 4,
+      "type": "backend",
+      "label": "错误分支",
+      "sublabel": "onError",
+      "width": 144,
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/DebounceSearchEmitterFragment.java", "line": 94, "end_line": 99 }
+      ]
+    },
+    {
+      "id": "n_dispose",
+      "lane": "lifecycle",
+      "col": 4,
+      "type": "external",
+      "label": "销毁释放",
+      "sublabel": "dispose + unbind",
+      "width": 156,
+      "sources": [
+        { "path": "app/src/main/java/com/morihacky/android/rxjava/fragments/DebounceSearchEmitterFragment.java", "line": 49, "end_line": 54 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_bind", "from": "n_create", "to": "n_input", "label": "绑定控件" },
+    { "id": "e_text", "from": "n_input", "to": "n_events", "label": "textChanges" },
+    { "id": "e_debounce", "from": "n_events", "to": "n_debounce", "label": "debounce" },
+    { "id": "e_filter", "from": "n_debounce", "to": "n_filter", "label": "400ms 后" },
+    { "id": "e_observe", "from": "n_filter", "to": "n_main", "label": "observeOn" },
+    { "id": "e_next", "from": "n_main", "to": "n_next", "label": "onNext" },
+    { "id": "e_error", "from": "n_main", "to": "n_err", "label": "onError", "variant": "dashed", "role": "branch" },
+    { "id": "e_destroy", "from": "n_next", "to": "n_dispose", "label": "onDestroy", "variant": "dashed", "role": "return" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "操作符组合",
+      "items": [
+        "textChangeEvents 默认在 UI 线程发事件，debounce 的定时器跑在 computation 调度器上",
+        "debounce 只保留静默 400ms 内的最后一个事件，filter 再用 isNotNullOrEmpty 丢掉空串"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "线程与释放",
+      "items": [
+        "observeOn(AndroidSchedulers.mainThread()) 保证 onNext 能安全写日志与刷新列表",
+        "Disposable 在 onDestroy 中 dispose，ButterKnife 的 Unbinder 同步解绑，避免 Fragment 泄漏"
+      ]
+    }
+  ]
+}
