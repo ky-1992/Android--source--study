@@ -1,0 +1,757 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Tinker 核心类型结构",
+    "subtitle": "安装侧 Tinker 门面调度补丁服务与处理器，补丁产物落盘后由独立加载器在进程启动时注入类加载器。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/21-tinker/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/Tencent/tinker",
+      "provider": "github",
+      "revision": "c72fce285ce10edb244d4142685d40b91cb1625d"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "tinker_installer",
+      "label": "TinkerInstaller",
+      "kind": "class",
+      "sublabel": "对外安装与打补丁入口",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        {
+          "name": "install",
+          "parameters": "applicationLike: ApplicationLike",
+          "returns": "Tinker",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "install",
+          "parameters": "applicationLike, loadReporter, patchReporter, listener, resultServiceClass, upgradePatchProcessor",
+          "returns": "Tinker",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "cleanPatch",
+          "parameters": "context: Context",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "onReceiveUpgradePatch",
+          "parameters": "context: Context, patchLocation: String",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/tinker/TinkerInstaller.java",
+          "line": 43,
+          "end_line": 48
+        },
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/tinker/TinkerInstaller.java",
+          "line": 109,
+          "end_line": 111
+        }
+      ]
+    },
+    {
+      "id": "tinker",
+      "label": "Tinker",
+      "kind": "class",
+      "sublabel": "单例门面，持有补丁目录与报告器",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "sInstance",
+          "type": "Tinker",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "sInstalled",
+          "type": "boolean",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "context",
+          "type": "Context",
+          "visibility": "package"
+        },
+        {
+          "name": "patchDirectory",
+          "type": "File",
+          "visibility": "package"
+        },
+        {
+          "name": "listener",
+          "type": "PatchListener",
+          "visibility": "package"
+        },
+        {
+          "name": "loadReporter",
+          "type": "LoadReporter",
+          "visibility": "package"
+        },
+        {
+          "name": "patchReporter",
+          "type": "PatchReporter",
+          "visibility": "package"
+        },
+        {
+          "name": "patchInfoFile",
+          "type": "File",
+          "visibility": "package"
+        },
+        {
+          "name": "patchInfoLockFile",
+          "type": "File",
+          "visibility": "package"
+        },
+        {
+          "name": "customPatcher",
+          "type": "AbstractFilePatch",
+          "visibility": "package"
+        },
+        {
+          "name": "tinkerLoadResult",
+          "type": "TinkerLoadResult",
+          "visibility": "package"
+        },
+        {
+          "name": "loaded",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "with",
+          "parameters": "context: Context",
+          "returns": "Tinker",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "create",
+          "parameters": "tinker: Tinker",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "install",
+          "parameters": "intentResult, serviceClass, upgradePatch",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "isTinkerLoaded",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "cleanPatch",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "rollbackPatch",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/tinker/Tinker.java",
+          "line": 47,
+          "end_line": 79
+        },
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/tinker/Tinker.java",
+          "line": 105,
+          "end_line": 115
+        },
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/tinker/Tinker.java",
+          "line": 141,
+          "end_line": 163
+        }
+      ]
+    },
+    {
+      "id": "tinker_patch_service",
+      "label": "TinkerPatchService",
+      "kind": "class",
+      "sublabel": "独立 :patch 进程里的补丁服务",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "upgradePatchProcessor",
+          "type": "AbstractPatch",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "notificationId",
+          "type": "int",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "resultServiceClass",
+          "type": "Class<? extends AbstractResultService>",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "sIsPatchApplying",
+          "type": "AtomicBoolean",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "runPatchService",
+          "parameters": "context: Context, path: String, useEmergencyMode: boolean",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "setPatchProcessor",
+          "parameters": "upgradePatch, serviceClass",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "onHandleIntent",
+          "parameters": "intent: Intent",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "doApplyPatch",
+          "parameters": "context: Context, intent: Intent",
+          "returns": "void",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "increasingPriority",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/service/TinkerPatchService.java",
+          "line": 46,
+          "end_line": 55
+        },
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/service/TinkerPatchService.java",
+          "line": 62,
+          "end_line": 77
+        },
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/service/TinkerPatchService.java",
+          "line": 201,
+          "end_line": 264
+        }
+      ]
+    },
+    {
+      "id": "abstract_patch",
+      "label": "AbstractPatch",
+      "kind": "abstract",
+      "sublabel": "补丁处理器抽象",
+      "row": 1,
+      "col": 1,
+      "methods": [
+        {
+          "name": "tryPatch",
+          "parameters": "context, tempPatchPath, useEmergencyMode, patchResult",
+          "returns": "boolean",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/patch/AbstractPatch.java",
+          "line": 26,
+          "end_line": 29
+        }
+      ]
+    },
+    {
+      "id": "upgrade_patch",
+      "label": "UpgradePatch",
+      "kind": "class",
+      "sublabel": "默认实现：校验后恢复 dex/so/资源",
+      "row": 2,
+      "col": 1,
+      "methods": [
+        {
+          "name": "tryPatch",
+          "parameters": "context, tempPatchPath, useEmergencyMode, patchResult",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/patch/UpgradePatch.java",
+          "line": 41,
+          "end_line": 58
+        },
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/patch/UpgradePatch.java",
+          "line": 62,
+          "end_line": 67
+        },
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/patch/UpgradePatch.java",
+          "line": 174,
+          "end_line": 200
+        }
+      ]
+    },
+    {
+      "id": "dex_diff_patch_internal",
+      "label": "DexDiffPatchInternal",
+      "kind": "class",
+      "sublabel": "dex 差异恢复与 dexopt 等待",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "WAIT_ASYN_OAT_TIME",
+          "type": "int",
+          "visibility": "protected",
+          "static": true
+        },
+        {
+          "name": "MAX_WAIT_COUNT",
+          "type": "int",
+          "visibility": "protected",
+          "static": true
+        },
+        {
+          "name": "optFiles",
+          "type": "ArrayList<File>",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "patchList",
+          "type": "ArrayList<ShareDexDiffPatchInfo>",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "classNDexInfo",
+          "type": "HashMap<ShareDexDiffPatchInfo, File>",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "isVmArt",
+          "type": "boolean",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "tryRecoverDexFiles",
+          "parameters": "manager, checker, context, patchVersionDirectory, patchFile, useEmergencyMode, patchResult",
+          "returns": "boolean",
+          "visibility": "protected",
+          "static": true
+        },
+        {
+          "name": "waitAndCheckDexOptFile",
+          "parameters": "patchFile: File, manager: Tinker",
+          "returns": "boolean",
+          "visibility": "protected",
+          "static": true
+        },
+        {
+          "name": "patchDexExtractViaDexDiff",
+          "parameters": "context, patchVersionDirectory, meta, patchFile, useEmergencyMode, patchResult",
+          "returns": "boolean",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/patch/DexDiffPatchInternal.java",
+          "line": 60,
+          "end_line": 70
+        },
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/patch/DexDiffPatchInternal.java",
+          "line": 73,
+          "end_line": 94
+        },
+        {
+          "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/patch/DexDiffPatchInternal.java",
+          "line": 171,
+          "end_line": 203
+        }
+      ]
+    },
+    {
+      "id": "tinker_loader",
+      "label": "TinkerLoader",
+      "kind": "class",
+      "sublabel": "启动时校验 patch.info 并加载",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "sProcessGuardRef",
+          "type": "Guard",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "tryLoad",
+          "parameters": "app: TinkerApplication",
+          "returns": "Intent",
+          "visibility": "public"
+        },
+        {
+          "name": "tryLoadPatchFilesInternal",
+          "parameters": "app, resultIntent, resultGuard",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "checkSafeModeCount",
+          "parameters": "app: TinkerApplication",
+          "returns": "boolean",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/TinkerLoader.java",
+          "line": 41,
+          "end_line": 45
+        },
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/TinkerLoader.java",
+          "line": 51,
+          "end_line": 73
+        },
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/TinkerLoader.java",
+          "line": 75,
+          "end_line": 103
+        }
+      ]
+    },
+    {
+      "id": "tinker_dex_loader",
+      "label": "TinkerDexLoader",
+      "kind": "class",
+      "sublabel": "校验并通过 ClassLoader 装载 dex",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "LOAD_DEX_LIST",
+          "type": "ArrayList<ShareDexDiffPatchInfo>",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "classNDexInfo",
+          "type": "HashSet<ShareDexDiffPatchInfo>",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "isVmArt",
+          "type": "boolean",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "loadTinkerJars",
+          "parameters": "application, directory, oatDir, intentResult, isSystemOTA, isProtectedApp",
+          "returns": "boolean",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "checkComplete",
+          "parameters": "directory, securityCheck, oatDir, intentResult",
+          "returns": "boolean",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/TinkerDexLoader.java",
+          "line": 40,
+          "end_line": 58
+        },
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/TinkerDexLoader.java",
+          "line": 66,
+          "end_line": 80
+        },
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/TinkerDexLoader.java",
+          "line": 189,
+          "end_line": 200
+        }
+      ]
+    },
+    {
+      "id": "system_class_loader_adder",
+      "label": "SystemClassLoaderAdder",
+      "kind": "class",
+      "sublabel": "反射把补丁 dex 插到加载器前面",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "sPatchDexCount",
+          "type": "int",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "installDexes",
+          "parameters": "application, loader, dexOptDir, files, isProtectedApp, useDLC",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "injectDexesInternal",
+          "parameters": "cl: ClassLoader, dexFiles: List<File>, optimizeDir: File",
+          "returns": "void",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "uninstallPatchDex",
+          "parameters": "classLoader: ClassLoader",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/SystemClassLoaderAdder.java",
+          "line": 48,
+          "end_line": 55
+        },
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/SystemClassLoaderAdder.java",
+          "line": 54,
+          "end_line": 76
+        },
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/SystemClassLoaderAdder.java",
+          "line": 78,
+          "end_line": 88
+        }
+      ]
+    },
+    {
+      "id": "share_tinker_internals",
+      "label": "ShareTinkerInternals",
+      "kind": "class",
+      "sublabel": "进程/VM 判定与补丁包校验",
+      "row": 4,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "VM_IS_ART",
+          "type": "boolean",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "PATCH_PROCESS_NAME",
+          "type": "String",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "tinkerID",
+          "type": "String",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "isTinkerEnabled",
+          "parameters": "flag: int",
+          "returns": "boolean",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "checkTinkerPackage",
+          "parameters": "context, tinkerFlag, patchFile, securityCheck",
+          "returns": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "getCurrentOatMode",
+          "parameters": "context: Context, current: String",
+          "returns": "String",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "cleanPatch",
+          "parameters": "context: Context",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/shareutil/ShareTinkerInternals.java",
+          "line": 59,
+          "end_line": 72
+        },
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/shareutil/ShareTinkerInternals.java",
+          "line": 209,
+          "end_line": 215
+        },
+        {
+          "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/shareutil/ShareTinkerInternals.java",
+          "line": 738,
+          "end_line": 773
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "installer_uses_tinker",
+      "from": "tinker_installer",
+      "to": "tinker",
+      "kind": "dependency",
+      "label": "build + install"
+    },
+    {
+      "id": "tinker_sets_processor",
+      "from": "tinker",
+      "to": "tinker_patch_service",
+      "kind": "dependency",
+      "label": "setPatchProcessor"
+    },
+    {
+      "id": "service_runs_patch",
+      "from": "tinker_patch_service",
+      "to": "abstract_patch",
+      "kind": "dependency",
+      "label": "tryPatch"
+    },
+    {
+      "id": "upgrade_is_patch",
+      "from": "upgrade_patch",
+      "to": "abstract_patch",
+      "kind": "inheritance"
+    },
+    {
+      "id": "upgrade_recovers_dex",
+      "from": "upgrade_patch",
+      "to": "dex_diff_patch_internal",
+      "kind": "dependency",
+      "label": "tryRecoverDexFiles"
+    },
+    {
+      "id": "dex_internal_uses_internals",
+      "from": "dex_diff_patch_internal",
+      "to": "share_tinker_internals",
+      "kind": "dependency",
+      "label": "isVmArt"
+    },
+    {
+      "id": "loader_delegates_dex",
+      "from": "tinker_loader",
+      "to": "tinker_dex_loader",
+      "kind": "dependency",
+      "label": "checkComplete"
+    },
+    {
+      "id": "loader_checks_package",
+      "from": "tinker_loader",
+      "to": "share_tinker_internals",
+      "kind": "dependency",
+      "label": "checkTinkerPackage"
+    },
+    {
+      "id": "dex_loader_installs",
+      "from": "tinker_dex_loader",
+      "to": "system_class_loader_adder",
+      "kind": "dependency",
+      "label": "installDexes"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "安装与补丁两段式",
+      "items": [
+        "TinkerInstaller.install 建 Builder 后调 Tinker.install，install 内把 AbstractPatch 交给 TinkerPatchService 静态持有",
+        "打补丁在 :patch 独立进程的 IntentService 里执行，避免污染主进程内存中的补丁状态"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "加载只读产物",
+      "items": [
+        "TinkerLoader 读 tinker/patch.info 与 guard 锁，版本变更只由主进程推进",
+        "TinkerDexLoader 只校验并调用 SystemClassLoaderAdder，dex 真正生效发生在下一次进程启动"
+      ]
+    }
+  ]
+}

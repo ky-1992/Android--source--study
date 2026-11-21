@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "0df19408-0506-4121-abc4-75015cb56d23",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/21-tinker/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/21-tinker/flow-diagram.html",
+  "specification": {
+    "sha256": "491598adf3a732bb9d4afb0720a8ae5c68738cfef6b886250bdf8e3b838858f6",
+    "bytes": 7079
+  },
+  "artifact": {
+    "sha256": "d8dde9b4423be6b5138b3b062a5990f667c275d92c4b6b2ddb52e38228d41b21",
+    "bytes": 852033
+  }
+}

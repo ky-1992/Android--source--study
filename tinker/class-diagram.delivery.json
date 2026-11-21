@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "ce002177-136c-4715-a76a-dc1a48d4daf7",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/21-tinker/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/21-tinker/class-diagram.html",
+  "specification": {
+    "sha256": "de45ce7f3dfc4a6d3c01a37b182cdc4cf82c4cfeb5e1fca74ac6b21f858a35d3",
+    "bytes": 21386
+  },
+  "artifact": {
+    "sha256": "4fc72d55292f1b43c920570da2d23838f46b2d96a6d48790578c4eb68957d866",
+    "bytes": 912219
+  }
+}

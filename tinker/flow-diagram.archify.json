@@ -1,0 +1,193 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Tinker 补丁生成与应用主流程",
+    "subtitle": "构建期用 dex 差分打出 patch 包，运行期 :patch 进程校验并合成补丁产物，下次进程启动时由 TinkerLoader 把补丁 dex 注入类加载器。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/21-tinker/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/Tencent/tinker",
+      "provider": "github",
+      "revision": "c72fce285ce10edb244d4142685d40b91cb1625d"
+    }
+  },
+  "lanes": [
+    { "id": "build", "label": "构建期" },
+    { "id": "artifact", "label": "补丁产物" },
+    { "id": "runtime", "label": "应用期" },
+    { "id": "loader", "label": "加载期" }
+  ],
+  "phases": [
+    { "id": "gen", "label": "生成", "fromCol": 0, "toCol": 1 },
+    { "id": "ship", "label": "分发", "fromCol": 2, "toCol": 2 },
+    { "id": "apply", "label": "应用", "fromCol": 3, "toCol": 3 },
+    { "id": "load", "label": "加载", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "b_diff",
+    "b_bsdiff",
+    "b_pack",
+    "a_patch",
+    "r_recv",
+    "r_apply",
+    "l_boot",
+    "l_inject"
+  ],
+  "nodes": [
+    {
+      "id": "b_diff",
+      "lane": "build",
+      "col": 0,
+      "type": "backend",
+      "label": "新旧包对比",
+      "sublabel": "dex diff",
+      "width": 148,
+      "sources": [
+        { "path": "tinker-build/tinker-patch-lib/src/main/java/com/tencent/tinker/build/decoder/DexDiffDecoder.java", "line": 177, "end_line": 245 }
+      ]
+    },
+    {
+      "id": "b_bsdiff",
+      "lane": "build",
+      "col": 1,
+      "type": "backend",
+      "label": "生成差分包",
+      "sublabel": "bsdiff",
+      "width": 148,
+      "sources": [
+        { "path": "tinker-build/tinker-patch-lib/src/main/java/com/tencent/tinker/build/decoder/DexDiffDecoder.java", "line": 626, "end_line": 690 }
+      ]
+    },
+    {
+      "id": "b_pack",
+      "lane": "build",
+      "col": 2,
+      "type": "backend",
+      "label": "打包补丁",
+      "sublabel": "tinker-patch",
+      "width": 152,
+      "sources": [
+        { "path": "tinker-build/tinker-patch-lib/src/main/java/com/tencent/tinker/build/decoder/ApkDecoder.java", "line": 111, "end_line": 143 }
+      ]
+    },
+    {
+      "id": "a_patch",
+      "lane": "artifact",
+      "col": 2,
+      "type": "external",
+      "label": "patch 文件",
+      "sublabel": "patch.apk",
+      "width": 144,
+      "sources": [
+        { "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/patch/UpgradePatch.java", "line": 45, "end_line": 58 }
+      ]
+    },
+    {
+      "id": "a_meta",
+      "lane": "artifact",
+      "col": 3,
+      "type": "external",
+      "label": "补丁元信息",
+      "sublabel": "package_meta",
+      "width": 148,
+      "sources": [
+        { "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/shareutil/ShareTinkerInternals.java", "line": 285, "end_line": 315 }
+      ]
+    },
+    {
+      "id": "r_recv",
+      "lane": "runtime",
+      "col": 2,
+      "type": "backend",
+      "label": "接收补丁",
+      "sublabel": "PatchService",
+      "width": 148,
+      "sources": [
+        { "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/service/TinkerPatchService.java", "line": 62, "end_line": 77 }
+      ]
+    },
+    {
+      "id": "r_apply",
+      "lane": "runtime",
+      "col": 3,
+      "type": "security",
+      "label": "合成补丁 dex",
+      "sublabel": "dex diff",
+      "width": 148,
+      "sources": [
+        { "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/patch/UpgradePatch.java", "line": 174, "end_line": 191 },
+        { "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/patch/DexDiffPatchInternal.java", "line": 462, "end_line": 520 }
+      ]
+    },
+    {
+      "id": "r_record",
+      "lane": "runtime",
+      "col": 4,
+      "type": "database",
+      "label": "记录补丁信息",
+      "sublabel": "patch.info",
+      "width": 152,
+      "sources": [
+        { "path": "tinker-android/tinker-android-lib/src/main/java/com/tencent/tinker/lib/patch/UpgradePatch.java", "line": 202, "end_line": 220 }
+      ]
+    },
+    {
+      "id": "l_boot",
+      "lane": "loader",
+      "col": 3,
+      "type": "backend",
+      "label": "启动加载",
+      "sublabel": "TinkerLoader",
+      "width": 148,
+      "sources": [
+        { "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/TinkerLoader.java", "line": 51, "end_line": 73 },
+        { "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/TinkerLoader.java", "line": 75, "end_line": 103 }
+      ]
+    },
+    {
+      "id": "l_inject",
+      "lane": "loader",
+      "col": 4,
+      "type": "backend",
+      "label": "注入类加载器",
+      "sublabel": "installDexes",
+      "width": 152,
+      "sources": [
+        { "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/TinkerDexLoader.java", "line": 66, "end_line": 80 },
+        { "path": "tinker-android/tinker-android-loader/src/main/java/com/tencent/tinker/loader/SystemClassLoaderAdder.java", "line": 54, "end_line": 76 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_diff_bsdiff", "from": "b_diff", "to": "b_bsdiff", "label": "差异清单" },
+    { "id": "e_bsdiff_pack", "from": "b_bsdiff", "to": "b_pack", "label": "差分文件" },
+    { "id": "e_pack_patch", "from": "b_pack", "to": "a_patch", "label": "assemble" },
+    { "id": "e_patch_recv", "from": "a_patch", "to": "r_recv", "label": "下发" },
+    { "id": "e_recv_apply", "from": "r_recv", "to": "r_apply", "label": "tryPatch" },
+    { "id": "e_apply_record", "from": "r_apply", "to": "r_record", "label": "写 patch.info", "variant": "dashed", "role": "branch" },
+    { "id": "e_record_boot", "from": "r_record", "to": "l_boot", "label": "重启后", "variant": "dashed", "role": "branch" },
+    { "id": "e_meta_boot", "from": "a_meta", "to": "l_boot", "label": "校验元信息" },
+    { "id": "e_boot_inject", "from": "l_boot", "to": "l_inject", "label": "loadTinkerJars" },
+    { "id": "e_apply_boot", "from": "r_apply", "to": "l_boot", "label": "dex 就绪" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两段式：应用与加载分离",
+      "items": [
+        "补丁在独立 :patch 进程的 TinkerPatchService 里被校验、解包并合成为补丁目录下的 dex/so/资源产物",
+        "真正的类替换发生在下一次进程启动，TinkerLoader 读 patch.info 后由 TinkerDexLoader 装载并注入 ClassLoader"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "安全与回滚",
+      "items": [
+        "UpgradePatch 先做签名、tinkerId、MD5 与包属性校验，失败只上报 PatchReporter 不改动线上产物",
+        "guard 锁文件与 safe mode 计数限制连续加载失败，避免坏补丁把应用卡在启动阶段"
+      ]
+    }
+  ]
+}
