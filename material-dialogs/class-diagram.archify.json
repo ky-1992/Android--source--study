@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Material Dialogs 3.x 核心类型结构",
+    "subtitle": "MaterialDialog 是 Dialog 子类与配置入口，DialogBehavior 决定主题与窗口行为，DialogLayout 负责三段式子布局。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/16-material-dialogs/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/afollestad/material-dialogs",
+      "provider": "github",
+      "revision": "709cfee9b45257af7ab4c428e4850bee38a075e7"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "material_dialog",
+      "label": "MaterialDialog",
+      "kind": "class",
+      "sublabel": "对话框实例与配置入口",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "windowContext", "type": "Context", "visibility": "public" },
+        { "name": "dialogBehavior", "type": "DialogBehavior", "visibility": "public" },
+        { "name": "config", "type": "MutableMap<String, Any>", "visibility": "public" },
+        { "name": "view", "type": "DialogLayout", "visibility": "public" },
+        { "name": "autoDismissEnabled", "type": "Boolean", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "positiveButton", "parameters": "res: Int?, text: CharSequence?, click: DialogCallback?", "returns": "MaterialDialog", "visibility": "public" },
+        { "name": "message", "parameters": "res: Int?, text: CharSequence?, applySettings: ...", "returns": "MaterialDialog", "visibility": "public" },
+        { "name": "show", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "dismiss", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "onActionButtonClicked", "parameters": "which: WhichButton", "returns": "void", "visibility": "package" },
+        { "name": "setWindowConstraints", "parameters": "", "returns": "void", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/MaterialDialog.kt", "line": 56, "end_line": 59 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/MaterialDialog.kt", "line": 104, "end_line": 121 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/MaterialDialog.kt", "line": 353, "end_line": 365 }
+      ]
+    },
+    {
+      "id": "dialog_behavior",
+      "label": "DialogBehavior",
+      "kind": "interface",
+      "sublabel": "主题、视图与窗口策略",
+      "row": 0,
+      "col": 1,
+      "methods": [
+        { "name": "getThemeRes", "parameters": "isDark: Boolean", "returns": "Int", "visibility": "public", "abstract": true },
+        { "name": "createView", "parameters": "context, window, inflater, dialog", "returns": "ViewGroup", "visibility": "public", "abstract": true },
+        { "name": "getDialogLayout", "parameters": "root: ViewGroup", "returns": "DialogLayout", "visibility": "public", "abstract": true },
+        { "name": "setWindowConstraints", "parameters": "context, window, view, maxWidth", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "onPreShow", "parameters": "dialog: MaterialDialog", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "onDismiss", "parameters": "", "returns": "Boolean", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/DialogBehavior.kt", "line": 37, "end_line": 79 }
+      ]
+    },
+    {
+      "id": "which_button",
+      "label": "WhichButton",
+      "kind": "enum",
+      "sublabel": "按钮位置与索引",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        { "name": "POSITIVE", "type": "index=0" },
+        { "name": "NEGATIVE", "type": "index=1" },
+        { "name": "NEUTRAL", "type": "index=2" }
+      ],
+      "methods": [
+        { "name": "fromIndex", "parameters": "index: Int", "returns": "WhichButton", "visibility": "public", "static": true }
+      ],
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/WhichButton.kt", "line": 22, "end_line": 34 }
+      ]
+    },
+    {
+      "id": "modal_dialog",
+      "label": "ModalDialog",
+      "kind": "class",
+      "sublabel": "默认行为单例 object",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        { "name": "getThemeRes", "parameters": "isDark: Boolean", "returns": "Int", "visibility": "public" },
+        { "name": "createView", "parameters": "context, window, inflater, dialog", "returns": "ViewGroup", "visibility": "public" },
+        { "name": "setWindowConstraints", "parameters": "context, window, view, maxWidth", "returns": "void", "visibility": "public" },
+        { "name": "onPostShow", "parameters": "dialog: MaterialDialog", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/DialogBehavior.kt", "line": 82, "end_line": 107 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/DialogBehavior.kt", "line": 109, "end_line": 140 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/DialogBehavior.kt", "line": 161, "end_line": 171 }
+      ]
+    },
+    {
+      "id": "dialog_layout",
+      "label": "DialogLayout",
+      "kind": "class",
+      "sublabel": "根布局与高度测量",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "dialog", "type": "MaterialDialog", "visibility": "package" },
+        { "name": "titleLayout", "type": "DialogTitleLayout", "visibility": "package" },
+        { "name": "contentLayout", "type": "DialogContentLayout", "visibility": "package" },
+        { "name": "buttonsLayout", "type": "DialogActionButtonLayout?", "visibility": "package" },
+        { "name": "layoutMode", "type": "LayoutMode", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "onFinishInflate", "parameters": "", "returns": "void", "visibility": "protected" },
+        { "name": "attachDialog", "parameters": "dialog: MaterialDialog", "returns": "void", "visibility": "public" },
+        { "name": "invalidateDividers", "parameters": "showTop: Boolean, showBottom: Boolean", "returns": "void", "visibility": "public" },
+        { "name": "onMeasure", "parameters": "widthMeasureSpec, heightMeasureSpec: Int", "returns": "void", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/main/DialogLayout.kt", "line": 59, "end_line": 62 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/main/DialogLayout.kt", "line": 83, "end_line": 120 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/main/DialogLayout.kt", "line": 129, "end_line": 176 }
+      ]
+    },
+    {
+      "id": "title_layout",
+      "label": "DialogTitleLayout",
+      "kind": "class",
+      "sublabel": "标题与图标子布局",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        { "name": "iconView", "type": "ImageView", "visibility": "package" },
+        { "name": "titleView", "type": "TextView", "visibility": "package" }
+      ],
+      "methods": [
+        { "name": "onFinishInflate", "parameters": "", "returns": "void", "visibility": "protected" },
+        { "name": "shouldNotBeVisible", "parameters": "", "returns": "Boolean", "visibility": "public" },
+        { "name": "onMeasure", "parameters": "widthMeasureSpec, heightMeasureSpec: Int", "returns": "void", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/main/DialogTitleLayout.kt", "line": 43, "end_line": 62 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/main/DialogTitleLayout.kt", "line": 66, "end_line": 96 }
+      ]
+    },
+    {
+      "id": "content_layout",
+      "label": "DialogContentLayout",
+      "kind": "class",
+      "sublabel": "消息、列表与自定义视图",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        { "name": "scrollView", "type": "DialogScrollView?", "visibility": "public" },
+        { "name": "recyclerView", "type": "DialogRecyclerView?", "visibility": "public" },
+        { "name": "customView", "type": "View?", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "setMessage", "parameters": "dialog, res, text, typeface, applySettings", "returns": "void", "visibility": "public" },
+        { "name": "addRecyclerView", "parameters": "dialog, adapter, layoutManager", "returns": "void", "visibility": "public" },
+        { "name": "addCustomView", "parameters": "res, view, scrollable, noVerticalPadding, horizontalPadding", "returns": "View", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/message/DialogContentLayout.kt", "line": 57, "end_line": 73 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/message/DialogContentLayout.kt", "line": 75, "end_line": 112 }
+      ]
+    },
+    {
+      "id": "action_layout",
+      "label": "DialogActionButtonLayout",
+      "kind": "class",
+      "sublabel": "按钮排布与堆叠判断",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        { "name": "actionButtons", "type": "Array<DialogActionButton>", "visibility": "package" },
+        { "name": "checkBoxPrompt", "type": "AppCompatCheckBox", "visibility": "package" },
+        { "name": "stackButtons", "type": "Boolean", "visibility": "package" }
+      ],
+      "methods": [
+        { "name": "onFinishInflate", "parameters": "", "returns": "void", "visibility": "protected" },
+        { "name": "visibleButtons", "parameters": "", "returns": "Array<DialogActionButton>", "visibility": "public" },
+        { "name": "onMeasure", "parameters": "widthMeasureSpec, heightMeasureSpec: Int", "returns": "void", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/button/DialogActionButtonLayout.kt", "line": 45, "end_line": 86 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/button/DialogActionButtonLayout.kt", "line": 88, "end_line": 156 }
+      ]
+    },
+    {
+      "id": "dialog_adapter",
+      "label": "DialogAdapter",
+      "kind": "interface",
+      "sublabel": "列表对话框适配器契约",
+      "row": 4,
+      "col": 1,
+      "methods": [
+        { "name": "replaceItems", "parameters": "items: List<IT>, listener: SL?", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "disableItems", "parameters": "indices: IntArray", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "positiveButtonClicked", "parameters": "", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/list/DialogAdapter.kt", "line": 18, "end_line": 43 }
+      ]
+    },
+    {
+      "id": "action_button",
+      "label": "DialogActionButton",
+      "kind": "class",
+      "sublabel": "单个动作按钮样式",
+      "row": 4,
+      "col": 2,
+      "attributes": [
+        { "name": "enabledColor", "type": "Int", "visibility": "private" },
+        { "name": "disabledColor", "type": "Int", "visibility": "private" },
+        { "name": "enabledColorOverride", "type": "Int?", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "update", "parameters": "baseContext, appContext, stacked: Boolean", "returns": "void", "visibility": "package" },
+        { "name": "updateTextColor", "parameters": "color: Int", "returns": "void", "visibility": "public" },
+        { "name": "setEnabled", "parameters": "enabled: Boolean", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/button/DialogActionButton.kt", "line": 42, "end_line": 57 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/button/DialogActionButton.kt", "line": 59, "end_line": 106 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "dialog_uses_behavior", "from": "material_dialog", "to": "dialog_behavior", "kind": "association", "label": "dialogBehavior" },
+    { "id": "dialog_owns_view", "from": "material_dialog", "to": "dialog_layout", "kind": "composition", "label": "view" },
+    { "id": "dialog_uses_button_enum", "from": "material_dialog", "to": "which_button", "kind": "dependency", "label": "按钮分发" },
+    { "id": "modal_implements", "from": "modal_dialog", "to": "dialog_behavior", "kind": "realization", "label": "默认实现" },
+    { "id": "layout_owns_title", "from": "dialog_layout", "to": "title_layout", "kind": "composition", "label": "titleLayout" },
+    { "id": "layout_owns_content", "from": "dialog_layout", "to": "content_layout", "kind": "composition", "label": "contentLayout" },
+    { "id": "layout_owns_buttons", "from": "dialog_layout", "to": "action_layout", "kind": "composition", "label": "buttonsLayout" },
+    { "id": "content_holds_adapter", "from": "content_layout", "to": "dialog_adapter", "kind": "association", "label": "recyclerView.adapter" },
+    { "id": "buttons_hold_buttons", "from": "action_layout", "to": "action_button", "kind": "aggregation", "label": "actionButtons" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Kotlin 重写后的结构",
+      "items": [
+        "3.x 不再有 Builder 与 DialogWrapper：配置改成链式方法，构造时直接 inflate 根布局",
+        "DialogBehavior 把主题选择、窗口尺寸、背景圆角等平台细节抽成可替换策略"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "点击与销毁",
+      "items": [
+        "DialogActionButtonLayout 在 onFinishInflate 给三个按钮统一注册 dialog.onActionButtonClicked(which)",
+        "onActionButtonClicked 先 invokeAll 对应回调，autoDismissEnabled 为 true 时再 dismiss"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "ea63ffdb-2c7a-40cc-bfb3-1ff0dc2ed41d",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/16-material-dialogs/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/16-material-dialogs/flow-diagram.html",
+  "specification": {
+    "sha256": "a6108ab46deb7bd1cca71782493a45c3e2560063c188c3bff2b1a5327e043ddc",
+    "bytes": 7089
+  },
+  "artifact": {
+    "sha256": "219fabde4b5b1c13c83f716d4bdf6ec766e516861ec45df66107004aacd30036",
+    "bytes": 852156
+  }
+}

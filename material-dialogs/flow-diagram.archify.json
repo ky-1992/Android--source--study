@@ -1,0 +1,206 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Material Dialogs 创建、显示与回调流程",
+    "subtitle": "构造时由 DialogBehavior 生成根布局，链式方法填充三段式子视图，show 后按钮点击经 WhichButton 分发到监听器。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/16-material-dialogs/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/afollestad/material-dialogs",
+      "provider": "github",
+      "revision": "709cfee9b45257af7ab4c428e4850bee38a075e7"
+    }
+  },
+  "lanes": [
+    { "id": "caller", "label": "调用方" },
+    { "id": "dialog", "label": "MaterialDialog" },
+    { "id": "behavior", "label": "DialogBehavior" },
+    { "id": "layout", "label": "布局" },
+    { "id": "callback", "label": "回调" }
+  ],
+  "phases": [
+    { "id": "build", "label": "构建", "fromCol": 0, "toCol": 1 },
+    { "id": "inflate", "label": "布局装配", "fromCol": 2, "toCol": 2 },
+    { "id": "show", "label": "显示", "fromCol": 3, "toCol": 3 },
+    { "id": "interact", "label": "交互", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "create",
+    "init",
+    "create_view",
+    "layout_inflate",
+    "fill_content",
+    "show",
+    "post_show",
+    "button_click",
+    "dispatch"
+  ],
+  "nodes": [
+    {
+      "id": "create",
+      "lane": "caller",
+      "col": 0,
+      "type": "external",
+      "label": "创建对话框",
+      "sublabel": "new MaterialDialog",
+      "width": 152,
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/MaterialDialog.kt", "line": 56, "end_line": 59 }
+      ]
+    },
+    {
+      "id": "init",
+      "lane": "dialog",
+      "col": 1,
+      "type": "frontend",
+      "label": "初始化",
+      "sublabel": "init 块",
+      "width": 146,
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/MaterialDialog.kt", "line": 104, "end_line": 121 }
+      ]
+    },
+    {
+      "id": "create_view",
+      "lane": "behavior",
+      "col": 1,
+      "type": "backend",
+      "label": "生成根布局",
+      "sublabel": "createView",
+      "width": 150,
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/DialogBehavior.kt", "line": 92, "end_line": 103 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/DialogBehavior.kt", "line": 105, "end_line": 107 }
+      ]
+    },
+    {
+      "id": "layout_inflate",
+      "lane": "layout",
+      "col": 2,
+      "type": "backend",
+      "label": "解析子布局",
+      "sublabel": "三段式",
+      "width": 146,
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/main/DialogLayout.kt", "line": 94, "end_line": 104 }
+      ]
+    },
+    {
+      "id": "fill_content",
+      "lane": "layout",
+      "col": 3,
+      "type": "backend",
+      "label": "填充内容",
+      "sublabel": "setMessage",
+      "width": 146,
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/MaterialDialog.kt", "line": 167, "end_line": 180 },
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/message/DialogContentLayout.kt", "line": 75, "end_line": 97 }
+      ]
+    },
+    {
+      "id": "show",
+      "lane": "dialog",
+      "col": 3,
+      "type": "backend",
+      "label": "显示窗口",
+      "sublabel": "show()",
+      "width": 144,
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/MaterialDialog.kt", "line": 353, "end_line": 359 }
+      ]
+    },
+    {
+      "id": "post_show",
+      "lane": "behavior",
+      "col": 3,
+      "type": "backend",
+      "label": "窗口后处理",
+      "sublabel": "onPostShow",
+      "width": 150,
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/DialogBehavior.kt", "line": 161, "end_line": 171 }
+      ]
+    },
+    {
+      "id": "button_click",
+      "lane": "layout",
+      "col": 4,
+      "type": "frontend",
+      "label": "按钮点击",
+      "sublabel": "setOnClick",
+      "width": 146,
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/internal/button/DialogActionButtonLayout.kt", "line": 73, "end_line": 86 }
+      ]
+    },
+    {
+      "id": "dispatch",
+      "lane": "callback",
+      "col": 4,
+      "type": "backend",
+      "label": "分发动作",
+      "sublabel": "WhichButton",
+      "width": 148,
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/MaterialDialog.kt", "line": 403, "end_line": 416 }
+      ]
+    },
+    {
+      "id": "listeners",
+      "lane": "caller",
+      "col": 4,
+      "type": "external",
+      "label": "执行回调",
+      "sublabel": "invokeAll",
+      "width": 146,
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/callbacks/DialogCallbackExt.kt", "line": 66, "end_line": 70 }
+      ]
+    },
+    {
+      "id": "auto_dismiss",
+      "lane": "dialog",
+      "col": 4,
+      "type": "backend",
+      "label": "自动关闭",
+      "sublabel": "dismiss",
+      "width": 144,
+      "sources": [
+        { "path": "core/src/main/java/com/afollestad/materialdialogs/MaterialDialog.kt", "line": 397, "end_line": 401 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_create_init", "from": "create", "to": "init", "label": "构造" },
+    { "id": "e_init_view", "from": "init", "to": "create_view", "label": "取策略" },
+    { "id": "e_view_layout", "from": "create_view", "to": "layout_inflate", "label": "setContentView" },
+    { "id": "e_layout_content", "from": "layout_inflate", "to": "fill_content", "label": "title/message" },
+    { "id": "e_content_show", "from": "fill_content", "to": "show", "label": "配置完成" },
+    { "id": "e_show_post", "from": "show", "to": "post_show", "label": "onPostShow" },
+    { "id": "e_post_click", "from": "post_show", "to": "button_click", "label": "用户点击" },
+    { "id": "e_click_dispatch", "from": "button_click", "to": "dispatch", "label": "onActionButtonClicked" },
+    { "id": "e_dispatch_listeners", "from": "dispatch", "to": "listeners", "label": "invokeAll" },
+    { "id": "e_dispatch_dismiss", "from": "dispatch", "to": "auto_dismiss", "label": "autoDismiss", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "没有 Builder 的构建路径",
+      "items": [
+        "3.x 里 MaterialDialog 自身就是配置入口，title/message/positiveButton 都返回 this 供链式调用",
+        "init 块中 dialogBehavior.createView 负责 inflate 根布局，再由 getDialogLayout 强转为 DialogLayout"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "按钮回调顺序",
+      "items": [
+        "DialogActionButtonLayout 用 INDEX_POSITIVE/NEGATIVE/NEUTRAL 给三个按钮绑定同一个分发入口",
+        "onActionButtonClicked 先执行本类监听器，再通知列表适配器，最后按 autoDismissEnabled 决定是否 dismiss"
+      ]
+    }
+  ]
+}
