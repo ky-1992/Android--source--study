@@ -1,0 +1,173 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "UltimateRecyclerView 下拉刷新与加载更多流程",
+    "subtitle": "setAdapter 接管监听与占位视图；滚动时 scroll_load_more_detection 判断触底，交给适配器的 loading view 与 Footer；下拉手势由 VerticalSwipeRefreshLayout 转给宿主回调。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/46-UItimateRecyclerView/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/cymcsg/UltimateRecyclerView",
+      "provider": "github",
+      "revision": "b05147d16dd2bfd9f4de4ebe0fdfc4617fb4e857"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "宿主调用" },
+    { "id": "container", "label": "UltimateRecyclerView" },
+    { "id": "adapter", "label": "适配器" },
+    { "id": "refresh", "label": "刷新控件" }
+  ],
+  "phases": [
+    { "id": "init", "label": "装配", "fromCol": 0, "toCol": 1 },
+    { "id": "detect", "label": "滚动检测", "fromCol": 2, "toCol": 3 },
+    { "id": "load", "label": "加载回调", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "n_init",
+    "n_bind",
+    "n_scroll",
+    "n_edge",
+    "n_loading",
+    "n_footer"
+  ],
+  "nodes": [
+    {
+      "id": "n_set",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "注册监听",
+      "sublabel": "setOnLoadMore",
+      "width": 146,
+      "sources": [
+        { "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerView.java", "line": 755, "end_line": 757 }
+      ]
+    },
+    {
+      "id": "n_init",
+      "lane": "container",
+      "col": 0,
+      "type": "backend",
+      "label": "装配容器",
+      "sublabel": "initViews",
+      "width": 152,
+      "sources": [
+        { "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerView.java", "line": 182, "end_line": 217 }
+      ]
+    },
+    {
+      "id": "n_bind",
+      "lane": "container",
+      "col": 1,
+      "type": "backend",
+      "label": "绑定适配器",
+      "sublabel": "setAdapter",
+      "width": 154,
+      "sources": [
+        { "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerView.java", "line": 667, "end_line": 670 },
+        { "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerView.java", "line": 784, "end_line": 845 }
+      ]
+    },
+    {
+      "id": "n_swipe",
+      "lane": "refresh",
+      "col": 1,
+      "type": "frontend",
+      "label": "下拉手势",
+      "sublabel": "onIntercept",
+      "width": 146,
+      "sources": [
+        { "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/ui/VerticalSwipeRefreshLayout.java", "line": 20, "end_line": 38 }
+      ]
+    },
+    {
+      "id": "n_scroll",
+      "lane": "container",
+      "col": 2,
+      "type": "backend",
+      "label": "滚动回调",
+      "sublabel": "onScrolled",
+      "width": 150,
+      "sources": [
+        { "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerView.java", "line": 486, "end_line": 506 }
+      ]
+    },
+    {
+      "id": "n_refresh",
+      "lane": "refresh",
+      "col": 2,
+      "type": "frontend",
+      "label": "刷新回调",
+      "sublabel": "onRefresh",
+      "width": 148,
+      "sources": [
+        { "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerView.java", "line": 724, "end_line": 739 }
+      ]
+    },
+    {
+      "id": "n_edge",
+      "lane": "container",
+      "col": 3,
+      "type": "backend",
+      "label": "触底判定",
+      "sublabel": "bottomEdgeHit",
+      "width": 154,
+      "sources": [
+        { "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerView.java", "line": 463, "end_line": 483 }
+      ]
+    },
+    {
+      "id": "n_loading",
+      "lane": "adapter",
+      "col": 3,
+      "type": "messagebus",
+      "label": "加载视图入队",
+      "sublabel": "internalExecute",
+      "width": 150,
+      "sources": [
+        { "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateViewAdapter.java", "line": 125, "end_line": 131 }
+      ]
+    },
+    {
+      "id": "n_footer",
+      "lane": "adapter",
+      "col": 4,
+      "type": "database",
+      "label": "Footer 复用",
+      "sublabel": "onCreateVH",
+      "width": 148,
+      "sources": [
+        { "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateViewAdapter.java", "line": 169, "end_line": 194 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_set_bind", "from": "n_set", "to": "n_bind", "label": "监听注入" },
+    { "id": "e_init_bind", "from": "n_init", "to": "n_bind", "label": "装载列表" },
+    { "id": "e_bind_scroll", "from": "n_bind", "to": "n_scroll", "label": "滚动事件" },
+    { "id": "e_swipe_refresh", "from": "n_swipe", "to": "n_refresh", "label": "下拉", "variant": "dashed", "role": "branch" },
+    { "id": "e_scroll_edge", "from": "n_scroll", "to": "n_edge", "label": "位置计算" },
+    { "id": "e_edge_loading", "from": "n_edge", "to": "n_loading", "label": "auto load" },
+    { "id": "e_loading_footer", "from": "n_loading", "to": "n_footer", "label": "notify" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "触底判定",
+      "items": [
+        "scroll_load_more_detection 先按 Grid/StaggeredGrid/Linear 三种 LayoutManager 取首个与最后可见位置",
+        "bottomEdgeHit 的条件是 (总数 - 可见数) <= 首个可见位置，命中后只触发一次 loadMore"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Footer 与刷新",
+      "items": [
+        "加载更多视图作为 FOOTER 类型复用，数量为 0 时先隐藏；enableLoadMore 通过 Handler 延迟生效",
+        "VerticalSwipeRefreshLayout 在水平位移超过 touchSlop 时放弃拦截，避免和横向滑动冲突"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,620 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "UltimateRecyclerView 核心类型结构",
+    "subtitle": "UltimateRecyclerView 在 FrameLayout 内组合 RecyclerView 与 VerticalSwipeRefreshLayout，滚动位置交给 RecyclerViewPositionHelper，适配器体系负责 Header/Footer 与加载更多。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/46-UItimateRecyclerView/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/cymcsg/UltimateRecyclerView",
+      "provider": "github",
+      "revision": "b05147d16dd2bfd9f4de4ebe0fdfc4617fb4e857"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "custom_recycler",
+      "label": "CustomUltimateRecyclerview",
+      "kind": "class",
+      "sublabel": "换成 PtrFrameLayout 刷新",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mPtrFrameLayout",
+          "type": "PtrFrameLayout",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "initViews",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setCustomSwipeToRefresh",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/CustomUltimateRecyclerview.java",
+          "line": 17,
+          "end_line": 19
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/CustomUltimateRecyclerview.java",
+          "line": 33,
+          "end_line": 70
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/CustomUltimateRecyclerview.java",
+          "line": 72,
+          "end_line": 80
+        }
+      ]
+    },
+    {
+      "id": "vertical_swipe_refresh",
+      "label": "VerticalSwipeRefreshLayout",
+      "kind": "class",
+      "sublabel": "只拦下拉手势的刷新层",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mTouchSlop",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mPrevX",
+          "type": "float",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onInterceptTouchEvent",
+          "parameters": "event: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "onMeasure",
+          "parameters": "widthMeasureSpec: int, heightMeasureSpec: int",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/ui/VerticalSwipeRefreshLayout.java",
+          "line": 10,
+          "end_line": 18
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/ui/VerticalSwipeRefreshLayout.java",
+          "line": 20,
+          "end_line": 38
+        }
+      ]
+    },
+    {
+      "id": "swipeable_recycler",
+      "label": "SwipeableUltimateRecyclerview",
+      "kind": "class",
+      "sublabel": "RecyclerView 换成 SwipeListView",
+      "row": 0,
+      "col": 2,
+      "methods": [
+        {
+          "name": "initViews",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setSwipeListViewListener",
+          "parameters": "swipeListViewListener: SwipeListViewListener",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/SwipeableUltimateRecyclerview.java",
+          "line": 17,
+          "end_line": 30
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/SwipeableUltimateRecyclerview.java",
+          "line": 32,
+          "end_line": 72
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/SwipeableUltimateRecyclerview.java",
+          "line": 74,
+          "end_line": 76
+        }
+      ]
+    },
+    {
+      "id": "ultimate_view_adapter",
+      "label": "UltimateViewAdapter",
+      "kind": "abstract",
+      "sublabel": "带 Header/Footer 的适配器基类",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "customHeaderView",
+          "type": "UltimateRecyclerView.CustomRelativeWrapper",
+          "visibility": "protected"
+        },
+        {
+          "name": "customLoadMoreView",
+          "type": "View",
+          "visibility": "protected"
+        },
+        {
+          "name": "enabled_custom_load_more_view",
+          "type": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "mEmptyViewPolicy",
+          "type": "int",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onCreateViewHolder",
+          "parameters": "parent: ViewGroup, viewType: int",
+          "returns": "VH",
+          "visibility": "public"
+        },
+        {
+          "name": "getItemViewType",
+          "parameters": "position: int",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "enableLoadMore",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "internalExecuteLoadingView",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateViewAdapter.java",
+          "line": 24,
+          "end_line": 42
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateViewAdapter.java",
+          "line": 125,
+          "end_line": 131
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateViewAdapter.java",
+          "line": 169,
+          "end_line": 194
+        }
+      ]
+    },
+    {
+      "id": "ultimate_recycler_view",
+      "label": "UltimateRecyclerView",
+      "kind": "class",
+      "sublabel": "组合 RecyclerView 与刷新层",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mRecyclerView",
+          "type": "RecyclerView",
+          "visibility": "public"
+        },
+        {
+          "name": "mSwipeRefreshLayout",
+          "type": "VerticalSwipeRefreshLayout",
+          "visibility": "public"
+        },
+        {
+          "name": "mAdapter",
+          "type": "UltimateViewAdapter",
+          "visibility": "private"
+        },
+        {
+          "name": "onLoadMoreListener",
+          "type": "OnLoadMoreListener",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "initViews",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setAdapter",
+          "parameters": "adapter: UltimateViewAdapter",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setDefaultOnRefreshListener",
+          "parameters": "listener: SwipeRefreshLayout.OnRefreshListener",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setOnLoadMoreListener",
+          "parameters": "onLoadMoreListener: OnLoadMoreListener",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "scroll_load_more_detection",
+          "parameters": "recyclerView: RecyclerView",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerView.java",
+          "line": 62,
+          "end_line": 62
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerView.java",
+          "line": 78,
+          "end_line": 92
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerView.java",
+          "line": 182,
+          "end_line": 217
+        }
+      ]
+    },
+    {
+      "id": "scrollable",
+      "label": "Scrollable",
+      "kind": "interface",
+      "sublabel": "可观察滚动的公共协议",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        {
+          "name": "setScrollViewCallbacks",
+          "parameters": "listener: ObservableScrollViewCallbacks",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "scrollVerticallyTo",
+          "parameters": "y: int",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getCurrentScrollY",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "setTouchInterceptionViewGroup",
+          "parameters": "viewGroup: ViewGroup",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/Scrollable.java",
+          "line": 10,
+          "end_line": 42
+        }
+      ]
+    },
+    {
+      "id": "position_helper",
+      "label": "RecyclerViewPositionHelper",
+      "kind": "class",
+      "sublabel": "任意 LayoutManager 的定位",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "recyclerView",
+          "type": "RecyclerView",
+          "visibility": "package"
+        },
+        {
+          "name": "layoutManager",
+          "type": "RecyclerView.LayoutManager",
+          "visibility": "package"
+        }
+      ],
+      "methods": [
+        {
+          "name": "createHelper",
+          "parameters": "recyclerView: RecyclerView",
+          "returns": "RecyclerViewPositionHelper",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "findFirstVisibleItemPosition",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "findLastVisibleItemPosition",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/uiUtils/RecyclerViewPositionHelper.java",
+          "line": 15,
+          "end_line": 40
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/uiUtils/RecyclerViewPositionHelper.java",
+          "line": 49,
+          "end_line": 76
+        }
+      ]
+    },
+    {
+      "id": "normal_adapter",
+      "label": "NormalUltimateViewAdapter",
+      "kind": "abstract",
+      "sublabel": "普通条目适配器",
+      "row": 3,
+      "col": 0,
+      "methods": [
+        {
+          "name": "onCreateViewHolder",
+          "parameters": "parent: ViewGroup, viewType: int",
+          "returns": "UltimateRecyclerviewViewHolder",
+          "visibility": "public"
+        },
+        {
+          "name": "getItemViewType",
+          "parameters": "position: int",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getItemCount",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/NormalUltimateViewAdapter.java",
+          "line": 20,
+          "end_line": 24
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/NormalUltimateViewAdapter.java",
+          "line": 42,
+          "end_line": 68
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/NormalUltimateViewAdapter.java",
+          "line": 96,
+          "end_line": 123
+        }
+      ]
+    },
+    {
+      "id": "holder",
+      "label": "UltimateRecyclerviewViewHolder",
+      "kind": "class",
+      "sublabel": "带滑动控件的 ViewHolder",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "swipeLayout",
+          "type": "SwipeLayout",
+          "visibility": "public"
+        },
+        {
+          "name": "position",
+          "type": "int",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onBindView",
+          "parameters": "object: Object",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "findViewByIdEfficient",
+          "parameters": "id: int",
+          "returns": "T",
+          "visibility": "public"
+        },
+        {
+          "name": "onItemSelected",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerviewViewHolder.java",
+          "line": 17,
+          "end_line": 41
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerviewViewHolder.java",
+          "line": 42,
+          "end_line": 53
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/UltimateRecyclerviewViewHolder.java",
+          "line": 150,
+          "end_line": 163
+        }
+      ]
+    },
+    {
+      "id": "swipe_adapter",
+      "label": "SwipeableUltimateViewAdapter",
+      "kind": "abstract",
+      "sublabel": "带侧滑菜单的适配器",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mItemManger",
+          "type": "SwipeItemManagerImpl",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "withBindHolder",
+          "parameters": "holder, data, position",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onBindAdViewHolder",
+          "parameters": "holder: RecyclerView.ViewHolder, pos: int",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/SwipeableUltimateViewAdapter.java",
+          "line": 16,
+          "end_line": 31
+        },
+        {
+          "path": "UltimateRecyclerView/ultimaterecyclerview/src/main/java/com/marshalchen/ultimaterecyclerview/SwipeableUltimateViewAdapter.java",
+          "line": 37,
+          "end_line": 45
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "custom_extends",
+      "from": "custom_recycler",
+      "to": "ultimate_recycler_view",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "swipeable_extends",
+      "from": "swipeable_recycler",
+      "to": "ultimate_recycler_view",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "recycler_holds_refresh",
+      "from": "ultimate_recycler_view",
+      "to": "vertical_swipe_refresh",
+      "kind": "composition"
+    },
+    {
+      "id": "recycler_holds_adapter",
+      "from": "ultimate_recycler_view",
+      "to": "ultimate_view_adapter",
+      "kind": "aggregation",
+      "label": "持有 mAdapter"
+    },
+    {
+      "id": "recycler_uses_helper",
+      "from": "ultimate_recycler_view",
+      "to": "position_helper",
+      "kind": "dependency",
+      "label": "定位可见项"
+    },
+    {
+      "id": "recycler_implements_scrollable",
+      "from": "ultimate_recycler_view",
+      "to": "scrollable",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "normal_uses_holder",
+      "from": "normal_adapter",
+      "to": "holder",
+      "kind": "dependency",
+      "label": "复用 Holder"
+    },
+    {
+      "id": "swipe_uses_holder",
+      "from": "swipe_adapter",
+      "to": "holder",
+      "kind": "dependency",
+      "label": "绑定 Holder"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "三种容器变体",
+      "items": [
+        "UltimateRecyclerView 默认布局同时内嵌 RecyclerView 与 VerticalSwipeRefreshLayout",
+        "CustomUltimateRecyclerview 改用 PtrFrameLayout 刷新；SwipeableUltimateRecyclerview 把 RecyclerView 换成 SwipeListView"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "适配器附加位",
+      "items": [
+        "VIEW_TYPES 固定了 NORMAL/HEADER/FOOTER/NOVIEW/ADVIEW/CUSTOMVIEW/SECTION 七种视图位",
+        "getItemCount 在业务数量上叠加 header 与 load-more footer 的占位"
+      ]
+    }
+  ]
+}
