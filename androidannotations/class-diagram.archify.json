@@ -1,0 +1,326 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "AndroidAnnotations 处理器核心类型",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/18-androidannotations/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/androidannotations/androidannotations",
+      "provider": "github",
+      "revision": "0d24f1b64dd6b4c27d9a77d3b771a129a59b5b4c"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "processor",
+      "label": "AndroidAnnotationProcessor",
+      "kind": "class",
+      "sublabel": "编译期入口：AbstractProcessor 实现",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        {
+          "name": "init",
+          "parameters": "ProcessingEnvironment",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "process",
+          "parameters": "Set<TypeElement>, RoundEnvironment",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "getSupportedAnnotationTypes",
+          "returns": "Set<String>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidAnnotations/androidannotations-core/androidannotations/src/main/java/org/androidannotations/internal/AndroidAnnotationProcessor.java",
+          "line": 63,
+          "end_line": 120
+        }
+      ]
+    },
+    {
+      "id": "env",
+      "label": "AndroidAnnotationsEnvironment",
+      "kind": "interface",
+      "sublabel": "处理器运行环境契约",
+      "row": 0,
+      "col": 1,
+      "methods": [
+        {
+          "name": "getSupportedAnnotationTypes",
+          "returns": "Set<String>",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getProcessingEnvironment",
+          "returns": "ProcessingEnvironment",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidAnnotations/androidannotations-core/androidannotations/src/main/java/org/androidannotations/AndroidAnnotationsEnvironment.java",
+          "line": 39,
+          "end_line": 60
+        }
+      ]
+    },
+    {
+      "id": "env_impl",
+      "label": "InternalAndroidAnnotationsEnvironment",
+      "kind": "class",
+      "sublabel": "环境实现：rClass / manifest / 插件",
+      "row": 0,
+      "col": 2,
+      "methods": [
+        {
+          "name": "setPlugins",
+          "parameters": "List<AndroidAnnotationsPlugin>",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setProcessHolder",
+          "parameters": "ProcessHolder",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidAnnotations/androidannotations-core/androidannotations/src/main/java/org/androidannotations/internal/InternalAndroidAnnotationsEnvironment.java",
+          "line": 41,
+          "end_line": 100
+        }
+      ]
+    },
+    {
+      "id": "extractor",
+      "label": "ModelExtractor",
+      "kind": "class",
+      "sublabel": "从轮次环境提取注解模型",
+      "row": 1,
+      "col": 0,
+      "methods": [
+        {
+          "name": "extract",
+          "parameters": "Set<TypeElement>, Set<String>, RoundEnvironment",
+          "returns": "AnnotationElementsHolder",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidAnnotations/androidannotations-core/androidannotations/src/main/java/org/androidannotations/internal/model/ModelExtractor.java",
+          "line": 33,
+          "end_line": 60
+        }
+      ]
+    },
+    {
+      "id": "handlers",
+      "label": "AnnotationHandlers",
+      "kind": "class",
+      "sublabel": "处理器注册表：按注解分发",
+      "row": 1,
+      "col": 1,
+      "methods": [
+        {
+          "name": "add",
+          "parameters": "AnnotationHandler<?>",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getGenerating",
+          "returns": "List<GeneratingAnnotationHandler<?>>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidAnnotations/androidannotations-core/androidannotations/src/main/java/org/androidannotations/internal/AnnotationHandlers.java",
+          "line": 29,
+          "end_line": 82
+        }
+      ]
+    },
+    {
+      "id": "handler_iface",
+      "label": "AnnotationHandler",
+      "kind": "interface",
+      "sublabel": "单个注解的处理契约",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        {
+          "name": "process",
+          "parameters": "Element",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getTarget",
+          "returns": "Target",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidAnnotations/androidannotations-core/androidannotations/src/main/java/org/androidannotations/handler/AnnotationHandler.java",
+          "line": 1,
+          "end_line": 30
+        }
+      ]
+    },
+    {
+      "id": "holder",
+      "label": "AnnotationElementsHolder",
+      "kind": "class",
+      "sublabel": "按注解名分组的元素集合",
+      "row": 2,
+      "col": 1,
+      "methods": [
+        {
+          "name": "putRootAnnotatedElements",
+          "parameters": "String, Set<Element>",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getAllElements",
+          "returns": "Set<Element>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidAnnotations/androidannotations-core/androidannotations/src/main/java/org/androidannotations/internal/model/AnnotationElementsHolder.java",
+          "line": 28,
+          "end_line": 70
+        }
+      ]
+    },
+    {
+      "id": "base_handler",
+      "label": "BaseAnnotationHandler",
+      "kind": "abstract",
+      "sublabel": "Handler 基类：持有环境与 holder",
+      "row": 2,
+      "col": 2,
+      "methods": [
+        {
+          "name": "process",
+          "parameters": "Element",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "validate",
+          "parameters": "Element",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidAnnotations/androidannotations-core/androidannotations/src/main/java/org/androidannotations/handler/BaseAnnotationHandler.java",
+          "line": 37,
+          "end_line": 90
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "p_env",
+      "from": "processor",
+      "to": "env",
+      "kind": "dependency",
+      "label": "持有环境"
+    },
+    {
+      "id": "env_impl_real",
+      "from": "env_impl",
+      "to": "env",
+      "kind": "realization"
+    },
+    {
+      "id": "p_extract",
+      "from": "processor",
+      "to": "extractor",
+      "kind": "dependency",
+      "label": "提取模型"
+    },
+    {
+      "id": "p_handlers",
+      "from": "processor",
+      "to": "handlers",
+      "kind": "dependency",
+      "label": "分发处理"
+    },
+    {
+      "id": "extract_holder",
+      "from": "extractor",
+      "to": "holder",
+      "kind": "dependency",
+      "label": "填充模型"
+    },
+    {
+      "id": "handlers_iface",
+      "from": "handlers",
+      "to": "handler_iface",
+      "kind": "aggregation",
+      "label": "持有"
+    },
+    {
+      "id": "base_real",
+      "from": "base_handler",
+      "to": "handler_iface",
+      "kind": "realization"
+    },
+    {
+      "id": "env_handlers",
+      "from": "env_impl",
+      "to": "handlers",
+      "kind": "dependency",
+      "label": "创建注册表"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "一次注解处理的三阶段",
+      "items": [
+        "ModelExtractor 从 RoundEnvironment 收集被注解元素",
+        "AnnotationHandlers 按注解类型分发给对应 Handler 校验",
+        "GeneratingAnnotationHandler 生成 Xxx_ 子类源码，交给 CodeModelGenerator"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "扩展方式",
+      "items": [
+        "新增注解 = 定义注解 + 实现 AnnotationHandler + 通过插件注册",
+        "环境接口让同一套处理器同时支持 javac 注解处理与服务端独立运行"
+      ]
+    }
+  ]
+}

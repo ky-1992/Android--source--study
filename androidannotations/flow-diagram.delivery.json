@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "dc73eafd-c3e6-416e-a65a-1ea4291b4a53",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/18-androidannotations/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/18-androidannotations/flow-diagram.html",
+  "specification": {
+    "sha256": "3fef8f072a583b5c32c584239fc6dcb13a277c16c29330abe15e5ce3cea81dc0",
+    "bytes": 5685
+  },
+  "artifact": {
+    "sha256": "0cd7ea787f87f3b0f550dacbaf384b031daa77431ab0bba3be4c3bf8493585dc",
+    "bytes": 842832
+  }
+}
