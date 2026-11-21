@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Lottie 动画加载与渲染流程",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/11-lottie-android/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/airbnb/lottie-android",
+      "provider": "github",
+      "revision": "05ea92e90381eb8a8ae06855ea2b74f322bebbec"
+    }
+  },
+  "lanes": [
+    { "id": "host", "label": "宿主视图" },
+    { "id": "parse", "label": "解析与缓存" },
+    { "id": "render", "label": "渲染层" },
+    { "id": "clock", "label": "动画驱动" }
+  ],
+  "phases": [
+    { "id": "load", "label": "加载解析", "fromCol": 0, "toCol": 3, "variant": "default" },
+    { "id": "draw", "label": "逐帧渲染", "fromCol": 4, "toCol": 4, "variant": "emphasis" }
+  ],
+  "mainPath": ["view", "factory", "parser", "composition", "drawable", "animator", "layer"],
+  "nodes": [
+    { "id": "view", "lane": "host", "col": 0, "type": "frontend", "label": "LottieAnimationView", "sublabel": "setAnimation", "width": 150, "sources": [{ "path": "lottie/src/main/java/com/airbnb/lottie/LottieAnimationView.java", "line": 660, "end_line": 716 }] },
+    { "id": "factory", "lane": "parse", "col": 1, "type": "backend", "label": "LottieCompositionFactory", "sublabel": "fromRawRes / fromJson", "width": 160, "sources": [{ "path": "lottie/src/main/java/com/airbnb/lottie/LottieCompositionFactory.java", "line": 61, "end_line": 79 }] },
+    { "id": "parser", "lane": "parse", "col": 2, "type": "backend", "label": "MoshiParser", "sublabel": "json → 图层树", "width": 140, "sources": [{ "path": "lottie/src/main/java/com/airbnb/lottie/parser/LottieCompositionMoshiParser.java", "line": 25, "end_line": 100 }] },
+    { "id": "composition", "lane": "parse", "col": 3, "type": "database", "label": "LottieComposition", "sublabel": "帧率 / 时长 / 图层", "width": 150, "sources": [{ "path": "lottie/src/main/java/com/airbnb/lottie/LottieComposition.java", "line": 43, "end_line": 98 }] },
+    { "id": "drawable", "lane": "render", "col": 3, "type": "backend", "label": "LottieDrawable", "sublabel": "setComposition / draw", "width": 150, "sources": [{ "path": "lottie/src/main/java/com/airbnb/lottie/LottieDrawable.java", "line": 423, "end_line": 470 }] },
+    { "id": "animator", "lane": "clock", "col": 4, "type": "backend", "label": "LottieValueAnimator", "sublabel": "帧时间轴", "width": 150, "sources": [{ "path": "lottie/src/main/java/com/airbnb/lottie/utils/LottieValueAnimator.java", "line": 87, "end_line": 130 }] },
+    { "id": "layer", "lane": "render", "col": 4, "type": "backend", "label": "CompositionLayer", "sublabel": "逐层绘制", "width": 150, "sources": [{ "path": "lottie/src/main/java/com/airbnb/lottie/model/layer/CompositionLayer.java", "line": 114, "end_line": 174 }] },
+    { "id": "cache", "lane": "parse", "col": 4, "type": "database", "label": "LottieResult 缓存", "sublabel": "同 key 复用", "width": 150, "sources": [{ "path": "lottie/src/main/java/com/airbnb/lottie/LottieResult.java", "line": 11, "end_line": 30 }] }
+  ],
+  "edges": [
+    { "id": "e1", "from": "view", "to": "factory", "label": "加载动画资源", "variant": "emphasis" },
+    { "id": "e2", "from": "factory", "to": "parser", "label": "解析 json", "variant": "emphasis" },
+    { "id": "e3", "from": "parser", "to": "composition", "label": "构建图层树", "variant": "emphasis" },
+    { "id": "e4", "from": "factory", "to": "cache", "label": "结果缓存", "variant": "dashed", "role": "branch" },
+    { "id": "e5", "from": "composition", "to": "drawable", "label": "setComposition" },
+    { "id": "e6", "from": "drawable", "to": "animator", "label": "启动帧循环" },
+    { "id": "e7", "from": "animator", "to": "layer", "label": "每帧进度", "variant": "emphasis" },
+    { "id": "e8", "from": "layer", "to": "drawable", "label": "invalidate 重绘", "variant": "dashed", "role": "return" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "一句话主线",
+      "items": [
+        "json → Composition（图层树）→ Drawable（可绘制对象）→ Animator 驱动时间轴 → 每帧逐层绘制",
+        "LottieComposition 是纯数据模型，可缓存复用，与 View 生命周期解耦"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "关键机制",
+      "items": [
+        "图层树按 json 的 layers 递归构建，每个 BaseLayer 负责自身属性动画",
+        "KeyPath 用于按路径定位属性（如给某个图层单独设进度/颜色）"
+      ]
+    }
+  ]
+}

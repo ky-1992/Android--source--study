@@ -1,0 +1,911 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Lottie-android 6.7 核心类型结构",
+    "subtitle": "LottieCompositionFactory 解析 JSON 产出 LottieComposition；LottieDrawable 持有动画器与 CompositionLayer，按帧把图层树画到 Canvas。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/11-lottie-android/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/airbnb/lottie-android",
+      "provider": "github",
+      "revision": "05ea92e90381eb8a8ae06855ea2b74f322bebbec"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "lottie_composition_factory",
+      "label": "LottieCompositionFactory",
+      "kind": "class",
+      "sublabel": "多种来源的解析入口",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "taskCache",
+          "type": "Map<String, LottieTask<LottieComposition>>",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "ZIP_MAGIC",
+          "type": "byte[]",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "GZIP_MAGIC",
+          "type": "byte[]",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "fromJsonInputStream",
+          "parameters": "stream: InputStream, cacheKey: String",
+          "returns": "LottieTask<LottieComposition>",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "fromJsonString",
+          "parameters": "json: String, cacheKey: String",
+          "returns": "LottieTask<LottieComposition>",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "fromAsset",
+          "parameters": "context: Context, fileName: String",
+          "returns": "LottieTask<LottieComposition>",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "fromRawRes",
+          "parameters": "context: Context, rawRes: int",
+          "returns": "LottieTask<LottieComposition>",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "fromJsonReaderSyncInternal",
+          "parameters": "reader: JsonReader, cacheKey: String, close: boolean",
+          "returns": "LottieResult<LottieComposition>",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieCompositionFactory.java",
+          "line": 61,
+          "end_line": 79
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieCompositionFactory.java",
+          "line": 434,
+          "end_line": 441
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieCompositionFactory.java",
+          "line": 512,
+          "end_line": 536
+        }
+      ]
+    },
+    {
+      "id": "lottie_composition",
+      "label": "LottieComposition",
+      "kind": "class",
+      "sublabel": "解析后的动画数据模型",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "precomps",
+          "type": "Map<String, List<Layer>>",
+          "visibility": "private"
+        },
+        {
+          "name": "images",
+          "type": "Map<String, LottieImageAsset>",
+          "visibility": "private"
+        },
+        {
+          "name": "layerMap",
+          "type": "LongSparseArray<Layer>",
+          "visibility": "private"
+        },
+        {
+          "name": "layers",
+          "type": "List<Layer>",
+          "visibility": "private"
+        },
+        {
+          "name": "bounds",
+          "type": "Rect",
+          "visibility": "private"
+        },
+        {
+          "name": "startFrame",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "endFrame",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "frameRate",
+          "type": "float",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "init",
+          "parameters": "bounds, startFrame, endFrame, frameRate, ...",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getLayers",
+          "parameters": "",
+          "returns": "List<Layer>",
+          "visibility": "public"
+        },
+        {
+          "name": "getDuration",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public"
+        },
+        {
+          "name": "getDurationFrames",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public"
+        },
+        {
+          "name": "layerModelForId",
+          "parameters": "id: long",
+          "returns": "Layer",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieComposition.java",
+          "line": 43,
+          "end_line": 76
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieComposition.java",
+          "line": 78,
+          "end_line": 98
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieComposition.java",
+          "line": 152,
+          "end_line": 180
+        }
+      ]
+    },
+    {
+      "id": "lottie_composition_parser",
+      "label": "LottieCompositionMoshiParser",
+      "kind": "class",
+      "sublabel": "JsonReader 逐字段解析",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "NAMES",
+          "type": "String[]",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "parse",
+          "parameters": "reader: JsonReader",
+          "returns": "LottieComposition",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/parser/LottieCompositionMoshiParser.java",
+          "line": 25,
+          "end_line": 40
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/parser/LottieCompositionMoshiParser.java",
+          "line": 40,
+          "end_line": 100
+        }
+      ]
+    },
+    {
+      "id": "lottie_result",
+      "label": "LottieResult",
+      "kind": "class",
+      "sublabel": "成功值或异常的二选一",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "value",
+          "type": "V",
+          "visibility": "private"
+        },
+        {
+          "name": "exception",
+          "type": "Throwable",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getValue",
+          "parameters": "",
+          "returns": "V",
+          "visibility": "public"
+        },
+        {
+          "name": "getException",
+          "parameters": "",
+          "returns": "Throwable",
+          "visibility": "public"
+        },
+        {
+          "name": "equals",
+          "parameters": "o: Object",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "hashCode",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieResult.java",
+          "line": 11,
+          "end_line": 30
+        }
+      ]
+    },
+    {
+      "id": "lottie_animation_view",
+      "label": "LottieAnimationView",
+      "kind": "class",
+      "sublabel": "带播放控制的宿主 View",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "lottieDrawable",
+          "type": "LottieDrawable",
+          "visibility": "private"
+        },
+        {
+          "name": "animationResId",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "animationName",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "autoPlay",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setAnimation",
+          "parameters": "rawRes: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setAnimation",
+          "parameters": "assetName: String",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setComposition",
+          "parameters": "composition: LottieComposition",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "playAnimation",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setProgress",
+          "parameters": "progress: float",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieAnimationView.java",
+          "line": 65,
+          "end_line": 120
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieAnimationView.java",
+          "line": 660,
+          "end_line": 716
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieAnimationView.java",
+          "line": 486,
+          "end_line": 502
+        }
+      ]
+    },
+    {
+      "id": "lottie_drawable",
+      "label": "LottieDrawable",
+      "kind": "class",
+      "sublabel": "把图层树画到 Canvas",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "composition",
+          "type": "LottieComposition",
+          "visibility": "private"
+        },
+        {
+          "name": "animator",
+          "type": "LottieValueAnimator",
+          "visibility": "private"
+        },
+        {
+          "name": "compositionLayer",
+          "type": "CompositionLayer",
+          "visibility": "private"
+        },
+        {
+          "name": "lazyCompositionTasks",
+          "type": "ArrayList<LazyCompositionTask>",
+          "visibility": "private"
+        },
+        {
+          "name": "renderMode",
+          "type": "RenderMode",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setComposition",
+          "parameters": "composition: LottieComposition",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "draw",
+          "parameters": "canvas: Canvas",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "playAnimation",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setProgress",
+          "parameters": "progress: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setFrame",
+          "parameters": "frame: int",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieDrawable.java",
+          "line": 73,
+          "end_line": 119
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieDrawable.java",
+          "line": 423,
+          "end_line": 470
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/LottieDrawable.java",
+          "line": 731,
+          "end_line": 786
+        }
+      ]
+    },
+    {
+      "id": "lottie_value_animator",
+      "label": "LottieValueAnimator",
+      "kind": "class",
+      "sublabel": "Choreographer 帧驱动",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "composition",
+          "type": "LottieComposition",
+          "visibility": "private"
+        },
+        {
+          "name": "minFrame",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "maxFrame",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "speed",
+          "type": "float",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "doFrame",
+          "parameters": "frameTimeNanos: long",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setFrame",
+          "parameters": "frame: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setMinAndMaxFrames",
+          "parameters": "minFrame: float, maxFrame: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getAnimatedValueAbsolute",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/utils/LottieValueAnimator.java",
+          "line": 18,
+          "end_line": 60
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/utils/LottieValueAnimator.java",
+          "line": 87,
+          "end_line": 130
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/utils/LottieValueAnimator.java",
+          "line": 177,
+          "end_line": 200
+        }
+      ]
+    },
+    {
+      "id": "composition_layer",
+      "label": "CompositionLayer",
+      "kind": "class",
+      "sublabel": "根图层，向下推进进度",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "layers",
+          "type": "List<BaseLayer>",
+          "visibility": "private"
+        },
+        {
+          "name": "progress",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "timeRemapping",
+          "type": "FloatKeyframeAnimation",
+          "visibility": "private"
+        },
+        {
+          "name": "hasMasks",
+          "type": "Boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "hasMatte",
+          "type": "Boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "drawLayer",
+          "parameters": "canvas, parentMatrix, parentAlpha, shadow",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setProgress",
+          "parameters": "progress: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getBounds",
+          "parameters": "outBounds, parentMatrix, applyParents",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "addValueCallback",
+          "parameters": "property: T, callback: LottieValueCallback<T>",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/model/layer/CompositionLayer.java",
+          "line": 27,
+          "end_line": 44
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/model/layer/CompositionLayer.java",
+          "line": 114,
+          "end_line": 174
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/model/layer/CompositionLayer.java",
+          "line": 184,
+          "end_line": 213
+        }
+      ]
+    },
+    {
+      "id": "base_layer",
+      "label": "BaseLayer",
+      "kind": "abstract",
+      "sublabel": "变换、遮罩与绘制模板",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "lottieDrawable",
+          "type": "LottieDrawable",
+          "visibility": "package"
+        },
+        {
+          "name": "layerModel",
+          "type": "Layer",
+          "visibility": "package"
+        },
+        {
+          "name": "mask",
+          "type": "MaskKeyframeAnimation",
+          "visibility": "private"
+        },
+        {
+          "name": "matteLayer",
+          "type": "BaseLayer",
+          "visibility": "private"
+        },
+        {
+          "name": "path",
+          "type": "Path",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "draw",
+          "parameters": "canvas, parentMatrix, parentAlpha, shadow",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "drawLayer",
+          "parameters": "canvas, parentMatrix, parentAlpha, shadow",
+          "returns": "void",
+          "visibility": "package",
+          "abstract": true
+        },
+        {
+          "name": "setProgress",
+          "parameters": "progress: float",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "getBounds",
+          "parameters": "outBounds, parentMatrix, applyParents",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/model/layer/BaseLayer.java",
+          "line": 45,
+          "end_line": 80
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/model/layer/BaseLayer.java",
+          "line": 235,
+          "end_line": 300
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/model/layer/BaseLayer.java",
+          "line": 643,
+          "end_line": 680
+        }
+      ]
+    },
+    {
+      "id": "key_path",
+      "label": "KeyPath",
+      "kind": "class",
+      "sublabel": "按名字定位动画元素",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "COMPOSITION",
+          "type": "KeyPath",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "keys",
+          "type": "List<String>",
+          "visibility": "private"
+        },
+        {
+          "name": "resolvedElement",
+          "type": "KeyPathElement",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "addKey",
+          "parameters": "key: String",
+          "returns": "KeyPath",
+          "visibility": "public"
+        },
+        {
+          "name": "resolve",
+          "parameters": "element: KeyPathElement",
+          "returns": "KeyPath",
+          "visibility": "public"
+        },
+        {
+          "name": "matches",
+          "parameters": "key: String, depth: int",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "equals",
+          "parameters": "o: Object",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/model/KeyPath.java",
+          "line": 46,
+          "end_line": 60
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/model/KeyPath.java",
+          "line": 87,
+          "end_line": 100
+        },
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/model/KeyPath.java",
+          "line": 218,
+          "end_line": 235
+        }
+      ]
+    },
+    {
+      "id": "key_path_element",
+      "label": "KeyPathElement",
+      "kind": "interface",
+      "sublabel": "可被 KeyPath 命中的元素",
+      "row": 4,
+      "col": 1,
+      "methods": [
+        {
+          "name": "resolveKeyPath",
+          "parameters": "keyPath, depth, accumulator, currentPartialKeyPath",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "addValueCallback",
+          "parameters": "property: T, callback: LottieValueCallback<T>",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "lottie/src/main/java/com/airbnb/lottie/model/KeyPathElement.java",
+          "line": 16,
+          "end_line": 41
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "factory_parses_composition",
+      "from": "lottie_composition_factory",
+      "to": "lottie_composition",
+      "kind": "dependency",
+      "label": "产出"
+    },
+    {
+      "id": "factory_uses_parser",
+      "from": "lottie_composition_factory",
+      "to": "lottie_composition_parser",
+      "kind": "dependency",
+      "label": "Moshi 解析"
+    },
+    {
+      "id": "factory_returns_result",
+      "from": "lottie_composition_factory",
+      "to": "lottie_result",
+      "kind": "dependency",
+      "label": "同步结果"
+    },
+    {
+      "id": "parser_builds_composition",
+      "from": "lottie_composition_parser",
+      "to": "lottie_composition",
+      "kind": "dependency",
+      "label": "填充模型"
+    },
+    {
+      "id": "view_owns_drawable",
+      "from": "lottie_animation_view",
+      "to": "lottie_drawable",
+      "kind": "composition",
+      "label": "持有"
+    },
+    {
+      "id": "view_sets_composition",
+      "from": "lottie_animation_view",
+      "to": "lottie_composition",
+      "kind": "dependency",
+      "label": "setComposition"
+    },
+    {
+      "id": "drawable_owns_composition",
+      "from": "lottie_drawable",
+      "to": "lottie_composition",
+      "kind": "composition",
+      "label": "持有"
+    },
+    {
+      "id": "drawable_owns_animator",
+      "from": "lottie_drawable",
+      "to": "lottie_value_animator",
+      "kind": "composition",
+      "label": "持有"
+    },
+    {
+      "id": "drawable_builds_root_layer",
+      "from": "lottie_drawable",
+      "to": "composition_layer",
+      "kind": "dependency",
+      "label": "buildCompositionLayer"
+    },
+    {
+      "id": "drawable_resolves_keypath",
+      "from": "lottie_drawable",
+      "to": "key_path",
+      "kind": "dependency",
+      "label": "resolveKeyPath"
+    },
+    {
+      "id": "animator_drives_frames",
+      "from": "lottie_value_animator",
+      "to": "lottie_composition",
+      "kind": "dependency",
+      "label": "帧范围"
+    },
+    {
+      "id": "composition_layer_extends",
+      "from": "composition_layer",
+      "to": "base_layer",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "base_impl_keypath_element",
+      "from": "base_layer",
+      "to": "key_path_element",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "keypath_resolves_element",
+      "from": "key_path",
+      "to": "key_path_element",
+      "kind": "dependency",
+      "label": "resolve"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "解析链",
+      "items": [
+        "所有 fromXxx 入口最终落到 fromJsonReaderSyncInternal，内部 new LottieComposition 后交给 LottieCompositionMoshiParser.parse",
+        "LottieCompositionFactory.taskCache 按 cacheKey 缓存 LottieTask，避免同一动画并发解析"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "渲染链",
+      "items": [
+        "LottieDrawable.setComposition 只保存模型并 buildCompositionLayer，真正的每帧工作由 Choreographer 驱动的 LottieValueAnimator 发起",
+        "CompositionLayer.setProgress 先做 timeRemapping/timeStretch 换算，再倒序把进度推给每个子 BaseLayer"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "KeyPath 定位",
+      "items": [
+        "KeyPath 用字符串链描述目标（如 Fill / 图层名），resolve 时沿图层树递归匹配",
+        "命中元素实现 KeyPathElement，可用 addValueCallback 直接改某个动画属性，属于运行时动态改参而非改 JSON"
+      ]
+    }
+  ]
+}
