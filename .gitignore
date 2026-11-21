@@ -1,0 +1,4 @@
+.DS_Store
+.archify-*/
+.archify-*.json
+*.tmp
