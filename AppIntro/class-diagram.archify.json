@@ -1,0 +1,620 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "AppIntro 核心类型结构",
+    "subtitle": "AppIntroBase 持有分页控制器与幻灯片列表，翻页前向 SlidePolicy 与权限表问路。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/40-AppIntro/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/AppIntro/AppIntro",
+      "provider": "github",
+      "revision": "ce7d35dafe5689a35831da4a662c06d5f899705a"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "appintrobase",
+      "label": "AppIntroBase",
+      "kind": "abstract",
+      "sublabel": "向导 Activity 基类",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "indicatorController",
+          "type": "IndicatorController?",
+          "visibility": "protected"
+        },
+        {
+          "name": "pagerController",
+          "type": "AppIntroViewPagerController",
+          "visibility": "private"
+        },
+        {
+          "name": "fragments",
+          "type": "MutableList<Fragment>",
+          "visibility": "private"
+        },
+        {
+          "name": "permissionsMap",
+          "type": "HashMap<Int, PermissionWrapper>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "addSlide",
+          "parameters": "fragment: Fragment",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "askForPermissions",
+          "parameters": "permissions: Array<String>, slideNumber: Int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "goToNextSlide",
+          "parameters": "isLastSlide: Boolean",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onCreate",
+          "parameters": "savedInstanceState: Bundle?",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onPostCreate",
+          "parameters": "savedInstanceState: Bundle?",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onCanRequestNextPage",
+          "parameters": "",
+          "returns": "Boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "requestPermissions",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "updateButtonsVisibility",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt",
+          "line": 43,
+          "end_line": 45
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt",
+          "line": 111,
+          "end_line": 122
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt",
+          "line": 388,
+          "end_line": 445
+        }
+      ]
+    },
+    {
+      "id": "appintro",
+      "label": "AppIntro",
+      "kind": "abstract",
+      "sublabel": "文字按钮默认版式",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "layoutId",
+          "type": "Int",
+          "visibility": "protected",
+          "static": false
+        }
+      ],
+      "methods": [
+        {
+          "name": "setBarColor",
+          "parameters": "color: Int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setSkipText",
+          "parameters": "text: CharSequence?",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setDoneTextAppearance",
+          "parameters": "textAppearance: Int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "showSeparator",
+          "parameters": "showSeparator: Boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setBarMargin",
+          "parameters": "setBarMargin: Boolean",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntro.kt",
+          "line": 16,
+          "end_line": 17
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntro.kt",
+          "line": 23,
+          "end_line": 28
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntro.kt",
+          "line": 235,
+          "end_line": 246
+        }
+      ]
+    },
+    {
+      "id": "slide_policy",
+      "label": "SlidePolicy",
+      "kind": "interface",
+      "sublabel": "单屏是否可离开",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "isPolicyRespected",
+          "type": "Boolean",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onUserIllegallyRequestNextPage",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "appintro/src/main/java/com/github/appintro/SlidePolicy.kt",
+          "line": 3,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "viewpager_listener",
+      "label": "AppIntroViewPagerListener",
+      "kind": "interface",
+      "sublabel": "翻页前的问路回调",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        {
+          "name": "onCanRequestNextPage",
+          "parameters": "",
+          "returns": "Boolean",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onIllegallyRequestedNextPage",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onUserRequestedPermissionsDialog",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntroViewPagerListener.kt",
+          "line": 14,
+          "end_line": 20
+        }
+      ]
+    },
+    {
+      "id": "controller",
+      "label": "AppIntroViewPagerController",
+      "kind": "class",
+      "sublabel": "接管 ViewPager2 触摸",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "isFullPagingEnabled",
+          "type": "Boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "isPermissionSlide",
+          "type": "Boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "onNextPageRequestedListener",
+          "type": "AppIntroViewPagerListener?",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "goToNextSlide",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "goToPreviousSlide",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setCurrentViewPagerItem",
+          "parameters": "position: Int, smoothScrool: Boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "addPagerTouchInterceptor",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "handleOnTouchEvent",
+          "parameters": "event: MotionEvent?",
+          "returns": "Boolean",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "appintro/src/main/java/com/github/appintro/internal/AppIntroViewPagerController.kt",
+          "line": 22,
+          "end_line": 28
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/internal/AppIntroViewPagerController.kt",
+          "line": 83,
+          "end_line": 99
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/internal/AppIntroViewPagerController.kt",
+          "line": 218,
+          "end_line": 254
+        }
+      ]
+    },
+    {
+      "id": "permission_wrapper",
+      "label": "PermissionWrapper",
+      "kind": "class",
+      "sublabel": "某屏的权限请求包",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "permissions",
+          "type": "Array<String>",
+          "visibility": "public"
+        },
+        {
+          "name": "position",
+          "type": "Int",
+          "visibility": "public"
+        },
+        {
+          "name": "required",
+          "type": "Boolean",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "equals",
+          "parameters": "other: Any?",
+          "returns": "Boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "hashCode",
+          "parameters": "",
+          "returns": "Int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "appintro/src/main/java/com/github/appintro/internal/PermissionWrapper.kt",
+          "line": 11,
+          "end_line": 15
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/internal/PermissionWrapper.kt",
+          "line": 16,
+          "end_line": 27
+        }
+      ]
+    },
+    {
+      "id": "base_fragment",
+      "label": "AppIntroBaseFragment",
+      "kind": "abstract",
+      "sublabel": "幻灯片 Fragment 基类",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "viewModel",
+          "type": "AppIntroFragmentViewModel",
+          "visibility": "private"
+        },
+        {
+          "name": "defaultBackgroundColorRes",
+          "type": "Int",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onCreate",
+          "parameters": "savedInstanceState: Bundle?",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onCreateView",
+          "parameters": "inflater: LayoutInflater, container: ViewGroup?",
+          "returns": "View?",
+          "visibility": "public"
+        },
+        {
+          "name": "setBackgroundColor",
+          "parameters": "backgroundColor: Int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onSlideSelected",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntroBaseFragment.kt",
+          "line": 21,
+          "end_line": 25
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntroBaseFragment.kt",
+          "line": 44,
+          "end_line": 49
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntroBaseFragment.kt",
+          "line": 89,
+          "end_line": 93
+        }
+      ]
+    },
+    {
+      "id": "appintro_fragment",
+      "label": "AppIntroFragment",
+      "kind": "class",
+      "sublabel": "标题图文的开箱即用页",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "layoutId",
+          "type": "Int",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "createInstance",
+          "parameters": "title: CharSequence?, description: CharSequence?, imageDrawable: Int?",
+          "returns": "AppIntroFragment",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "createInstance",
+          "parameters": "sliderPage: SliderPage",
+          "returns": "AppIntroFragment",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntroFragment.kt",
+          "line": 10,
+          "end_line": 11
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntroFragment.kt",
+          "line": 88,
+          "end_line": 93
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/AppIntroFragment.kt",
+          "line": 140,
+          "end_line": 141
+        }
+      ]
+    },
+    {
+      "id": "color_holder",
+      "label": "SlideBackgroundColorHolder",
+      "kind": "interface",
+      "sublabel": "可参与颜色渐变",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "defaultBackgroundColor",
+          "type": "Int",
+          "visibility": "public"
+        },
+        {
+          "name": "defaultBackgroundColorRes",
+          "type": "Int",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setBackgroundColor",
+          "parameters": "backgroundColor: Int",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "appintro/src/main/java/com/github/appintro/SlideBackgroundColorHolder.kt",
+          "line": 6,
+          "end_line": 9
+        },
+        {
+          "path": "appintro/src/main/java/com/github/appintro/SlideBackgroundColorHolder.kt",
+          "line": 24,
+          "end_line": 36
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "base_realizes_listener",
+      "from": "appintrobase",
+      "to": "viewpager_listener",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "base_uses_policy",
+      "from": "appintrobase",
+      "to": "slide_policy",
+      "kind": "dependency",
+      "label": "isPolicyRespected"
+    },
+    {
+      "id": "base_owns_controller",
+      "from": "appintrobase",
+      "to": "controller",
+      "kind": "composition",
+      "label": "pagerController"
+    },
+    {
+      "id": "controller_calls_listener",
+      "from": "controller",
+      "to": "viewpager_listener",
+      "kind": "association",
+      "label": "onCanRequest"
+    },
+    {
+      "id": "appintro_extends_base",
+      "from": "appintro",
+      "to": "appintrobase",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "base_holds_permissions",
+      "from": "appintrobase",
+      "to": "permission_wrapper",
+      "kind": "aggregation",
+      "label": "permissionsMap"
+    },
+    {
+      "id": "base_holds_fragments",
+      "from": "appintrobase",
+      "to": "base_fragment",
+      "kind": "aggregation",
+      "label": "fragments"
+    },
+    {
+      "id": "base_fragment_realizes_color",
+      "from": "base_fragment",
+      "to": "color_holder",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "fragment_extends_base",
+      "from": "appintro_fragment",
+      "to": "base_fragment",
+      "kind": "inheritance",
+      "label": "继承"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "生命周期锚点",
+      "items": [
+        "onCreate 绑控件、建 PagerAdapter 与分页控制器，并挂上 Back 与按钮监听（L388–L445）",
+        "onPostCreate 初始化指示器、把首个 slide 回调补发出去；无 slide 直接 finish（L447–L474）"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "权限与策略",
+      "items": [
+        "askForPermissions 把 slideNumber 映射成 PermissionWrapper（L167），翻页前先查表",
+        "requestPermissions 先 setSwipeLock(true) 再请求，结果里区分“可再问”与“不再询问”（L639、L690）"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "触摸被接管",
+      "items": [
+        "控制器把 isUserInputEnabled 置 false，改由 GestureOverlayView 收手势再 fakeDrag（L218–L254）",
+        "这样 AppIntroBase 才能在滑动途中拒绝前进，而不是等页面已经换过去"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "0f2e7f7c-ba82-4bc6-9670-8b4acb7ac6f9",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/40-AppIntro/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/40-AppIntro/class-diagram.html",
+  "specification": {
+    "sha256": "1c56dfabe231c8f5f70ead8ad9684ffe03e391c6c50c2ea5554dfda8e9ba6ad2",
+    "bytes": 16307
+  },
+  "artifact": {
+    "sha256": "d133c6e104aca34329aaf08fead34fba669e92be0adfc414ce6049f4f86f17df",
+    "bytes": 893864
+  }
+}

@@ -1,0 +1,189 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "AppIntro 装配与逐屏推进流程",
+    "subtitle": "子类 onCreate 追加幻灯片，基类建控件与分页控制器，点击/滑动时先过策略与权限再前进。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/40-AppIntro/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/AppIntro/AppIntro",
+      "provider": "github",
+      "revision": "ce7d35dafe5689a35831da4a662c06d5f899705a"
+    }
+  },
+  "lanes": [
+    { "id": "host", "label": "宿主应用" },
+    { "id": "base", "label": "AppIntroBase" },
+    { "id": "pager", "label": "分页控制器" },
+    { "id": "sys", "label": "系统权限" }
+  ],
+  "phases": [
+    { "id": "assemble", "label": "装配", "fromCol": 0, "toCol": 1, "variant": "default" },
+    { "id": "advance", "label": "推进", "fromCol": 2, "toCol": 2, "variant": "emphasis" },
+    { "id": "guard", "label": "校验", "fromCol": 3, "toCol": 3, "variant": "security" },
+    { "id": "finish", "label": "收尾", "fromCol": 4, "toCol": 4, "variant": "dashed" }
+  ],
+  "mainPath": [
+    "n_add_slide",
+    "n_on_create",
+    "n_post_create",
+    "n_touch",
+    "n_next_click",
+    "n_policy",
+    "n_permission",
+    "n_page_selected",
+    "n_intro_finished"
+  ],
+  "nodes": [
+    {
+      "id": "n_add_slide",
+      "lane": "host",
+      "col": 0,
+      "type": "external",
+      "label": "子类装配",
+      "sublabel": "addSlide",
+      "width": 148,
+      "sources": [
+        { "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt", "line": 146, "end_line": 157 }
+      ]
+    },
+    {
+      "id": "n_on_create",
+      "lane": "base",
+      "col": 0,
+      "type": "backend",
+      "label": "创建控件",
+      "sublabel": "onCreate",
+      "width": 150,
+      "sources": [
+        { "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt", "line": 388, "end_line": 445 }
+      ]
+    },
+    {
+      "id": "n_post_create",
+      "lane": "base",
+      "col": 1,
+      "type": "backend",
+      "label": "指示器初始化",
+      "sublabel": "onPostCreate",
+      "width": 152,
+      "sources": [
+        { "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt", "line": 447, "end_line": 474 },
+        { "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt", "line": 529, "end_line": 533 }
+      ]
+    },
+    {
+      "id": "n_touch",
+      "lane": "pager",
+      "col": 1,
+      "type": "messagebus",
+      "label": "接管手势",
+      "sublabel": "fakeDrag",
+      "width": 148,
+      "sources": [
+        { "path": "appintro/src/main/java/com/github/appintro/internal/AppIntroViewPagerController.kt", "line": 218, "end_line": 254 }
+      ]
+    },
+    {
+      "id": "n_next_click",
+      "lane": "host",
+      "col": 2,
+      "type": "external",
+      "label": "点击下一步",
+      "sublabel": "next / swipe",
+      "width": 150,
+      "sources": [
+        { "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt", "line": 781, "end_line": 805 },
+        { "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt", "line": 186, "end_line": 195 }
+      ]
+    },
+    {
+      "id": "n_policy",
+      "lane": "base",
+      "col": 2,
+      "type": "backend",
+      "label": "策略校验",
+      "sublabel": "SlidePolicy",
+      "width": 150,
+      "sources": [
+        { "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt", "line": 610, "end_line": 630 }
+      ]
+    },
+    {
+      "id": "n_permission",
+      "lane": "sys",
+      "col": 3,
+      "type": "security",
+      "label": "权限请求",
+      "sublabel": "requestPerms",
+      "width": 150,
+      "sources": [
+        { "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt", "line": 639, "end_line": 649 },
+        { "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt", "line": 654, "end_line": 684 }
+      ]
+    },
+    {
+      "id": "n_page_selected",
+      "lane": "pager",
+      "col": 3,
+      "type": "messagebus",
+      "label": "页面回调",
+      "sublabel": "onPageSelected",
+      "width": 152,
+      "sources": [
+        { "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt", "line": 811, "end_line": 849 }
+      ]
+    },
+    {
+      "id": "n_intro_finished",
+      "lane": "host",
+      "col": 4,
+      "type": "external",
+      "label": "完成回调",
+      "sublabel": "onIntroFinished",
+      "width": 152,
+      "sources": [
+        { "path": "appintro/src/main/java/com/github/appintro/AppIntroBase.kt", "line": 364, "end_line": 369 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_add_create", "from": "n_add_slide", "to": "n_on_create", "label": "super", "role": "main" },
+    { "id": "e_create_post", "from": "n_on_create", "to": "n_post_create", "label": "装配完成", "role": "main" },
+    { "id": "e_post_touch", "from": "n_post_create", "to": "n_touch", "label": "交出控制", "role": "main" },
+    { "id": "e_touch_next", "from": "n_touch", "to": "n_next_click", "label": "用户操作", "role": "main" },
+    { "id": "e_next_policy", "from": "n_next_click", "to": "n_policy", "label": "先校验", "role": "main" },
+    { "id": "e_policy_perm", "from": "n_policy", "to": "n_permission", "label": "该屏要权限", "variant": "security", "role": "main" },
+    { "id": "e_perm_selected", "from": "n_permission", "to": "n_page_selected", "label": "结果回调", "variant": "security", "role": "main" },
+    { "id": "e_selected_finish", "from": "n_page_selected", "to": "n_intro_finished", "label": "最后一屏", "role": "main" },
+    { "id": "e_policy_deny", "from": "n_policy", "to": "n_next_click", "label": "策略未满足", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "装配顺序",
+      "items": [
+        "子类在 onCreate 里 addSlide，基类再在 onPostCreate 用 fragments.size 初始化指示器",
+        "addSlide 在 RTL 下插到队首并 notifyItemInserted(0)，顺序与视觉方向一致"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "为什么用自己的手势层",
+      "items": [
+        "ViewPager2 一旦滑动就没法在中途否决，所以 isUserInputEnabled 置 false，改由 fakeDrag 转发",
+        "策略未满足时 short-circuit 并节流 1 秒才回调 onIllegallyRequestedNextPage"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "权限状态机",
+      "items": [
+        "授予：从 permissionsMap 移除并 goToNextSlide；拒绝：required 才拦，否则也放行",
+        "拒绝后 reCenterCurrentSlide 把 ViewPager 拽回原位，避免半开状态"
+      ]
+    }
+  ]
+}
