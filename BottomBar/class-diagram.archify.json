@@ -1,0 +1,662 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "BottomBar 核心类型结构",
+    "subtitle": "BottomBar 用 TabParser 把 XML 解析成 BottomBarTab；选中切换时由 Tab 自身与 BottomBar 协同完成动画。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/37-BottomBar/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/roughike/BottomBar",
+      "provider": "github",
+      "revision": "885d70e62359d15ed17dfd77a28809702d6ae513"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "tab_parser",
+      "label": "TabParser",
+      "kind": "class",
+      "sublabel": "解析 tabs XML",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "context",
+          "type": "Context",
+          "visibility": "private"
+        },
+        {
+          "name": "defaultTabConfig",
+          "type": "BottomBarTab.Config",
+          "visibility": "private"
+        },
+        {
+          "name": "parser",
+          "type": "XmlResourceParser",
+          "visibility": "private"
+        },
+        {
+          "name": "tabs",
+          "type": "List<BottomBarTab>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "parseTabs",
+          "parameters": "",
+          "returns": "List<BottomBarTab>",
+          "visibility": "public"
+        },
+        {
+          "name": "parseNewTab",
+          "parameters": "parser, containerPosition: int",
+          "returns": "BottomBarTab",
+          "visibility": "private"
+        },
+        {
+          "name": "tabWithDefaults",
+          "parameters": "",
+          "returns": "BottomBarTab",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/TabParser.java",
+          "line": 51,
+          "end_line": 73
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/TabParser.java",
+          "line": 77,
+          "end_line": 96
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/TabParser.java",
+          "line": 99,
+          "end_line": 149
+        }
+      ]
+    },
+    {
+      "id": "tab_config",
+      "label": "Config",
+      "kind": "class",
+      "sublabel": "Tab 外观配置",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "inActiveTabAlpha",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "activeTabColor",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "badgeBackgroundColor",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "titleTypeFace",
+          "type": "Typeface",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "build",
+          "parameters": "",
+          "returns": "Config",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBarTab.java",
+          "line": 643,
+          "end_line": 664
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBarTab.java",
+          "line": 666,
+          "end_line": 725
+        }
+      ]
+    },
+    {
+      "id": "interceptor",
+      "label": "TabSelectionInterceptor",
+      "kind": "interface",
+      "sublabel": "拦截选中切换",
+      "row": 0,
+      "col": 2,
+      "methods": [
+        {
+          "name": "shouldInterceptTabSelection",
+          "parameters": "oldTabId: int, newTabId: int",
+          "returns": "boolean",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/TabSelectionInterceptor.java",
+          "line": 21,
+          "end_line": 33
+        }
+      ]
+    },
+    {
+      "id": "bottom_bar",
+      "label": "BottomBar",
+      "kind": "class",
+      "sublabel": "底部导航容器",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "currentTabs",
+          "type": "BottomBarTab[]",
+          "visibility": "private"
+        },
+        {
+          "name": "currentTabPosition",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "behaviors",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "tabXmlResource",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "activeShiftingItemWidth",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "tabSelectionInterceptor",
+          "type": "TabSelectionInterceptor",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setItems",
+          "parameters": "xmlRes: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "selectTabAtPosition",
+          "parameters": "position: int, animate: boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "handleClick",
+          "parameters": "newTab: BottomBarTab",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "shiftingMagic",
+          "parameters": "oldTab, newTab: BottomBarTab, animate: boolean",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "handleBackgroundColorChange",
+          "parameters": "tab: BottomBarTab, animate: boolean",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBar.java",
+          "line": 55,
+          "end_line": 115
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBar.java",
+          "line": 300,
+          "end_line": 311
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBar.java",
+          "line": 552,
+          "end_line": 567
+        }
+      ]
+    },
+    {
+      "id": "bottom_bar_tab",
+      "label": "BottomBarTab",
+      "kind": "class",
+      "sublabel": "单个导航项",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "type",
+          "type": "Type",
+          "visibility": "private"
+        },
+        {
+          "name": "isActive",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "iconView",
+          "type": "AppCompatImageView",
+          "visibility": "private"
+        },
+        {
+          "name": "titleView",
+          "type": "TextView",
+          "visibility": "private"
+        },
+        {
+          "name": "badge",
+          "type": "BottomBarBadge",
+          "visibility": "package"
+        }
+      ],
+      "methods": [
+        {
+          "name": "prepareLayout",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "select",
+          "parameters": "animate: boolean",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "deselect",
+          "parameters": "animate: boolean",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "updateWidth",
+          "parameters": "endWidth: float, animated: boolean",
+          "returns": "void",
+          "visibility": "package"
+        }
+      ],
+      "sources": [
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBarTab.java",
+          "line": 37,
+          "end_line": 70
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBarTab.java",
+          "line": 92,
+          "end_line": 135
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBarTab.java",
+          "line": 384,
+          "end_line": 431
+        }
+      ]
+    },
+    {
+      "id": "tab_type",
+      "label": "Type",
+      "kind": "enum",
+      "sublabel": "三种排布",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "FIXED"
+        },
+        {
+          "name": "SHIFTING"
+        },
+        {
+          "name": "TABLET"
+        }
+      ],
+      "sources": [
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBarTab.java",
+          "line": 639,
+          "end_line": 641
+        }
+      ]
+    },
+    {
+      "id": "shy_settings",
+      "label": "ShySettings",
+      "kind": "class",
+      "sublabel": "隐藏/显示入口",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "bottomBar",
+          "type": "BottomBar",
+          "visibility": "private"
+        },
+        {
+          "name": "pendingIsVisibleInShyMode",
+          "type": "Boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "showBar",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "hideBar",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "toggleIsVisibleInShyMode",
+          "parameters": "visible: boolean",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/ShySettings.java",
+          "line": 6,
+          "end_line": 55
+        }
+      ]
+    },
+    {
+      "id": "badge",
+      "label": "BottomBarBadge",
+      "kind": "class",
+      "sublabel": "数字角标",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "count",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "isVisible",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setCount",
+          "parameters": "count: int",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "show",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "hide",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "attachToTab",
+          "parameters": "tab: BottomBarTab, backgroundColor: int",
+          "returns": "void",
+          "visibility": "package"
+        }
+      ],
+      "sources": [
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBarBadge.java",
+          "line": 32,
+          "end_line": 56
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBarBadge.java",
+          "line": 58,
+          "end_line": 91
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBarBadge.java",
+          "line": 94,
+          "end_line": 110
+        }
+      ]
+    },
+    {
+      "id": "nav_behavior",
+      "label": "BottomNavigationBehavior",
+      "kind": "class",
+      "sublabel": "滚动隐藏行为",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "bottomNavHeight",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "defaultOffset",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "hidden",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "mScrollingEnabled",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onDirectionNestedPreScroll",
+          "parameters": "target, dx, dy, consumed, direction",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "handleDirection",
+          "parameters": "child: V, scrollDirection: int",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "setHidden",
+          "parameters": "view: V, bottomLayoutHidden: boolean",
+          "returns": "void",
+          "visibility": "package"
+        }
+      ],
+      "sources": [
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomNavigationBehavior.java",
+          "line": 20,
+          "end_line": 43
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomNavigationBehavior.java",
+          "line": 57,
+          "end_line": 86
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomNavigationBehavior.java",
+          "line": 104,
+          "end_line": 115
+        }
+      ]
+    },
+    {
+      "id": "vertical_behavior",
+      "label": "VerticalScrollingBehavior",
+      "kind": "abstract",
+      "sublabel": "滚动方向基类",
+      "row": 3,
+      "col": 2,
+      "methods": [
+        {
+          "name": "onNestedVerticalOverScroll",
+          "parameters": "child, direction, currentOverScroll, totalOverScroll",
+          "returns": "void",
+          "visibility": "package",
+          "abstract": true
+        },
+        {
+          "name": "onDirectionNestedPreScroll",
+          "parameters": "target, dx, dy, consumed, direction",
+          "returns": "void",
+          "visibility": "package",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/VerticalScrollingBehavior.java",
+          "line": 21,
+          "end_line": 40
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/VerticalScrollingBehavior.java",
+          "line": 73,
+          "end_line": 78
+        },
+        {
+          "path": "bottom-bar/src/main/java/com/roughike/bottombar/VerticalScrollingBehavior.java",
+          "line": 100,
+          "end_line": 120
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "bar_composition_tab",
+      "from": "bottom_bar",
+      "to": "bottom_bar_tab",
+      "kind": "composition",
+      "label": "currentTabs"
+    },
+    {
+      "id": "bar_uses_parser",
+      "from": "bottom_bar",
+      "to": "tab_parser",
+      "kind": "dependency",
+      "label": "new TabParser"
+    },
+    {
+      "id": "parser_uses_config",
+      "from": "tab_parser",
+      "to": "tab_config",
+      "kind": "association",
+      "label": "defaultTabConfig"
+    },
+    {
+      "id": "tab_has_type",
+      "from": "bottom_bar_tab",
+      "to": "tab_type",
+      "kind": "association",
+      "label": "type"
+    },
+    {
+      "id": "tab_composition_badge",
+      "from": "bottom_bar_tab",
+      "to": "badge",
+      "kind": "composition",
+      "label": "badge"
+    },
+    {
+      "id": "bar_uses_interceptor",
+      "from": "bottom_bar",
+      "to": "interceptor",
+      "kind": "association",
+      "label": "拦截"
+    },
+    {
+      "id": "bar_composition_shy",
+      "from": "bottom_bar",
+      "to": "shy_settings",
+      "kind": "composition",
+      "label": "getShySettings"
+    },
+    {
+      "id": "shy_uses_behavior",
+      "from": "shy_settings",
+      "to": "nav_behavior",
+      "kind": "dependency",
+      "label": "from()"
+    },
+    {
+      "id": "bar_creates_behavior",
+      "from": "bottom_bar",
+      "to": "nav_behavior",
+      "kind": "dependency",
+      "label": "setBehavior"
+    },
+    {
+      "id": "behavior_extends_vertical",
+      "from": "nav_behavior",
+      "to": "vertical_behavior",
+      "kind": "inheritance"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "三种排布",
+      "items": [
+        "isShiftingMode() 只看 behaviors 位掩码里的 BEHAVIOR_SHIFTING，且与 tablet 互斥（L220-222、L338-344）",
+        "宽度由 resizeTabsToCorrectSizes 按屏宽均分，shifting 下激活项额外拿到 9:1 的份额（L383-420）"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "动画切换",
+      "items": [
+        "select/deselect 统一用 150ms ValueAnimator 改色、缩放与 padding（BottomBarTab L384-431、L433-445）",
+        "背景色切换 5.0+ 走 circular reveal，低版本退化为 crossfade（BottomBar L991-1011）"
+      ]
+    }
+  ]
+}

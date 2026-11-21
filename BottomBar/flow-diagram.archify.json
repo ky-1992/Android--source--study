@@ -1,0 +1,193 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "BottomBar 装配与选中切换流程",
+    "subtitle": "TabParser 把 XML 解析成 Tab 并挂入容器；点击 Tab 后 deselect/select、变宽与背景色动画依次执行。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/37-BottomBar/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/roughike/BottomBar",
+      "provider": "github",
+      "revision": "885d70e62359d15ed17dfd77a28809702d6ae513"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "使用方" },
+    { "id": "parser", "label": "XML 解析" },
+    { "id": "bar", "label": "BottomBar" },
+    { "id": "tab", "label": "BottomBarTab" }
+  ],
+  "phases": [
+    { "id": "config", "label": "配置", "fromCol": 0, "toCol": 1 },
+    { "id": "attach", "label": "装配", "fromCol": 2, "toCol": 2 },
+    { "id": "select", "label": "选中", "fromCol": 3, "toCol": 3 },
+    { "id": "animate", "label": "动画", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "n_set_items",
+    "n_parse",
+    "n_new_tab",
+    "n_attach",
+    "n_resize",
+    "n_click",
+    "n_switch",
+    "n_width",
+    "n_color",
+    "n_notify"
+  ],
+  "nodes": [
+    {
+      "id": "n_set_items",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "配置 tabs",
+      "sublabel": "bb_tabXmlResource",
+      "width": 150,
+      "sources": [
+        { "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBar.java", "line": 300, "end_line": 311 }
+      ]
+    },
+    {
+      "id": "n_parse",
+      "lane": "parser",
+      "col": 1,
+      "type": "backend",
+      "label": "解析 XML",
+      "sublabel": "parseTabs",
+      "width": 148,
+      "sources": [
+        { "path": "bottom-bar/src/main/java/com/roughike/bottombar/TabParser.java", "line": 77, "end_line": 96 }
+      ]
+    },
+    {
+      "id": "n_new_tab",
+      "lane": "parser",
+      "col": 2,
+      "type": "backend",
+      "label": "逐项建 Tab",
+      "sublabel": "parseNewTab",
+      "width": 152,
+      "sources": [
+        { "path": "bottom-bar/src/main/java/com/roughike/bottombar/TabParser.java", "line": 99, "end_line": 149 }
+      ]
+    },
+    {
+      "id": "n_attach",
+      "lane": "bar",
+      "col": 2,
+      "type": "frontend",
+      "label": "装入容器",
+      "sublabel": "updateItems",
+      "width": 150,
+      "sources": [
+        { "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBar.java", "line": 327, "end_line": 381 }
+      ]
+    },
+    {
+      "id": "n_resize",
+      "lane": "bar",
+      "col": 3,
+      "type": "frontend",
+      "label": "计算宽度",
+      "sublabel": "resizeTabs",
+      "width": 148,
+      "sources": [
+        { "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBar.java", "line": 383, "end_line": 420 }
+      ]
+    },
+    {
+      "id": "n_click",
+      "lane": "app",
+      "col": 3,
+      "type": "external",
+      "label": "点击 Tab",
+      "sublabel": "onClick",
+      "width": 148,
+      "sources": [
+        { "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBar.java", "line": 890, "end_line": 927 }
+      ]
+    },
+    {
+      "id": "n_switch",
+      "lane": "tab",
+      "col": 3,
+      "type": "frontend",
+      "label": "切换选中态",
+      "sublabel": "select/deselect",
+      "width": 150,
+      "sources": [
+        { "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBarTab.java", "line": 384, "end_line": 431 }
+      ]
+    },
+    {
+      "id": "n_width",
+      "lane": "tab",
+      "col": 4,
+      "type": "frontend",
+      "label": "Shifting 变宽",
+      "sublabel": "updateWidth",
+      "width": 148,
+      "sources": [
+        { "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBarTab.java", "line": 469, "end_line": 508 },
+        { "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBar.java", "line": 962, "end_line": 967 }
+      ]
+    },
+    {
+      "id": "n_color",
+      "lane": "bar",
+      "col": 4,
+      "type": "frontend",
+      "label": "背景色动画",
+      "sublabel": "circular reveal",
+      "width": 152,
+      "sources": [
+        { "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBar.java", "line": 969, "end_line": 1003 }
+      ]
+    },
+    {
+      "id": "n_notify",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "通知监听",
+      "sublabel": "updateSelectedTab",
+      "width": 152,
+      "sources": [
+        { "path": "bottom-bar/src/main/java/com/roughike/bottombar/BottomBar.java", "line": 944, "end_line": 960 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_set_parse", "from": "n_set_items", "to": "n_parse", "label": "xmlRes", "role": "main" },
+    { "id": "e_parse_new", "from": "n_parse", "to": "n_new_tab", "label": "tab 标签", "role": "main" },
+    { "id": "e_new_attach", "from": "n_new_tab", "to": "n_attach", "label": "Tab 列表", "role": "main" },
+    { "id": "e_attach_resize", "from": "n_attach", "to": "n_resize", "label": "addView", "role": "main" },
+    { "id": "e_resize_click", "from": "n_resize", "to": "n_click", "label": "布局完成", "role": "main" },
+    { "id": "e_click_switch", "from": "n_click", "to": "n_switch", "label": "handleClick", "role": "main" },
+    { "id": "e_switch_width", "from": "n_switch", "to": "n_width", "label": "shiftingMagic", "role": "main" },
+    { "id": "e_width_color", "from": "n_width", "to": "n_color", "label": "选中色", "role": "main" },
+    { "id": "e_color_notify", "from": "n_color", "to": "n_notify", "label": "位置变更", "role": "main" },
+    { "id": "e_click_notify", "from": "n_click", "to": "n_notify", "label": "拦截/重选", "role": "branch", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Shifting 规则",
+      "items": [
+        "shifting 下未选中项只留图标，选中项把标题与图标按 150ms 动画展开（BottomBarTab L406-431）",
+        "加宽量取自 resizeTabsToCorrectSizes 预算的 activeShiftingItemWidth（BottomBar L395-396）"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "选中回调",
+      "items": [
+        "handleClick 先问 TabSelectionInterceptor，返回 true 就吞掉这次切换（BottomBar L913-919）",
+        "位置变化触发 onTabSelectListener，同位置再点触发 onTabReselectListener（L944-960）"
+      ]
+    }
+  ]
+}
