@@ -1,0 +1,607 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Dagger 编译期核心类型结构",
+    "subtitle": "两个注解处理器共用 DelegateComponentProcessor：由 ProcessingStep 解析组件、建依赖图、再生成 DaggerXxx 实现类。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/42-dagger/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/google/dagger",
+      "provider": "github",
+      "revision": "28d3950005e9e8b6bda852f574c4533bcbb8b0bd"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "component_annot",
+      "label": "@Component",
+      "kind": "interface",
+      "sublabel": "标记组件接口的注解",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "modules",
+          "type": "Class<?>[]",
+          "visibility": "public"
+        },
+        {
+          "name": "dependencies",
+          "type": "Class<?>[]",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "dagger-runtime/main/java/dagger/Component.java",
+          "line": 243,
+          "end_line": 246
+        },
+        {
+          "path": "dagger-runtime/main/java/dagger/Component.java",
+          "line": 250,
+          "end_line": 259
+        }
+      ]
+    },
+    {
+      "id": "component_processor",
+      "label": "ComponentProcessor",
+      "kind": "class",
+      "sublabel": "Javac 注解处理器入口",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "delegate",
+          "type": "DelegateComponentProcessor",
+          "visibility": "private"
+        },
+        {
+          "name": "testingPlugins",
+          "type": "Optional<ImmutableSet>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "initialize",
+          "parameters": "env: XProcessingEnv",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "processingSteps",
+          "parameters": "",
+          "returns": "Iterable<XProcessingStep>",
+          "visibility": "public"
+        },
+        {
+          "name": "postRound",
+          "parameters": "env, roundEnv",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/ComponentProcessor.java",
+          "line": 42,
+          "end_line": 45
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/ComponentProcessor.java",
+          "line": 82,
+          "end_line": 96
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/ComponentProcessor.java",
+          "line": 117,
+          "end_line": 130
+        }
+      ]
+    },
+    {
+      "id": "ksp_processor",
+      "label": "KspComponentProcessor",
+      "kind": "class",
+      "sublabel": "KSP 侧同一套逻辑",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "delegate",
+          "type": "DelegateComponentProcessor",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "processingSteps",
+          "parameters": "",
+          "returns": "Iterable<XProcessingStep>",
+          "visibility": "public"
+        },
+        {
+          "name": "create",
+          "parameters": "env: SymbolProcessorEnvironment",
+          "returns": "SymbolProcessor",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/KspComponentProcessor.java",
+          "line": 36,
+          "end_line": 45
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/KspComponentProcessor.java",
+          "line": 47,
+          "end_line": 69
+        }
+      ]
+    },
+    {
+      "id": "delegate_processor",
+      "label": "DelegateComponentProcessor",
+      "kind": "class",
+      "sublabel": "Javac 与 KSP 共享实现",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "injectBindingRegistry",
+          "type": "InjectBindingRegistry",
+          "visibility": "package"
+        },
+        {
+          "name": "processingSteps",
+          "type": "ImmutableList<XProcessingStep>",
+          "visibility": "package"
+        },
+        {
+          "name": "factoryGenerator",
+          "type": "SourceFileGenerator",
+          "visibility": "package"
+        },
+        {
+          "name": "validationBindingGraphPlugins",
+          "type": "ValidationBindingGraphPlugins",
+          "visibility": "package"
+        }
+      ],
+      "methods": [
+        {
+          "name": "initialize",
+          "parameters": "env, testingPlugins, legacyPlugins",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "postRound",
+          "parameters": "env: XProcessingEnv, roundEnv: XRoundEnv",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/DelegateComponentProcessor.java",
+          "line": 70,
+          "end_line": 83
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/DelegateComponentProcessor.java",
+          "line": 85,
+          "end_line": 114
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/DelegateComponentProcessor.java",
+          "line": 125,
+          "end_line": 134
+        }
+      ]
+    },
+    {
+      "id": "processing_step",
+      "label": "ComponentProcessingStep",
+      "kind": "class",
+      "sublabel": "处理 @Component 的步骤",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "bindingGraphFactory",
+          "type": "BindingGraphFactory",
+          "visibility": "private"
+        },
+        {
+          "name": "componentGenerator",
+          "type": "SourceFileGenerator<BindingGraph>",
+          "visibility": "private"
+        },
+        {
+          "name": "bindingGraphValidator",
+          "type": "BindingGraphValidator",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "process",
+          "parameters": "element, annotations",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "processRootComponent",
+          "parameters": "component: XTypeElement",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "generateComponent",
+          "parameters": "bindingGraph: BindingGraph",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/processingstep/ComponentProcessingStep.java",
+          "line": 47,
+          "end_line": 54
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/processingstep/ComponentProcessingStep.java",
+          "line": 84,
+          "end_line": 95
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/processingstep/ComponentProcessingStep.java",
+          "line": 97,
+          "end_line": 121
+        }
+      ]
+    },
+    {
+      "id": "component_descriptor",
+      "label": "ComponentDescriptor",
+      "kind": "abstract",
+      "sublabel": "组件声明的只读模型",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "typeElement",
+          "type": "XTypeElement",
+          "visibility": "public"
+        },
+        {
+          "name": "modules",
+          "type": "ImmutableSet<ModuleDescriptor>",
+          "visibility": "public"
+        },
+        {
+          "name": "dependencies",
+          "type": "ImmutableSet<ComponentRequirement>",
+          "visibility": "public"
+        },
+        {
+          "name": "scopes",
+          "type": "ImmutableSet<Scope>",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "rootComponentDescriptor",
+          "parameters": "typeElement",
+          "returns": "ComponentDescriptor",
+          "visibility": "public"
+        },
+        {
+          "name": "componentMethods",
+          "parameters": "",
+          "returns": "ImmutableSet<ComponentMethodDescriptor>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/binding/ComponentDescriptor.java",
+          "line": 89,
+          "end_line": 101
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/binding/ComponentDescriptor.java",
+          "line": 107,
+          "end_line": 116
+        }
+      ]
+    },
+    {
+      "id": "binding_graph_factory",
+      "label": "BindingGraphFactory",
+      "kind": "class",
+      "sublabel": "解析请求构建依赖图",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "bindingFactory",
+          "type": "BindingFactory",
+          "visibility": "private"
+        },
+        {
+          "name": "keyFactory",
+          "type": "KeyFactory",
+          "visibility": "private"
+        },
+        {
+          "name": "injectBindingRegistry",
+          "type": "InjectBindingRegistry",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "create",
+          "parameters": "descriptor, createFullGraph: boolean",
+          "returns": "BindingGraph",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/binding/BindingGraphFactory.java",
+          "line": 74,
+          "end_line": 82
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/binding/BindingGraphFactory.java",
+          "line": 104,
+          "end_line": 123
+        }
+      ]
+    },
+    {
+      "id": "binding_graph",
+      "label": "BindingGraph",
+      "kind": "abstract",
+      "sublabel": "单组件内的绑定网络",
+      "row": 4,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "componentNode",
+          "type": "ComponentNode",
+          "visibility": "public"
+        },
+        {
+          "name": "parent",
+          "type": "Optional<BindingGraph>",
+          "visibility": "private"
+        },
+        {
+          "name": "contributionBindings",
+          "type": "ImmutableMap<Key, BindingNode>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "topLevelBindingGraph",
+          "parameters": "",
+          "returns": "TopLevelBindingGraph",
+          "visibility": "public"
+        },
+        {
+          "name": "componentDescriptor",
+          "parameters": "",
+          "returns": "ComponentDescriptor",
+          "visibility": "public"
+        },
+        {
+          "name": "subgraphs",
+          "parameters": "",
+          "returns": "ImmutableList<BindingGraph>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/binding/BindingGraph.java",
+          "line": 70,
+          "end_line": 82
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/binding/BindingGraph.java",
+          "line": 284,
+          "end_line": 301
+        }
+      ]
+    },
+    {
+      "id": "component_generator",
+      "label": "ComponentGenerator",
+      "kind": "class",
+      "sublabel": "图到实现类的生成器",
+      "row": 5,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "topLevelImplementationComponentFactory",
+          "type": "TopLevelImplementationComponent.Factory",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "topLevelTypes",
+          "parameters": "bindingGraph: BindingGraph",
+          "returns": "ImmutableList<XTypeSpec>",
+          "visibility": "public"
+        },
+        {
+          "name": "originatingElement",
+          "parameters": "input: BindingGraph",
+          "returns": "XElement",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/componentgenerator/ComponentGenerator.java",
+          "line": 31,
+          "end_line": 42
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/componentgenerator/ComponentGenerator.java",
+          "line": 44,
+          "end_line": 62
+        }
+      ]
+    },
+    {
+      "id": "component_implementation",
+      "label": "ComponentImplementation",
+      "kind": "class",
+      "sublabel": "拼装字段与方法片段",
+      "row": 5,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "componentShard",
+          "type": "ShardImplementation",
+          "visibility": "private"
+        },
+        {
+          "name": "componentNames",
+          "type": "ComponentNames",
+          "visibility": "private"
+        },
+        {
+          "name": "graph",
+          "type": "BindingGraph",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "generate",
+          "parameters": "",
+          "returns": "XTypeSpec",
+          "visibility": "public"
+        },
+        {
+          "name": "getCreatorName",
+          "parameters": "",
+          "returns": "XClassName",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/writing/ComponentImplementation.java",
+          "line": 111,
+          "end_line": 118
+        },
+        {
+          "path": "dagger-compiler/main/java/dagger/internal/codegen/writing/ComponentImplementation.java",
+          "line": 475,
+          "end_line": 478
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r_proc_delegate",
+      "from": "component_processor",
+      "to": "delegate_processor",
+      "kind": "composition",
+      "label": "委托"
+    },
+    {
+      "id": "r_ksp_delegate",
+      "from": "ksp_processor",
+      "to": "delegate_processor",
+      "kind": "composition",
+      "label": "委托"
+    },
+    {
+      "id": "r_proc_annot",
+      "from": "component_processor",
+      "to": "component_annot",
+      "kind": "dependency",
+      "label": "处理注解"
+    },
+    {
+      "id": "r_delegate_steps",
+      "from": "delegate_processor",
+      "to": "processing_step",
+      "kind": "aggregation",
+      "label": "processingSteps"
+    },
+    {
+      "id": "r_step_descriptor",
+      "from": "processing_step",
+      "to": "component_descriptor",
+      "kind": "dependency",
+      "label": "解析声明"
+    },
+    {
+      "id": "r_descriptor_factory",
+      "from": "component_descriptor",
+      "to": "binding_graph_factory",
+      "kind": "dependency",
+      "label": "作为输入"
+    },
+    {
+      "id": "r_factory_graph",
+      "from": "binding_graph_factory",
+      "to": "binding_graph",
+      "kind": "composition",
+      "label": "构建"
+    },
+    {
+      "id": "r_graph_generator",
+      "from": "binding_graph",
+      "to": "component_generator",
+      "kind": "dependency",
+      "label": "生成实现"
+    },
+    {
+      "id": "r_generator_impl",
+      "from": "component_generator",
+      "to": "component_implementation",
+      "kind": "dependency",
+      "label": "生成实现"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "编译期链路",
+      "items": [
+        "Javac 与 KSP 各有一个薄处理器，真正的处理逻辑都交给 DelegateComponentProcessor",
+        "delegate 自身由 Dagger 的 @Component 注入依赖，处理器用自己编译自己，形成自举"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "两条生成产物",
+      "items": [
+        "ComponentProcessingStep 先做 FullBindingGraph 校验，再对局部图生成组件实现",
+        "postRound 里 InjectBindingRegistry 还会为 @Inject/@Provides 生成 Factory 与 MembersInjector"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "5d09c961-d7c5-4697-8175-854c414a8547",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/42-dagger/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/42-dagger/class-diagram.html",
+  "specification": {
+    "sha256": "082c3cc61e00e260c0ea8045febf8213743db3b9b3e48646da05774edbef0c4b",
+    "bytes": 16361
+  },
+  "artifact": {
+    "sha256": "15f147978254b4737fcb01379948d6690fb64cb0dd8f6878859675dbe41781da",
+    "bytes": 890542
+  }
+}

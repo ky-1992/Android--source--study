@@ -1,0 +1,171 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Dagger 注解处理到 DaggerXxx 生成",
+    "subtitle": "编译期扫描 @Component，解析声明、建依赖图并校验，最后由 ComponentGenerator 写出实现类。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/42-dagger/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/google/dagger",
+      "provider": "github",
+      "revision": "28d3950005e9e8b6bda852f574c4533bcbb8b0bd"
+    }
+  },
+  "lanes": [
+    { "id": "source", "label": "业务源码" },
+    { "id": "proc", "label": "注解处理器" },
+    { "id": "graph", "label": "依赖图" },
+    { "id": "code", "label": "代码生成" }
+  ],
+  "phases": [
+    { "id": "scan", "label": "扫描", "fromCol": 0, "toCol": 0, "variant": "default" },
+    { "id": "resolve", "label": "解析", "fromCol": 1, "toCol": 2, "variant": "emphasis" },
+    { "id": "emit", "label": "建图与生成", "fromCol": 3, "toCol": 4, "variant": "default" }
+  ],
+  "mainPath": ["iface", "processor", "steps", "descriptor", "factory", "validate", "generator"],
+  "nodes": [
+    {
+      "id": "iface",
+      "lane": "source",
+      "col": 0,
+      "type": "external",
+      "label": "@Component 接口",
+      "sublabel": "带 modules 列表",
+      "width": 148,
+      "sources": [
+        { "path": "examples/maven/coffee/src/main/java/example/dagger/CoffeeApp.java", "line": 24, "end_line": 34 }
+      ]
+    },
+    {
+      "id": "processor",
+      "lane": "proc",
+      "col": 1,
+      "type": "backend",
+      "label": "注解处理器",
+      "sublabel": "ComponentProcessor",
+      "width": 156,
+      "sources": [
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/ComponentProcessor.java", "line": 98, "end_line": 101 },
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/DelegateComponentProcessor.java", "line": 85, "end_line": 114 }
+      ]
+    },
+    {
+      "id": "steps",
+      "lane": "proc",
+      "col": 2,
+      "type": "backend",
+      "label": "分派处理步骤",
+      "sublabel": "ProcessingStep",
+      "width": 156,
+      "sources": [
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/processingstep/ComponentProcessingStep.java", "line": 84, "end_line": 95 }
+      ]
+    },
+    {
+      "id": "descriptor",
+      "lane": "graph",
+      "col": 2,
+      "type": "database",
+      "label": "解析组件声明",
+      "sublabel": "ComponentDescriptor",
+      "width": 156,
+      "sources": [
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/processingstep/ComponentProcessingStep.java", "line": 101, "end_line": 105 },
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/binding/ComponentDescriptor.java", "line": 535, "end_line": 560 }
+      ]
+    },
+    {
+      "id": "factory",
+      "lane": "graph",
+      "col": 3,
+      "type": "database",
+      "label": "构建依赖图",
+      "sublabel": "BindingGraphFactory",
+      "width": 156,
+      "sources": [
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/binding/BindingGraphFactory.java", "line": 104, "end_line": 123 }
+      ]
+    },
+    {
+      "id": "plugin",
+      "lane": "proc",
+      "col": 3,
+      "type": "security",
+      "label": "SPI 插件校验",
+      "sublabel": "BindingGraphPlugin",
+      "width": 148,
+      "sources": [
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/DelegateComponentProcessor.java", "line": 112, "end_line": 113 },
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/processingstep/ComponentProcessingStep.java", "line": 110, "end_line": 114 }
+      ]
+    },
+    {
+      "id": "validate",
+      "lane": "graph",
+      "col": 4,
+      "type": "database",
+      "label": "校验依赖图",
+      "sublabel": "BindingGraphValidator",
+      "width": 152,
+      "sources": [
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/processingstep/ComponentProcessingStep.java", "line": 116, "end_line": 121 }
+      ]
+    },
+    {
+      "id": "generator",
+      "lane": "code",
+      "col": 4,
+      "type": "cloud",
+      "label": "生成实现类",
+      "sublabel": "DaggerXxx",
+      "width": 152,
+      "sources": [
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/processingstep/ComponentProcessingStep.java", "line": 140, "end_line": 142 },
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/componentgenerator/ComponentGenerator.java", "line": 49, "end_line": 62 },
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/writing/ComponentNames.java", "line": 60, "end_line": 64 }
+      ]
+    },
+    {
+      "id": "inject",
+      "lane": "code",
+      "col": 2,
+      "type": "cloud",
+      "label": "@Inject 工厂",
+      "sublabel": "FactoryGenerator",
+      "width": 148,
+      "sources": [
+        { "path": "dagger-compiler/main/java/dagger/internal/codegen/DelegateComponentProcessor.java", "line": 125, "end_line": 134 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_iface_proc", "from": "iface", "to": "processor", "label": "编译触发" },
+    { "id": "e_proc_steps", "from": "processor", "to": "steps", "label": "分派" },
+    { "id": "e_steps_desc", "from": "steps", "to": "descriptor", "label": "解析声明" },
+    { "id": "e_desc_factory", "from": "descriptor", "to": "factory", "label": "作为输入" },
+    { "id": "e_factory_valid", "from": "factory", "to": "validate", "label": "校验" },
+    { "id": "e_valid_gen", "from": "validate", "to": "generator", "label": "通过后生成" },
+    { "id": "e_plugin_valid", "from": "plugin", "to": "validate", "label": "运行插件", "variant": "dashed", "role": "branch" },
+    { "id": "e_proc_inject", "from": "processor", "to": "inject", "label": "postRound", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "为什么分两次建图",
+      "items": [
+        "createFullBindingGraph=true 先跑全量图，让 BindingGraphPlugin 看到所有绑定并报错",
+        "校验通过后用 createFullBindingGraph=false 只保留入口点可达绑定，再交给生成器"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "命名约定",
+      "items": [
+        "ComponentNames.getComponentName 在组件类名前后拼出 Dagger 前缀，所以 @Component CoffeeShop 得到 DaggerCoffeeApp_CoffeeShop",
+        "实现类同包生成，文件由 XFiler 写出，originatingElement 指回组件接口"
+      ]
+    }
+  ]
+}

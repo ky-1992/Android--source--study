@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "fb4ce1af-bd79-4551-a26e-1b8b60f6e7d9",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/42-dagger/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/42-dagger/flow-diagram.html",
+  "specification": {
+    "sha256": "bb6f7154b42d9163e16aaa82e4c1bcb58cfded6dc2e303cd7bea3b38ed3bc54d",
+    "bytes": 6579
+  },
+  "artifact": {
+    "sha256": "1dcd6a067d246d2e6c1c80354793bf8d0f7c53d51fa69a1447fca1923c2760e5",
+    "bytes": 848603
+  }
+}
