@@ -1,0 +1,844 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Android-PullToRefresh 核心类型结构",
+    "subtitle": "PullToRefreshBase 用 State 枚举驱动下拉状态机，持有 header/footer 两个 LoadingLayout，具体控件由 AdapterViewBase 派生。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/24-Android-PullToRefresh/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/chrisbanes/Android-PullToRefresh",
+      "provider": "github",
+      "revision": "3bd8ef6869c3297bfe874d2f15c2ee53c3456e99"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "iptr",
+      "label": "IPullToRefresh",
+      "kind": "interface",
+      "sublabel": "下拉刷新对外契约",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        {
+          "name": "getMode",
+          "parameters": "",
+          "returns": "Mode",
+          "visibility": "public"
+        },
+        {
+          "name": "getState",
+          "parameters": "",
+          "returns": "State",
+          "visibility": "public"
+        },
+        {
+          "name": "isRefreshing",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "setRefreshing",
+          "parameters": "doScroll: boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onRefreshComplete",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "demo",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/IPullToRefresh.java",
+          "line": 27,
+          "end_line": 31
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/IPullToRefresh.java",
+          "line": 115,
+          "end_line": 121
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/IPullToRefresh.java",
+          "line": 153,
+          "end_line": 160
+        }
+      ]
+    },
+    {
+      "id": "ptr_base",
+      "label": "PullToRefreshBase",
+      "kind": "abstract",
+      "sublabel": "手势、状态机与回弹门面",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "FRICTION",
+          "type": "float",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "mState",
+          "type": "State",
+          "visibility": "private"
+        },
+        {
+          "name": "mMode",
+          "type": "Mode",
+          "visibility": "private"
+        },
+        {
+          "name": "mCurrentMode",
+          "type": "Mode",
+          "visibility": "private"
+        },
+        {
+          "name": "mHeaderLayout",
+          "type": "LoadingLayout",
+          "visibility": "private"
+        },
+        {
+          "name": "mFooterLayout",
+          "type": "LoadingLayout",
+          "visibility": "private"
+        },
+        {
+          "name": "mOnRefreshListener",
+          "type": "OnRefreshListener<T>",
+          "visibility": "private"
+        },
+        {
+          "name": "mTouchSlop",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setState",
+          "parameters": "state: State, params: boolean...",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "onTouchEvent",
+          "parameters": "event: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "onInterceptTouchEvent",
+          "parameters": "event: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "pullEvent",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "onPullToRefresh",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onReleaseToRefresh",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onRefreshing",
+          "parameters": "doScroll: boolean",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onReset",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setRefreshing",
+          "parameters": "doScroll: boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onRefreshComplete",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getPullToRefreshScrollDirection",
+          "parameters": "",
+          "returns": "Orientation",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 43,
+          "end_line": 48
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 539,
+          "end_line": 572
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 1164,
+          "end_line": 1210
+        }
+      ]
+    },
+    {
+      "id": "adapter_base",
+      "label": "PullToRefreshAdapterViewBase",
+      "kind": "abstract",
+      "sublabel": "AbsListView 系控件基类",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mOnLastItemVisibleListener",
+          "type": "OnLastItemVisibleListener",
+          "visibility": "private"
+        },
+        {
+          "name": "mHasNotifiedLastItemVisible",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onScrollStateChanged",
+          "parameters": "view: AbsListView, state: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setOnLastItemVisibleListener",
+          "parameters": "listener: OnLastItemVisibleListener",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onScrollChanged",
+          "parameters": "l, t, oldl, oldt: int",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshAdapterViewBase.java",
+          "line": 38,
+          "end_line": 41
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshAdapterViewBase.java",
+          "line": 129,
+          "end_line": 137
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshAdapterViewBase.java",
+          "line": 211,
+          "end_line": 215
+        }
+      ]
+    },
+    {
+      "id": "ptr_listview",
+      "label": "PullToRefreshListView",
+      "kind": "class",
+      "sublabel": "把加载视图塞进 ListView",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mHeaderLoadingView",
+          "type": "LoadingLayout",
+          "visibility": "private"
+        },
+        {
+          "name": "mFooterLoadingView",
+          "type": "LoadingLayout",
+          "visibility": "private"
+        },
+        {
+          "name": "mListViewExtrasEnabled",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getPullToRefreshScrollDirection",
+          "parameters": "",
+          "returns": "Orientation",
+          "visibility": "public"
+        },
+        {
+          "name": "onRefreshing",
+          "parameters": "doScroll: boolean",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "handleStyledAttributes",
+          "parameters": "a: TypedArray",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshListView.java",
+          "line": 35,
+          "end_line": 39
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshListView.java",
+          "line": 66,
+          "end_line": 72
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshListView.java",
+          "line": 235,
+          "end_line": 245
+        }
+      ]
+    },
+    {
+      "id": "iloading",
+      "label": "ILoadingLayout",
+      "kind": "interface",
+      "sublabel": "加载区文案与图标接口",
+      "row": 0,
+      "col": 2,
+      "methods": [
+        {
+          "name": "setPullLabel",
+          "parameters": "pullLabel: CharSequence",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setReleaseLabel",
+          "parameters": "releaseLabel: CharSequence",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setRefreshingLabel",
+          "parameters": "refreshingLabel: CharSequence",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setLastUpdatedLabel",
+          "parameters": "label: CharSequence",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setLoadingDrawable",
+          "parameters": "drawable: Drawable",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setTextTypeface",
+          "parameters": "tf: Typeface",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/ILoadingLayout.java",
+          "line": 6,
+          "end_line": 8
+        }
+      ]
+    },
+    {
+      "id": "loading_layout",
+      "label": "LoadingLayout",
+      "kind": "abstract",
+      "sublabel": "三态视图基类，子类做动画",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mHeaderText",
+          "type": "TextView",
+          "visibility": "private"
+        },
+        {
+          "name": "mHeaderImage",
+          "type": "ImageView",
+          "visibility": "private"
+        },
+        {
+          "name": "mUseIntrinsicAnimation",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "mPullLabel",
+          "type": "CharSequence",
+          "visibility": "private"
+        },
+        {
+          "name": "mReleaseLabel",
+          "type": "CharSequence",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onPull",
+          "parameters": "scaleOfLayout: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "pullToRefresh",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "releaseToRefresh",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "refreshing",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "reset",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onPullImpl",
+          "parameters": "scaleOfLayout: float",
+          "returns": "void",
+          "visibility": "protected",
+          "abstract": true
+        },
+        {
+          "name": "refreshingImpl",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected",
+          "abstract": true
+        },
+        {
+          "name": "resetImpl",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/LoadingLayout.java",
+          "line": 44,
+          "end_line": 46
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/LoadingLayout.java",
+          "line": 220,
+          "end_line": 233
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/LoadingLayout.java",
+          "line": 333,
+          "end_line": 345
+        }
+      ]
+    },
+    {
+      "id": "rotate_layout",
+      "label": "RotateLoadingLayout",
+      "kind": "class",
+      "sublabel": "箭头随下拉角度旋转",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "ROTATION_ANIMATION_DURATION",
+          "type": "int",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "mRotateAnimation",
+          "type": "Animation",
+          "visibility": "private"
+        },
+        {
+          "name": "mHeaderImageMatrix",
+          "type": "Matrix",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onPullImpl",
+          "parameters": "scaleOfLayout: float",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "refreshingImpl",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "resetImpl",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "getDefaultDrawableResId",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/RotateLoadingLayout.java",
+          "line": 30,
+          "end_line": 33
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/RotateLoadingLayout.java",
+          "line": 65,
+          "end_line": 76
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/RotateLoadingLayout.java",
+          "line": 78,
+          "end_line": 86
+        }
+      ]
+    },
+    {
+      "id": "flip_layout",
+      "label": "FlipLoadingLayout",
+      "kind": "class",
+      "sublabel": "翻转箭头并切换进度圈",
+      "row": 3,
+      "col": 2,
+      "methods": [
+        {
+          "name": "onPullImpl",
+          "parameters": "scaleOfLayout: float",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "pullToRefreshImpl",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "refreshingImpl",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "releaseToRefreshImpl",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "resetImpl",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/FlipLoadingLayout.java",
+          "line": 34,
+          "end_line": 38
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/FlipLoadingLayout.java",
+          "line": 86,
+          "end_line": 116
+        }
+      ]
+    },
+    {
+      "id": "layout_proxy",
+      "label": "LoadingLayoutProxy",
+      "kind": "class",
+      "sublabel": "一次调用转发到多个加载区",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mLoadingLayouts",
+          "type": "HashSet<LoadingLayout>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "addLayout",
+          "parameters": "layout: LoadingLayout",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setPullLabel",
+          "parameters": "label: CharSequence",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setRefreshingLabel",
+          "parameters": "label: CharSequence",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/LoadingLayoutProxy.java",
+          "line": 10,
+          "end_line": 18
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/LoadingLayoutProxy.java",
+          "line": 26,
+          "end_line": 31
+        }
+      ]
+    },
+    {
+      "id": "state",
+      "label": "State",
+      "kind": "enum",
+      "sublabel": "下拉状态机六态",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "RESET",
+          "type": "State",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "PULL_TO_REFRESH",
+          "type": "State",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "RELEASE_TO_REFRESH",
+          "type": "State",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "REFRESHING",
+          "type": "State",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "MANUAL_REFRESHING",
+          "type": "State",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "OVERSCROLLING",
+          "type": "State",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "mIntValue",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getIntValue",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "package"
+        },
+        {
+          "name": "mapIntToValue",
+          "parameters": "stateInt: int",
+          "returns": "State",
+          "visibility": "package",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 1524,
+          "end_line": 1568
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r1",
+      "from": "ptr_base",
+      "to": "iptr",
+      "kind": "realization",
+      "label": "实现契约"
+    },
+    {
+      "id": "r2",
+      "from": "loading_layout",
+      "to": "iloading",
+      "kind": "realization",
+      "label": "实现接口"
+    },
+    {
+      "id": "r3",
+      "from": "adapter_base",
+      "to": "ptr_base",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "r4",
+      "from": "ptr_listview",
+      "to": "adapter_base",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "r5",
+      "from": "rotate_layout",
+      "to": "loading_layout",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "r6",
+      "from": "flip_layout",
+      "to": "loading_layout",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "r7",
+      "from": "ptr_base",
+      "to": "loading_layout",
+      "kind": "composition",
+      "label": "header/footer"
+    },
+    {
+      "id": "r8",
+      "from": "ptr_base",
+      "to": "state",
+      "kind": "dependency",
+      "label": "setState"
+    },
+    {
+      "id": "r9",
+      "from": "ptr_base",
+      "to": "layout_proxy",
+      "kind": "dependency",
+      "label": "创建代理"
+    },
+    {
+      "id": "r10",
+      "from": "layout_proxy",
+      "to": "loading_layout",
+      "kind": "association",
+      "label": "批量转发"
+    },
+    {
+      "id": "r11",
+      "from": "iptr",
+      "to": "state",
+      "kind": "dependency",
+      "label": "getState"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "状态迁移由 setState 单点驱动",
+      "items": [
+        "setState 按 mState 分发到 onPullToRefresh / onReleaseToRefresh / onRefreshing / onReset",
+        "状态变化后统一回调 OnPullEventListener，用于音效等外部联动"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "视图与状态解耦",
+      "items": [
+        "LoadingLayout 只暴露 onPull / pullToRefresh / releaseToRefresh / refreshing / reset",
+        "具体动画由 Rotate/Flip 子类实现 abstract 的 *Impl 方法"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Mode 决定方向与加载区",
+      "items": [
+        "Mode.BOTH 时用 mCurrentMode 区分 PULL_FROM_START / PULL_FROM_END",
+        "showHeaderLoadingLayout / showFooterLoadingLayout 决定创建哪个加载区"
+      ]
+    }
+  ]
+}

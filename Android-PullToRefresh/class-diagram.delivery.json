@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "bc36ed99-7008-44b5-b5f3-e1723dfa227d",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/24-Android-PullToRefresh/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/24-Android-PullToRefresh/class-diagram.html",
+  "specification": {
+    "sha256": "849ce3966a5e429e52b7f43216efb6399a2f4b331f7d61a3842967678629b125",
+    "bytes": 21621
+  },
+  "artifact": {
+    "sha256": "cbc6ecfbbc18613953c9b2530a0be316850e6f257a2cce706fd66251bdd6ae52",
+    "bytes": 915273
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "e8d30469-b9ce-47c3-b679-562095951186",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/24-Android-PullToRefresh/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/24-Android-PullToRefresh/flow-diagram.html",
+  "specification": {
+    "sha256": "586a490f276b41da9b20727c40370f967b922783294be5a98617a3cd7a051081",
+    "bytes": 8465
+  },
+  "artifact": {
+    "sha256": "8efee7095a087a49e098e817457c58f3b8f957c87dd9244ab2aecfff0eca463a",
+    "bytes": 852932
+  }
+}

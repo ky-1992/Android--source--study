@@ -1,0 +1,362 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "PullToRefresh 下拉手势到刷新的主流程",
+    "subtitle": "onTouchEvent 记录起手点，pullEvent 按 FRICTION 折算滚动距离并推进状态机，松手后由 LoadingLayout 播放动画并回调 OnRefreshListener。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/24-Android-PullToRefresh/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/chrisbanes/Android-PullToRefresh",
+      "provider": "github",
+      "revision": "3bd8ef6869c3297bfe874d2f15c2ee53c3456e99"
+    }
+  },
+  "lanes": [
+    {
+      "id": "touch",
+      "label": "触摸手势"
+    },
+    {
+      "id": "core",
+      "label": "状态机"
+    },
+    {
+      "id": "layout",
+      "label": "加载视图"
+    },
+    {
+      "id": "host",
+      "label": "宿主回调"
+    }
+  ],
+  "phases": [
+    {
+      "id": "drag",
+      "label": "拖动",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "judge",
+      "label": "状态判定",
+      "fromCol": 2,
+      "toCol": 3
+    },
+    {
+      "id": "refresh",
+      "label": "刷新与复位",
+      "fromCol": 4,
+      "toCol": 4
+    }
+  ],
+  "mainPath": [
+    "touch_down",
+    "drag_move",
+    "calc_scroll",
+    "state_pull",
+    "state_release",
+    "refreshing",
+    "layout_refresh",
+    "reset"
+  ],
+  "nodes": [
+    {
+      "id": "touch_down",
+      "lane": "touch",
+      "col": 0,
+      "type": "external",
+      "label": "手指按下",
+      "sublabel": "ACTION_DOWN",
+      "width": 148,
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 336,
+          "end_line": 343
+        }
+      ]
+    },
+    {
+      "id": "drag_move",
+      "lane": "touch",
+      "col": 1,
+      "type": "external",
+      "label": "拖动判定",
+      "sublabel": "ACTION_MOVE",
+      "width": 152,
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 244,
+          "end_line": 299
+        }
+      ]
+    },
+    {
+      "id": "calc_scroll",
+      "lane": "core",
+      "col": 1,
+      "type": "backend",
+      "label": "折算滚动",
+      "sublabel": "pullEvent",
+      "width": 152,
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 1164,
+          "end_line": 1210
+        }
+      ]
+    },
+    {
+      "id": "state_pull",
+      "lane": "core",
+      "col": 2,
+      "type": "backend",
+      "label": "进入下拉态",
+      "sublabel": "PULL_TO_REFRESH",
+      "width": 156,
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 1206,
+          "end_line": 1210
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 707,
+          "end_line": 716
+        }
+      ]
+    },
+    {
+      "id": "layout_pull",
+      "lane": "layout",
+      "col": 2,
+      "type": "frontend",
+      "label": "回弹进度",
+      "sublabel": "onPull(scale)",
+      "width": 148,
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/LoadingLayout.java",
+          "line": 220,
+          "end_line": 233
+        }
+      ]
+    },
+    {
+      "id": "state_release",
+      "lane": "core",
+      "col": 3,
+      "type": "backend",
+      "label": "进入释放态",
+      "sublabel": "松手可刷新",
+      "width": 156,
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 344,
+          "end_line": 366
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 769,
+          "end_line": 779
+        }
+      ]
+    },
+    {
+      "id": "layout_release",
+      "lane": "layout",
+      "col": 3,
+      "type": "frontend",
+      "label": "提示可释放",
+      "sublabel": "releaseToRefresh",
+      "width": 150,
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/LoadingLayout.java",
+          "line": 252,
+          "end_line": 259
+        }
+      ]
+    },
+    {
+      "id": "refreshing",
+      "lane": "core",
+      "col": 4,
+      "type": "backend",
+      "label": "触发刷新",
+      "sublabel": "REFRESHING",
+      "width": 150,
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 727,
+          "end_line": 762
+        }
+      ]
+    },
+    {
+      "id": "layout_refresh",
+      "lane": "layout",
+      "col": 4,
+      "type": "frontend",
+      "label": "播放动画",
+      "sublabel": "refreshing()",
+      "width": 146,
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/LoadingLayout.java",
+          "line": 235,
+          "end_line": 250
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/internal/RotateLoadingLayout.java",
+          "line": 78,
+          "end_line": 82
+        }
+      ]
+    },
+    {
+      "id": "reset",
+      "lane": "host",
+      "col": 4,
+      "type": "external",
+      "label": "完成刷新",
+      "sublabel": "RESET 收尾",
+      "width": 152,
+      "sources": [
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 303,
+          "end_line": 307
+        },
+        {
+          "path": "library/src/com/handmark/pulltorefresh/library/PullToRefreshBase.java",
+          "line": 787,
+          "end_line": 796
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "touch_down",
+      "to": "drag_move",
+      "label": "记录起点",
+      "variant": "default",
+      "role": "main"
+    },
+    {
+      "id": "e2",
+      "from": "drag_move",
+      "to": "calc_scroll",
+      "label": "超过 touchSlop",
+      "variant": "default",
+      "role": "main"
+    },
+    {
+      "id": "e3",
+      "from": "calc_scroll",
+      "to": "state_pull",
+      "label": "位移 > 0",
+      "variant": "default",
+      "role": "main"
+    },
+    {
+      "id": "e4",
+      "from": "state_pull",
+      "to": "layout_pull",
+      "label": "onPull",
+      "variant": "default",
+      "role": "main"
+    },
+    {
+      "id": "e5",
+      "from": "state_pull",
+      "to": "state_release",
+      "label": "超过头高",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "e6",
+      "from": "state_release",
+      "to": "layout_release",
+      "label": "松手提示",
+      "variant": "default",
+      "role": "main"
+    },
+    {
+      "id": "e7",
+      "from": "state_release",
+      "to": "refreshing",
+      "label": "ACTION_UP",
+      "variant": "emphasis",
+      "role": "main"
+    },
+    {
+      "id": "e8",
+      "from": "refreshing",
+      "to": "layout_refresh",
+      "label": "动画状态",
+      "variant": "default",
+      "role": "main"
+    },
+    {
+      "id": "e9",
+      "from": "layout_refresh",
+      "to": "reset",
+      "label": "刷新结束",
+      "variant": "default",
+      "role": "main"
+    },
+    {
+      "id": "e10",
+      "from": "state_pull",
+      "to": "reset",
+      "label": "未超阈值松手",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e11",
+      "from": "reset",
+      "to": "touch_down",
+      "label": "回到 RESET",
+      "variant": "dashed",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "距离换算",
+      "items": [
+        "pullEvent 把指尖位移除以 FRICTION=2.0 得到 header 偏移",
+        "scale = |scroll| / itemDimension，交给 onPull 驱动子类动画"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "两条判定线",
+      "items": [
+        "itemDimension >= |scroll| 进入 PULL_TO_REFRESH",
+        "超过 itemDimension 后切到 RELEASE_TO_REFRESH，松手才真正刷新"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "回调时机",
+      "items": [
+        "doScroll 且 mShowViewWhileRefreshing 时，等平滑滚动结束再 callRefreshListener",
+        "onRefreshComplete 只在 isRefreshing() 时切回 RESET"
+      ]
+    }
+  ]
+}
