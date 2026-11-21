@@ -1,0 +1,188 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Android-Bootstrap 属性解析与背景绘制流程",
+    "subtitle": "XML 属性进入 initialise，解析品牌与尺寸倍数，updateBootstrapState 计算像素，再由 BootstrapDrawableFactory 组装 StateListDrawable 并写回背景。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/43-Android-Bootstrap/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/Bearded-Hen/Android-Bootstrap",
+      "provider": "github",
+      "revision": "b3d62cc1847e26d420c53c92665a4fe1e6ee7ecf"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "布局与交互" },
+    { "id": "view", "label": "Bootstrap 控件" },
+    { "id": "theme", "label": "品牌与尺寸" },
+    { "id": "drawable", "label": "Drawable 工厂" }
+  ],
+  "phases": [
+    { "id": "parse", "label": "属性解析", "fromCol": 0, "toCol": 1 },
+    { "id": "calc", "label": "状态计算", "fromCol": 2, "toCol": 3 },
+    { "id": "paint", "label": "绘制应用", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "n_init",
+    "n_brand",
+    "n_size",
+    "n_state",
+    "n_factory",
+    "n_corner",
+    "n_apply"
+  ],
+  "nodes": [
+    {
+      "id": "n_xml",
+      "lane": "app",
+      "col": 0,
+      "type": "frontend",
+      "label": "XML 声明控件",
+      "sublabel": "layout 属性",
+      "width": 146,
+      "sources": [
+        { "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapButton.java", "line": 80, "end_line": 83 }
+      ]
+    },
+    {
+      "id": "n_init",
+      "lane": "view",
+      "col": 0,
+      "type": "backend",
+      "label": "解析属性",
+      "sublabel": "initialise",
+      "width": 150,
+      "sources": [
+        { "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapButton.java", "line": 90, "end_line": 108 }
+      ]
+    },
+    {
+      "id": "n_restore",
+      "lane": "view",
+      "col": 1,
+      "type": "backend",
+      "label": "恢复状态",
+      "sublabel": "onRestore",
+      "width": 142,
+      "sources": [
+        { "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapButton.java", "line": 141, "end_line": 161 }
+      ]
+    },
+    {
+      "id": "n_brand",
+      "lane": "theme",
+      "col": 1,
+      "type": "security",
+      "label": "解析品牌",
+      "sublabel": "fromAttribute",
+      "width": 150,
+      "sources": [
+        { "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/api/defaults/DefaultBootstrapBrand.java", "line": 44, "end_line": 63 }
+      ]
+    },
+    {
+      "id": "n_size",
+      "lane": "theme",
+      "col": 2,
+      "type": "security",
+      "label": "尺寸倍数",
+      "sublabel": "scaleFactor",
+      "width": 150,
+      "sources": [
+        { "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/api/defaults/DefaultBootstrapSize.java", "line": 32, "end_line": 47 }
+      ]
+    },
+    {
+      "id": "n_toggle",
+      "lane": "app",
+      "col": 2,
+      "type": "frontend",
+      "label": "切换描边",
+      "sublabel": "setShowOutline",
+      "width": 142,
+      "sources": [
+        { "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapButton.java", "line": 300, "end_line": 316 }
+      ]
+    },
+    {
+      "id": "n_state",
+      "lane": "view",
+      "col": 3,
+      "type": "backend",
+      "label": "更新绘制状态",
+      "sublabel": "updateState",
+      "width": 156,
+      "sources": [
+        { "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapButton.java", "line": 163, "end_line": 195 }
+      ]
+    },
+    {
+      "id": "n_factory",
+      "lane": "drawable",
+      "col": 3,
+      "type": "cloud",
+      "label": "生成背景",
+      "sublabel": "bootstrapButton",
+      "width": 152,
+      "sources": [
+        { "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapDrawableFactory.java", "line": 45, "end_line": 79 }
+      ]
+    },
+    {
+      "id": "n_corner",
+      "lane": "drawable",
+      "col": 4,
+      "type": "cloud",
+      "label": "圆角与状态",
+      "sublabel": "StateList",
+      "width": 150,
+      "sources": [
+        { "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapDrawableFactory.java", "line": 229, "end_line": 267 },
+        { "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapDrawableFactory.java", "line": 269, "end_line": 309 }
+      ]
+    },
+    {
+      "id": "n_apply",
+      "lane": "view",
+      "col": 4,
+      "type": "backend",
+      "label": "写入背景",
+      "sublabel": "setBackground",
+      "width": 148,
+      "sources": [
+        { "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapButton.java", "line": 181, "end_line": 190 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_xml_init", "from": "n_xml", "to": "n_init", "label": "构造" },
+    { "id": "e_init_brand", "from": "n_init", "to": "n_brand", "label": "读品牌" },
+    { "id": "e_brand_size", "from": "n_brand", "to": "n_size", "label": "枚举" },
+    { "id": "e_size_state", "from": "n_size", "to": "n_state", "label": "倍数缩放" },
+    { "id": "e_state_factory", "from": "n_state", "to": "n_factory", "label": "调工厂" },
+    { "id": "e_factory_corner", "from": "n_factory", "to": "n_corner", "label": "组装三态" },
+    { "id": "e_corner_apply", "from": "n_corner", "to": "n_apply", "label": "返回 Drawable" },
+    { "id": "e_restore_state", "from": "n_restore", "to": "n_state", "label": "恢复后重绘", "variant": "dashed", "role": "branch" },
+    { "id": "e_toggle_state", "from": "n_toggle", "to": "n_state", "label": "属性变更", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "属性到倍数",
+      "items": [
+        "BootstrapButton.initialise 读 roundedCorners / showOutline / bootstrapSize 等序号，默认走 MD",
+        "基线字号、内边距、描边、圆角先按资源取像素，再统一乘以 bootstrapSize"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "状态与圆角",
+      "items": [
+        "setupDrawableCorners 按 ViewGroupPosition 决定保留哪几个角，SOLO 才是四角全圆",
+        "setupStateDrawable 用负 inset 隐藏相邻边描边，再按 hovered/pressed/disabled 挂三份 LayerDrawable"
+      ]
+    }
+  ]
+}

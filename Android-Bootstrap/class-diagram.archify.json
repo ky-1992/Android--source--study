@@ -1,0 +1,567 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Android-Bootstrap 核心类型结构",
+    "subtitle": "自定义 View 通过 BootstrapBrand / BootstrapSizeView 取主题参数，再由 BootstrapDrawableFactory 在运行时生成 Drawable 背景。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/43-Android-Bootstrap/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/Bearded-Hen/Android-Bootstrap",
+      "provider": "github",
+      "revision": "b3d62cc1847e26d420c53c92665a4fe1e6ee7ecf"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "awesome_text_view",
+      "label": "AwesomeTextView",
+      "kind": "class",
+      "sublabel": "带图标的 TextView 基类",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "bootstrapText",
+          "type": "BootstrapText",
+          "visibility": "private"
+        },
+        {
+          "name": "bootstrapBrand",
+          "type": "BootstrapBrand",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setBootstrapText",
+          "parameters": "bootstrapText: BootstrapText",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setIcon",
+          "parameters": "iconCode: CharSequence, iconSet: IconSet",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "updateBootstrapState",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/AwesomeTextView.java",
+          "line": 33,
+          "end_line": 38
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/AwesomeTextView.java",
+          "line": 77,
+          "end_line": 127
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/AwesomeTextView.java",
+          "line": 250,
+          "end_line": 257
+        }
+      ]
+    },
+    {
+      "id": "bootstrap_brand",
+      "label": "BootstrapBrand",
+      "kind": "interface",
+      "sublabel": "六种语义色的取色协议",
+      "row": 0,
+      "col": 1,
+      "methods": [
+        {
+          "name": "defaultFill",
+          "parameters": "context: Context",
+          "returns": "int",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "defaultEdge",
+          "parameters": "context: Context",
+          "returns": "int",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "activeFill",
+          "parameters": "context: Context",
+          "returns": "int",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "disabledFill",
+          "parameters": "context: Context",
+          "returns": "int",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/api/attributes/BootstrapBrand.java",
+          "line": 12,
+          "end_line": 38
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/api/attributes/BootstrapBrand.java",
+          "line": 65,
+          "end_line": 89
+        }
+      ]
+    },
+    {
+      "id": "default_brand",
+      "label": "DefaultBootstrapBrand",
+      "kind": "enum",
+      "sublabel": "Primary/Success 等七种",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "color",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "textColor",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "fromAttributeValue",
+          "parameters": "attrValue: int",
+          "returns": "DefaultBootstrapBrand",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "defaultFill",
+          "parameters": "context: Context",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "activeFill",
+          "parameters": "context: Context",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/api/defaults/DefaultBootstrapBrand.java",
+          "line": 21,
+          "end_line": 42
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/api/defaults/DefaultBootstrapBrand.java",
+          "line": 44,
+          "end_line": 63
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/api/defaults/DefaultBootstrapBrand.java",
+          "line": 65,
+          "end_line": 87
+        }
+      ]
+    },
+    {
+      "id": "bootstrap_button",
+      "label": "BootstrapButton",
+      "kind": "class",
+      "sublabel": "可圆角/描边/成组按钮",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "viewGroupPosition",
+          "type": "ViewGroupPosition",
+          "visibility": "private"
+        },
+        {
+          "name": "buttonMode",
+          "type": "ButtonMode",
+          "visibility": "private"
+        },
+        {
+          "name": "bootstrapSize",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "showOutline",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "bootstrapBadge",
+          "type": "BootstrapBadge",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "initialise",
+          "parameters": "attrs: AttributeSet",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "updateBootstrapState",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onTouchEvent",
+          "parameters": "event: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "setViewGroupPosition",
+          "parameters": "viewGroupPosition, parentIndex",
+          "returns": "void",
+          "visibility": "package"
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapButton.java",
+          "line": 34,
+          "end_line": 36
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapButton.java",
+          "line": 55,
+          "end_line": 73
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapButton.java",
+          "line": 163,
+          "end_line": 195
+        }
+      ]
+    },
+    {
+      "id": "bootstrap_size_view",
+      "label": "BootstrapSizeView",
+      "kind": "interface",
+      "sublabel": "按倍数缩放的约定",
+      "row": 0,
+      "col": 2,
+      "methods": [
+        {
+          "name": "getBootstrapSize",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "setBootstrapSize",
+          "parameters": "bootstrapSize: float",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "setBootstrapSize",
+          "parameters": "bootstrapSize: DefaultBootstrapSize",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/api/view/BootstrapSizeView.java",
+          "line": 9,
+          "end_line": 37
+        }
+      ]
+    },
+    {
+      "id": "bootstrap_edit_text",
+      "label": "BootstrapEditText",
+      "kind": "class",
+      "sublabel": "带品牌描边的输入框",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "bootstrapBrand",
+          "type": "BootstrapBrand",
+          "visibility": "private"
+        },
+        {
+          "name": "bootstrapSize",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "rounded",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "initialise",
+          "parameters": "attrs: AttributeSet",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "updateBootstrapState",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapEditText.java",
+          "line": 28,
+          "end_line": 41
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapEditText.java",
+          "line": 58,
+          "end_line": 88
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapEditText.java",
+          "line": 116,
+          "end_line": 135
+        }
+      ]
+    },
+    {
+      "id": "bootstrap_text",
+      "label": "BootstrapText",
+      "kind": "class",
+      "sublabel": "带图标 Span 的文本",
+      "row": 2,
+      "col": 0,
+      "sources": [
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapText.java",
+          "line": 21,
+          "end_line": 25
+        }
+      ]
+    },
+    {
+      "id": "text_builder",
+      "label": "BootstrapText.Builder",
+      "kind": "class",
+      "sublabel": "逐步拼装图标文本",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "sb",
+          "type": "StringBuilder",
+          "visibility": "private"
+        },
+        {
+          "name": "context",
+          "type": "Context",
+          "visibility": "private"
+        },
+        {
+          "name": "fontIndicesMap",
+          "type": "Map<Integer, IconSet>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "addText",
+          "parameters": "text: CharSequence",
+          "returns": "Builder",
+          "visibility": "public"
+        },
+        {
+          "name": "addFontAwesomeIcon",
+          "parameters": "iconCode: CharSequence",
+          "returns": "Builder",
+          "visibility": "public"
+        },
+        {
+          "name": "addIcon",
+          "parameters": "iconCode: CharSequence, iconSet: IconSet",
+          "returns": "Builder",
+          "visibility": "public"
+        },
+        {
+          "name": "build",
+          "parameters": "",
+          "returns": "BootstrapText",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapText.java",
+          "line": 31,
+          "end_line": 50
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapText.java",
+          "line": 105,
+          "end_line": 124
+        }
+      ]
+    },
+    {
+      "id": "drawable_factory",
+      "label": "BootstrapDrawableFactory",
+      "kind": "class",
+      "sublabel": "运行时生成状态背景",
+      "row": 2,
+      "col": 1,
+      "methods": [
+        {
+          "name": "bootstrapButton",
+          "parameters": "context, brand, strokeWidth, cornerRadius, position, showOutline, rounded",
+          "returns": "Drawable",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "bootstrapEditText",
+          "parameters": "context, bootstrapBrand, strokeWidth, cornerRadius, rounded",
+          "returns": "Drawable",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "setupStateDrawable",
+          "parameters": "position, strokeWidth, defaultGd, activeGd, disabledGd",
+          "returns": "StateListDrawable",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "setupDrawableCorners",
+          "parameters": "position, rounded, r, defaultGd, activeGd, disabledGd",
+          "returns": "void",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapDrawableFactory.java",
+          "line": 31,
+          "end_line": 51
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapDrawableFactory.java",
+          "line": 229,
+          "end_line": 267
+        },
+        {
+          "path": "AndroidBootstrap/src/main/java/com/beardedhen/androidbootstrap/BootstrapDrawableFactory.java",
+          "line": 269,
+          "end_line": 309
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "brand_realization",
+      "from": "default_brand",
+      "to": "bootstrap_brand",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "textview_uses_brand",
+      "from": "awesome_text_view",
+      "to": "bootstrap_brand",
+      "kind": "association",
+      "label": "取色"
+    },
+    {
+      "id": "button_extends_textview",
+      "from": "bootstrap_button",
+      "to": "awesome_text_view",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "button_realizes_size",
+      "from": "bootstrap_button",
+      "to": "bootstrap_size_view",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "edit_realizes_size",
+      "from": "bootstrap_edit_text",
+      "to": "bootstrap_size_view",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "textview_holds_text",
+      "from": "awesome_text_view",
+      "to": "bootstrap_text",
+      "kind": "association",
+      "label": "持有"
+    },
+    {
+      "id": "button_draws",
+      "from": "bootstrap_button",
+      "to": "drawable_factory",
+      "kind": "dependency",
+      "label": "生成背景"
+    },
+    {
+      "id": "builder_builds_text",
+      "from": "text_builder",
+      "to": "bootstrap_text",
+      "kind": "dependency",
+      "label": "build()"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "属性即主题",
+      "items": [
+        "每个控件在 initialise 里用 obtainStyledAttributes 读品牌/尺寸序号，再换算成 float 倍数",
+        "DefaultBootstrapSize 的 scaleFactor 固定为 0.70、0.85、1.00、1.30、1.60"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Drawable 运行时生成",
+      "items": [
+        "BootstrapDrawableFactory 用 GradientDrawable + StateListDrawable 组合出默认/按下/禁用三态",
+        "成组按钮靠 ViewGroupPosition 只保留外侧圆角，并用负 inset 隐藏相邻描边"
+      ]
+    }
+  ]
+}
