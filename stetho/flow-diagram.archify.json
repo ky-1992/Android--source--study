@@ -1,0 +1,193 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "stetho 启动、接入与请求上报主流程",
+    "subtitle": "initialize 绑一条 _devtools_remote 本地套接字；首个连接到来才建协议分发器，按魔数分成 dumpapp 与 DevTools 两条通道，网络请求再从拦截器回流到同一批 peer。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/29-stetho/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/facebook/stetho",
+      "provider": "github",
+      "revision": "2198797c0ff961dd2d9b87efa711a7d734c0e4d5"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "应用进程" },
+    { "id": "core", "label": "初始化层" },
+    { "id": "io", "label": "本地套接字" },
+    { "id": "devtools", "label": "DevTools 通道" }
+  ],
+  "phases": [
+    { "id": "boot", "label": "启动绑定", "fromCol": 0, "toCol": 1 },
+    { "id": "accept", "label": "首连与分流", "fromCol": 2, "toCol": 3 },
+    { "id": "serve", "label": "协议服务", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "init_call",
+    "init_build",
+    "server_start",
+    "lazy_wrap",
+    "proto_detect",
+    "devtools_serve",
+    "devtools_reply"
+  ],
+  "nodes": [
+    {
+      "id": "init_call",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "初始化入口",
+      "sublabel": "initialize()",
+      "width": 148,
+      "sources": [
+        { "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java", "line": 123, "end_line": 133 }
+      ]
+    },
+    {
+      "id": "init_build",
+      "lane": "core",
+      "col": 1,
+      "type": "backend",
+      "label": "装配插件",
+      "sublabel": "Initializer",
+      "width": 148,
+      "sources": [
+        { "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java", "line": 497, "end_line": 528 },
+        { "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java", "line": 430, "end_line": 441 }
+      ]
+    },
+    {
+      "id": "server_start",
+      "lane": "core",
+      "col": 2,
+      "type": "backend",
+      "label": "启动监听",
+      "sublabel": "LocalSocketServer",
+      "width": 156,
+      "sources": [
+        { "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java", "line": 443, "end_line": 453 },
+        { "path": "stetho/src/main/java/com/facebook/stetho/server/LocalSocketServer.java", "line": 64, "end_line": 77 }
+      ]
+    },
+    {
+      "id": "lazy_wrap",
+      "lane": "core",
+      "col": 3,
+      "type": "backend",
+      "label": "惰性装配",
+      "sublabel": "LazySocketHandler",
+      "width": 156,
+      "sources": [
+        { "path": "stetho/src/main/java/com/facebook/stetho/server/LazySocketHandler.java", "line": 32, "end_line": 44 },
+        { "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java", "line": 455, "end_line": 461 }
+      ]
+    },
+    {
+      "id": "proto_detect",
+      "lane": "io",
+      "col": 3,
+      "type": "messagebus",
+      "label": "协议嗅探",
+      "sublabel": "MagicMatcher",
+      "width": 148,
+      "sources": [
+        { "path": "stetho/src/main/java/com/facebook/stetho/server/ProtocolDetectingSocketHandler.java", "line": 45, "end_line": 75 }
+      ]
+    },
+    {
+      "id": "devtools_serve",
+      "lane": "devtools",
+      "col": 4,
+      "type": "backend",
+      "label": "DevTools 端点",
+      "sublabel": "/inspector",
+      "width": 148,
+      "sources": [
+        { "path": "stetho/src/main/java/com/facebook/stetho/inspector/DevtoolsSocketHandler.java", "line": 33, "end_line": 47 },
+        { "path": "stetho/src/main/java/com/facebook/stetho/inspector/ChromeDevtoolsServer.java", "line": 56, "end_line": 60 }
+      ]
+    },
+    {
+      "id": "devtools_reply",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "返回响应",
+      "sublabel": "JSON-RPC",
+      "width": 140,
+      "sources": [
+        { "path": "stetho/src/main/java/com/facebook/stetho/inspector/ChromeDevtoolsServer.java", "line": 117, "end_line": 163 }
+      ]
+    },
+    {
+      "id": "dump_exec",
+      "lane": "io",
+      "col": 2,
+      "type": "backend",
+      "label": "执行 dump",
+      "sublabel": "Dumper.dump",
+      "width": 148,
+      "sources": [
+        { "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java", "line": 466, "end_line": 486 },
+        { "path": "stetho/src/main/java/com/facebook/stetho/dumpapp/Dumper.java", "line": 65, "end_line": 70 },
+        { "path": "stetho/src/main/java/com/facebook/stetho/dumpapp/DumpappSocketLikeHandler.java", "line": 37, "end_line": 49 }
+      ]
+    },
+    {
+      "id": "net_hook",
+      "lane": "app",
+      "col": 2,
+      "type": "external",
+      "label": "OkHttp 拦截",
+      "sublabel": "Interceptor",
+      "width": 148,
+      "sources": [
+        { "path": "stetho-okhttp3/src/main/java/com/facebook/stetho/okhttp3/StethoInterceptor.java", "line": 39, "end_line": 52 },
+        { "path": "stetho-okhttp3/src/main/java/com/facebook/stetho/okhttp3/StethoInterceptor.java", "line": 62, "end_line": 75 }
+      ]
+    },
+    {
+      "id": "net_report",
+      "lane": "io",
+      "col": 4,
+      "type": "messagebus",
+      "label": "上报事件",
+      "sublabel": "EventReporter",
+      "width": 148,
+      "sources": [
+        { "path": "stetho/src/main/java/com/facebook/stetho/inspector/network/NetworkEventReporterImpl.java", "line": 70, "end_line": 106 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_call_build", "from": "init_call", "to": "init_build", "label": "new Initializer" },
+    { "id": "e_build_start", "from": "init_build", "to": "server_start", "label": "start()" },
+    { "id": "e_start_lazy", "from": "server_start", "to": "lazy_wrap", "label": "accept 回调", "variant": "emphasis" },
+    { "id": "e_lazy_detect", "from": "lazy_wrap", "to": "proto_detect", "label": "首帧嗅探" },
+    { "id": "e_detect_devtools", "from": "proto_detect", "to": "devtools_serve", "label": "GET /inspector" },
+    { "id": "e_serve_reply", "from": "devtools_serve", "to": "devtools_reply", "label": "sendText", "role": "return" },
+    { "id": "e_detect_dump", "from": "proto_detect", "to": "dump_exec", "label": "DUMP 魔数", "variant": "dashed", "role": "branch" },
+    { "id": "e_hook_report", "from": "net_hook", "to": "net_report", "label": "isEnabled", "role": "branch" },
+    { "id": "e_report_reply", "from": "net_report", "to": "devtools_reply", "label": "sendNotification", "variant": "dashed", "role": "return" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "延迟初始化",
+      "items": [
+        "initialize 只做 ActivityTracker 挂钩与套接字绑定，真正创建 Dumper、分发器发生在首个连接"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "网络拦截",
+      "items": [
+        "StethoInterceptor 只做事件搬运：requestWillBeSent、responseHeadersReceived、interpretResponseStream",
+        "只有 Chrome 打开 Network 面板并注册 peer 后 isEnabled 才为 true，避免常规调试付代价"
+      ]
+    }
+  ]
+}

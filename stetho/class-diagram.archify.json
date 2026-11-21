@@ -1,0 +1,626 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "stetho 核心类型结构",
+    "subtitle": "Stetho 只做装配与启动；Initializer 把 dump 插件与 DevTools 模块挂到一条本地套接字上，LazySocketHandler 推迟到首个连接才创建真正的处理器。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/29-stetho/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/facebook/stetho",
+      "provider": "github",
+      "revision": "2198797c0ff961dd2d9b87efa711a7d734c0e4d5"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "dumper_provider",
+      "label": "DumperPluginsProvider",
+      "kind": "interface",
+      "sublabel": "惰性提供 dump 插件",
+      "row": 0,
+      "col": 0,
+      "attributes": [],
+      "methods": [
+        {
+          "name": "get",
+          "parameters": "",
+          "returns": "Iterable<DumperPlugin>",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/DumperPluginsProvider.java",
+          "line": 17,
+          "end_line": 19
+        }
+      ]
+    },
+    {
+      "id": "stetho",
+      "label": "Stetho",
+      "kind": "class",
+      "sublabel": "初始化入口与装配",
+      "row": 0,
+      "col": 1,
+      "attributes": [],
+      "methods": [
+        {
+          "name": "initializeWithDefaults",
+          "parameters": "context: Context",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "initialize",
+          "parameters": "initializer: Initializer",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "newInitializerBuilder",
+          "parameters": "context: Context",
+          "returns": "InitializerBuilder",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "defaultDumperPluginsProvider",
+          "parameters": "context: Context",
+          "returns": "DumperPluginsProvider",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "defaultInspectorModulesProvider",
+          "parameters": "context: Context",
+          "returns": "InspectorModulesProvider",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java",
+          "line": 93,
+          "end_line": 95
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java",
+          "line": 103,
+          "end_line": 115
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java",
+          "line": 123,
+          "end_line": 133
+        }
+      ]
+    },
+    {
+      "id": "dumper",
+      "label": "Dumper",
+      "kind": "class",
+      "sublabel": "命令行插件分派",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mDumperPlugins",
+          "type": "Map<String, DumperPlugin>",
+          "visibility": "private"
+        },
+        {
+          "name": "mParser",
+          "type": "CommandLineParser",
+          "visibility": "private"
+        },
+        {
+          "name": "mGlobalOptions",
+          "type": "GlobalOptions",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "dump",
+          "parameters": "input: InputStream, out: PrintStream, err: PrintStream, args: String[]",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/dumpapp/Dumper.java",
+          "line": 25,
+          "end_line": 43
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/dumpapp/Dumper.java",
+          "line": 65,
+          "end_line": 70
+        }
+      ]
+    },
+    {
+      "id": "initializer",
+      "label": "Initializer",
+      "kind": "abstract",
+      "sublabel": "懒加载插件钩子",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mContext",
+          "type": "Context",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getDumperPlugins",
+          "parameters": "",
+          "returns": "Iterable<DumperPlugin>",
+          "visibility": "protected",
+          "abstract": true
+        },
+        {
+          "name": "getInspectorModules",
+          "parameters": "",
+          "returns": "Iterable<ChromeDevtoolsDomain>",
+          "visibility": "protected",
+          "abstract": true
+        },
+        {
+          "name": "start",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "create",
+          "parameters": "",
+          "returns": "SocketHandler",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java",
+          "line": 430,
+          "end_line": 441
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java",
+          "line": 443,
+          "end_line": 453
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/Stetho.java",
+          "line": 457,
+          "end_line": 469
+        }
+      ]
+    },
+    {
+      "id": "local_server",
+      "label": "LocalSocketServer",
+      "kind": "class",
+      "sublabel": "本地套接字监听",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mFriendlyName",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "mAddress",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "mSocketHandler",
+          "type": "SocketHandler",
+          "visibility": "private"
+        },
+        {
+          "name": "mServerSocket",
+          "type": "LocalServerSocket",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "run",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "listenOnAddress",
+          "parameters": "address: String",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "stop",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/server/LocalSocketServer.java",
+          "line": 24,
+          "end_line": 40
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/server/LocalSocketServer.java",
+          "line": 64,
+          "end_line": 77
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/server/LocalSocketServer.java",
+          "line": 78,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "lazy_handler",
+      "label": "LazySocketHandler",
+      "kind": "class",
+      "sublabel": "首连时才装配",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mSocketHandlerFactory",
+          "type": "SocketHandlerFactory",
+          "visibility": "private"
+        },
+        {
+          "name": "mSocketHandler",
+          "type": "SocketHandler",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onAccepted",
+          "parameters": "socket: LocalSocket",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getSocketHandler",
+          "parameters": "",
+          "returns": "SocketHandler",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/server/LazySocketHandler.java",
+          "line": 22,
+          "end_line": 30
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/server/LazySocketHandler.java",
+          "line": 32,
+          "end_line": 44
+        }
+      ]
+    },
+    {
+      "id": "chrome_server",
+      "label": "ChromeDevtoolsServer",
+      "kind": "class",
+      "sublabel": "JSON-RPC 端点",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "PATH",
+          "type": "String",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "mMethodDispatcher",
+          "type": "MethodDispatcher",
+          "visibility": "private"
+        },
+        {
+          "name": "mPeers",
+          "type": "Map<SimpleSession, JsonRpcPeer>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onOpen",
+          "parameters": "session: SimpleSession",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onMessage",
+          "parameters": "session: SimpleSession, message: String",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "handleRemoteRequest",
+          "parameters": "peer: JsonRpcPeer, requestNode: JSONObject",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/inspector/ChromeDevtoolsServer.java",
+          "line": 39,
+          "end_line": 50
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/inspector/ChromeDevtoolsServer.java",
+          "line": 56,
+          "end_line": 60
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/inspector/ChromeDevtoolsServer.java",
+          "line": 104,
+          "end_line": 116
+        }
+      ]
+    },
+    {
+      "id": "dump_handler",
+      "label": "DumpappSocketLikeHandler",
+      "kind": "class",
+      "sublabel": "DUMP 协议处理器",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "PROTOCOL_MAGIC",
+          "type": "byte[]",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "PROTOCOL_VERSION",
+          "type": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "mDumper",
+          "type": "Dumper",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onAccepted",
+          "parameters": "socket: SocketLike",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "dump",
+          "parameters": "dumper: Dumper, framer: Framer, args: String[]",
+          "returns": "void",
+          "visibility": "package"
+        }
+      ],
+      "sources": [
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/dumpapp/DumpappSocketLikeHandler.java",
+          "line": 26,
+          "end_line": 33
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/dumpapp/DumpappSocketLikeHandler.java",
+          "line": 37,
+          "end_line": 49
+        }
+      ]
+    },
+    {
+      "id": "protocol_handler",
+      "label": "ProtocolDetectingSocketHandler",
+      "kind": "class",
+      "sublabel": "按魔数分流",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "SENSING_BUFFER_SIZE",
+          "type": "int",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "mHandlers",
+          "type": "ArrayList<HandlerInfo>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "addHandler",
+          "parameters": "magicMatcher: MagicMatcher, handler: SocketLikeHandler",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onSecured",
+          "parameters": "socket: LocalSocket",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/server/ProtocolDetectingSocketHandler.java",
+          "line": 31,
+          "end_line": 44
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/server/ProtocolDetectingSocketHandler.java",
+          "line": 45,
+          "end_line": 75
+        }
+      ]
+    },
+    {
+      "id": "devtools_handler",
+      "label": "DevtoolsSocketHandler",
+      "kind": "class",
+      "sublabel": "DevTools 协议入口",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mModules",
+          "type": "Iterable<ChromeDevtoolsDomain>",
+          "visibility": "private"
+        },
+        {
+          "name": "mServer",
+          "type": "LightHttpServer",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "createServer",
+          "parameters": "",
+          "returns": "LightHttpServer",
+          "visibility": "private"
+        },
+        {
+          "name": "onAccepted",
+          "parameters": "socket: SocketLike",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/inspector/DevtoolsSocketHandler.java",
+          "line": 23,
+          "end_line": 31
+        },
+        {
+          "path": "stetho/src/main/java/com/facebook/stetho/inspector/DevtoolsSocketHandler.java",
+          "line": 33,
+          "end_line": 47
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r_stetho_init",
+      "from": "stetho",
+      "to": "initializer",
+      "kind": "dependency",
+      "label": "initialize"
+    },
+    {
+      "id": "r_stetho_provider",
+      "from": "stetho",
+      "to": "dumper_provider",
+      "kind": "dependency",
+      "label": "默认 provider"
+    },
+    {
+      "id": "r_provider_dumper",
+      "from": "dumper_provider",
+      "to": "dumper",
+      "kind": "dependency",
+      "label": "提供插件"
+    },
+    {
+      "id": "r_init_dumper",
+      "from": "initializer",
+      "to": "dumper",
+      "kind": "dependency",
+      "label": "new Dumper"
+    },
+    {
+      "id": "r_init_server",
+      "from": "initializer",
+      "to": "local_server",
+      "kind": "dependency",
+      "label": "new + start"
+    },
+    {
+      "id": "r_init_lazy",
+      "from": "initializer",
+      "to": "lazy_handler",
+      "kind": "composition",
+      "label": "包住工厂"
+    },
+    {
+      "id": "r_lazy_protocol",
+      "from": "lazy_handler",
+      "to": "protocol_handler",
+      "kind": "dependency",
+      "label": "factory.create"
+    },
+    {
+      "id": "r_protocol_dump",
+      "from": "protocol_handler",
+      "to": "dump_handler",
+      "kind": "dependency",
+      "label": "addHandler"
+    },
+    {
+      "id": "r_protocol_devtools",
+      "from": "protocol_handler",
+      "to": "devtools_handler",
+      "kind": "dependency",
+      "label": "addHandler"
+    },
+    {
+      "id": "r_devtools_chrome",
+      "from": "devtools_handler",
+      "to": "chrome_server",
+      "kind": "composition",
+      "label": "new WebSocketHandler"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "懒加载设计",
+      "items": [
+        "Stetho.initialize 启动时只挂钩 ActivityTracker，并把服务名绑到 _devtools_remote 后缀，重活留给首个连接",
+        "真实处理器由 RealSocketHandlerFactory 在 LazySocketHandler 内部首次调用时创建"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "一条套接字两种协议",
+      "items": [
+        "魔数匹配分别是 DUMP、GET /dumpapp、POST /dumpapp，其余全部落到 DevTools 处理器",
+        "dump 走 Framer 帧协议 + 退出码；DevTools 走 HTTP/WebSocket 与 JSON-RPC"
+      ]
+    }
+  ]
+}
