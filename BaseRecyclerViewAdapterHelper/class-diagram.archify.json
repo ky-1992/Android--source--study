@@ -1,0 +1,688 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "BRVAH 4.x 核心类型结构",
+    "subtitle": "BaseQuickAdapter 用 final 覆写收口模板方法；加载更多、多布局、拖拽与动画都拆成独立类型协作。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/30-BaseRecyclerViewAdapterHelper/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/CymChad/BaseRecyclerViewAdapterHelper",
+      "provider": "github",
+      "revision": "40997b531652019b10ed2fdd2712da5709dd90d3"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "base_quick_adapter",
+      "label": "BaseQuickAdapter",
+      "kind": "abstract",
+      "sublabel": "列表适配器模板基类",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "items",
+          "type": "List<T>",
+          "visibility": "protected"
+        },
+        {
+          "name": "mDiffer",
+          "type": "AsyncListDiffer<T>?",
+          "visibility": "private"
+        },
+        {
+          "name": "stateView",
+          "type": "View?",
+          "visibility": "private"
+        },
+        {
+          "name": "animationEnable",
+          "type": "Boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "mLastPosition",
+          "type": "Int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onCreateViewHolder",
+          "parameters": "context, parent, viewType",
+          "returns": "VH",
+          "visibility": "protected",
+          "abstract": true
+        },
+        {
+          "name": "onBindViewHolder",
+          "parameters": "holder: VH, position: Int, item: T?",
+          "returns": "Unit",
+          "visibility": "protected",
+          "abstract": true
+        },
+        {
+          "name": "getItemViewType",
+          "parameters": "position: Int, list: List<T>",
+          "returns": "Int",
+          "visibility": "public"
+        },
+        {
+          "name": "submitList",
+          "parameters": "list: List<T>?",
+          "returns": "Unit",
+          "visibility": "public"
+        },
+        {
+          "name": "runAnimator",
+          "parameters": "holder: RecyclerView.ViewHolder",
+          "returns": "Unit",
+          "visibility": "private"
+        },
+        {
+          "name": "setItemAnimation",
+          "parameters": "animationType: AnimationType",
+          "returns": "Unit",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/BaseQuickAdapter.kt",
+          "line": 35,
+          "end_line": 50
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/BaseQuickAdapter.kt",
+          "line": 232,
+          "end_line": 244
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/BaseQuickAdapter.kt",
+          "line": 283,
+          "end_line": 339
+        }
+      ]
+    },
+    {
+      "id": "quick_view_holder",
+      "label": "QuickViewHolder",
+      "kind": "class",
+      "sublabel": "SparseArray 缓存的 VH",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "views",
+          "type": "SparseArray<View>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "QuickViewHolder",
+          "parameters": "resId: Int, parent: ViewGroup",
+          "returns": "QuickViewHolder",
+          "visibility": "public"
+        },
+        {
+          "name": "getView",
+          "parameters": "viewId: Int",
+          "returns": "T : View",
+          "visibility": "public"
+        },
+        {
+          "name": "getViewOrNull",
+          "parameters": "viewId: Int",
+          "returns": "T?",
+          "visibility": "public"
+        },
+        {
+          "name": "setText",
+          "parameters": "viewId: Int, value: CharSequence?",
+          "returns": "QuickViewHolder",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/viewholder/QuickViewHolder.kt",
+          "line": 24,
+          "end_line": 34
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/viewholder/QuickViewHolder.kt",
+          "line": 36,
+          "end_line": 48
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/viewholder/QuickViewHolder.kt",
+          "line": 54,
+          "end_line": 60
+        }
+      ]
+    },
+    {
+      "id": "quick_adapter_helper",
+      "label": "QuickAdapterHelper",
+      "kind": "class",
+      "sublabel": "ConcatAdapter 拼接助手",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "contentAdapter",
+          "type": "BaseQuickAdapter<*, *>",
+          "visibility": "public"
+        },
+        {
+          "name": "trailingLoadStateAdapter",
+          "type": "TrailingLoadStateAdapter<*>?",
+          "visibility": "public"
+        },
+        {
+          "name": "mAdapter",
+          "type": "ConcatAdapter",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "adapter",
+          "parameters": "",
+          "returns": "ConcatAdapter",
+          "visibility": "public"
+        },
+        {
+          "name": "addAfterAdapter",
+          "parameters": "adapter: BaseQuickAdapter",
+          "returns": "QuickAdapterHelper",
+          "visibility": "public"
+        },
+        {
+          "name": "addBeforeAdapter",
+          "parameters": "adapter: BaseQuickAdapter",
+          "returns": "QuickAdapterHelper",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/QuickAdapterHelper.kt",
+          "line": 47,
+          "end_line": 77
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/QuickAdapterHelper.kt",
+          "line": 155,
+          "end_line": 195
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/QuickAdapterHelper.kt",
+          "line": 329,
+          "end_line": 340
+        }
+      ]
+    },
+    {
+      "id": "item_animator",
+      "label": "ItemAnimator",
+      "kind": "interface",
+      "sublabel": "单条入场动画接口",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        {
+          "name": "animator",
+          "parameters": "view: View",
+          "returns": "Animator",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/animation/ItemAnimator.kt",
+          "line": 9,
+          "end_line": 11
+        }
+      ]
+    },
+    {
+      "id": "base_multi_item_adapter",
+      "label": "BaseMultiItemAdapter",
+      "kind": "abstract",
+      "sublabel": "按类型注册的监听表",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "typeViewHolders",
+          "type": "SparseArray<OnMultiItemAdapterListener>",
+          "visibility": "private"
+        },
+        {
+          "name": "onItemViewTypeListener",
+          "type": "OnItemViewTypeListener<T>?",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "addItemType",
+          "parameters": "itemViewType: Int, listener",
+          "returns": "BaseMultiItemAdapter",
+          "visibility": "public"
+        },
+        {
+          "name": "onItemViewType",
+          "parameters": "listener: OnItemViewTypeListener<T>?",
+          "returns": "BaseMultiItemAdapter",
+          "visibility": "public"
+        },
+        {
+          "name": "onCreateViewHolder",
+          "parameters": "context, parent, viewType",
+          "returns": "RecyclerView.ViewHolder",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/BaseMultiItemAdapter.kt",
+          "line": 17,
+          "end_line": 35
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/BaseMultiItemAdapter.kt",
+          "line": 37,
+          "end_line": 50
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/BaseMultiItemAdapter.kt",
+          "line": 69,
+          "end_line": 78
+        }
+      ]
+    },
+    {
+      "id": "base_single_item_adapter",
+      "label": "BaseSingleItemAdapter",
+      "kind": "abstract",
+      "sublabel": "只渲染一条数据的适配器",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mItem",
+          "type": "T?",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onBindViewHolder",
+          "parameters": "holder: VH, item: T?",
+          "returns": "Unit",
+          "visibility": "protected",
+          "abstract": true
+        },
+        {
+          "name": "setItem",
+          "parameters": "t: T?, payload: Any?",
+          "returns": "Unit",
+          "visibility": "public"
+        },
+        {
+          "name": "getItemCount",
+          "parameters": "items: List<Any>",
+          "returns": "Int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/BaseSingleItemAdapter.kt",
+          "line": 15,
+          "end_line": 34
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/BaseSingleItemAdapter.kt",
+          "line": 47,
+          "end_line": 50
+        }
+      ]
+    },
+    {
+      "id": "quick_drag_and_swipe",
+      "label": "QuickDragAndSwipe",
+      "kind": "class",
+      "sublabel": "ItemTouchHelper 回调实现",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "_itemTouchHelper",
+          "type": "ItemTouchHelper",
+          "visibility": "private"
+        },
+        {
+          "name": "_dataCallback",
+          "type": "DragAndSwipeDataCallback?",
+          "visibility": "private"
+        },
+        {
+          "name": "_dragMoveFlags",
+          "type": "Int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "attachToRecyclerView",
+          "parameters": "recyclerView: RecyclerView",
+          "returns": "QuickDragAndSwipe",
+          "visibility": "public"
+        },
+        {
+          "name": "onMove",
+          "parameters": "recyclerView, viewHolder, target",
+          "returns": "Boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "onSwiped",
+          "parameters": "viewHolder, direction: Int",
+          "returns": "Unit",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/dragswipe/QuickDragAndSwipe.kt",
+          "line": 16,
+          "end_line": 38
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/dragswipe/QuickDragAndSwipe.kt",
+          "line": 171,
+          "end_line": 177
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/dragswipe/QuickDragAndSwipe.kt",
+          "line": 200,
+          "end_line": 209
+        }
+      ]
+    },
+    {
+      "id": "load_state_adapter",
+      "label": "LoadStateAdapter",
+      "kind": "abstract",
+      "sublabel": "加载状态单条适配器",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "loadState",
+          "type": "LoadState",
+          "visibility": "public"
+        },
+        {
+          "name": "recyclerView",
+          "type": "RecyclerView?",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "displayLoadStateAsItem",
+          "parameters": "loadState: LoadState",
+          "returns": "Boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "getItemCount",
+          "parameters": "",
+          "returns": "Int",
+          "visibility": "public"
+        },
+        {
+          "name": "getItemViewType",
+          "parameters": "position: Int",
+          "returns": "Int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/loadState/LoadStateAdapter.kt",
+          "line": 13,
+          "end_line": 23
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/loadState/LoadStateAdapter.kt",
+          "line": 74,
+          "end_line": 76
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/loadState/LoadStateAdapter.kt",
+          "line": 131,
+          "end_line": 133
+        }
+      ]
+    },
+    {
+      "id": "trailing_load_state_adapter",
+      "label": "TrailingLoadStateAdapter",
+      "kind": "abstract",
+      "sublabel": "尾部加载更多",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "onTrailingListener",
+          "type": "OnTrailingListener?",
+          "visibility": "public"
+        },
+        {
+          "name": "isAutoLoadMore",
+          "type": "Boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "preloadSize",
+          "type": "Int",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onViewAttachedToWindow",
+          "parameters": "holder: VH",
+          "returns": "Unit",
+          "visibility": "public"
+        },
+        {
+          "name": "checkPreload",
+          "parameters": "itemCount: Int, currentPosition: Int",
+          "returns": "Unit",
+          "visibility": "package"
+        },
+        {
+          "name": "invokeLoadMore",
+          "parameters": "",
+          "returns": "Unit",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/loadState/trailing/TrailingLoadStateAdapter.kt",
+          "line": 17,
+          "end_line": 46
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/loadState/trailing/TrailingLoadStateAdapter.kt",
+          "line": 62,
+          "end_line": 67
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/loadState/trailing/TrailingLoadStateAdapter.kt",
+          "line": 102,
+          "end_line": 113
+        }
+      ]
+    },
+    {
+      "id": "base_node_adapter",
+      "label": "BaseNodeAdapter",
+      "kind": "abstract",
+      "sublabel": "树形节点列表适配器",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "openedSet",
+          "type": "NodeSet",
+          "visibility": "private"
+        },
+        {
+          "name": "closedSet",
+          "type": "NodeSet",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getChildNodeList",
+          "parameters": "position: Int, parent: Any",
+          "returns": "List<Any>?",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "open",
+          "parameters": "position: Int, positionPayload: Any?",
+          "returns": "Boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "closeAll",
+          "parameters": "",
+          "returns": "Unit",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/BaseNodeAdapter.kt",
+          "line": 16,
+          "end_line": 28
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/BaseNodeAdapter.kt",
+          "line": 89,
+          "end_line": 109
+        },
+        {
+          "path": "library/src/main/java/com/chad/library/adapter4/BaseNodeAdapter.kt",
+          "line": 295,
+          "end_line": 299
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "helper_holds_content",
+      "from": "quick_adapter_helper",
+      "to": "base_quick_adapter",
+      "kind": "association",
+      "label": "contentAdapter"
+    },
+    {
+      "id": "helper_holds_trailing",
+      "from": "quick_adapter_helper",
+      "to": "trailing_load_state_adapter",
+      "kind": "aggregation",
+      "label": "拼接尾部"
+    },
+    {
+      "id": "multi_extends_base",
+      "from": "base_multi_item_adapter",
+      "to": "base_quick_adapter",
+      "kind": "inheritance"
+    },
+    {
+      "id": "single_extends_base",
+      "from": "base_single_item_adapter",
+      "to": "base_quick_adapter",
+      "kind": "inheritance"
+    },
+    {
+      "id": "node_extends_base",
+      "from": "base_node_adapter",
+      "to": "base_quick_adapter",
+      "kind": "inheritance"
+    },
+    {
+      "id": "trailing_extends_load_state",
+      "from": "trailing_load_state_adapter",
+      "to": "load_state_adapter",
+      "kind": "inheritance"
+    },
+    {
+      "id": "base_uses_holder",
+      "from": "base_quick_adapter",
+      "to": "quick_view_holder",
+      "kind": "dependency",
+      "label": "泛型 VH"
+    },
+    {
+      "id": "base_uses_animator",
+      "from": "base_quick_adapter",
+      "to": "item_animator",
+      "kind": "dependency",
+      "label": "入场动画"
+    },
+    {
+      "id": "drag_uses_base",
+      "from": "quick_drag_and_swipe",
+      "to": "base_quick_adapter",
+      "kind": "dependency",
+      "label": "位置变更回调"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "模板方法收口",
+      "items": [
+        "getItemCount / getItemViewType / onCreateViewHolder / onBindViewHolder 均为 final override，子类只能实现 protected 版本",
+        "空状态由 StateLayoutVH 占一个 item，与内容共用同一个 Adapter"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "职责拆分",
+      "items": [
+        "4.x 把加载更多拆到 LoadStateAdapter 家族，靠 ConcatAdapter 拼在首尾，BaseQuickAdapter 不再感知分页",
+        "拖拽/侧滑交给 ItemTouchHelper.Callback，多布局交给 addItemType 的监听表"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Diff 与动画",
+      "items": [
+        "构造传入 DiffUtil.ItemCallback 即启用 AsyncListDiffer，submitList 走异步 diff",
+        "runAnimator 用 mLastPosition 做水位线，只给新出现的 position 放入场动画"
+      ]
+    }
+  ]
+}

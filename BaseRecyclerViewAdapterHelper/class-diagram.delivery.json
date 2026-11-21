@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "24645e78-eafe-4814-be0c-dd593a9a2e15",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/30-BaseRecyclerViewAdapterHelper/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/30-BaseRecyclerViewAdapterHelper/class-diagram.html",
+  "specification": {
+    "sha256": "364a464ec5a74fc34463ad927beff2418bfc7a12b941aaf7a3d82c85d273c6ec",
+    "bytes": 18664
+  },
+  "artifact": {
+    "sha256": "e178032903ab7e7188f8adc0d1f46ffc6d7ac58037814e718f351aaa20934f3b",
+    "bytes": 901356
+  }
+}

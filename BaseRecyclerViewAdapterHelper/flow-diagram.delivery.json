@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "18b271f8-81ff-47df-9775-3fd4b0ab31e2",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/30-BaseRecyclerViewAdapterHelper/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/30-BaseRecyclerViewAdapterHelper/flow-diagram.html",
+  "specification": {
+    "sha256": "4ba381f994ebe4e32545e2b851c7e7d74dd9cf4117da94b2151a59ce06b8df9f",
+    "bytes": 6703
+  },
+  "artifact": {
+    "sha256": "b03ef8440690f586bd6701214a833e721c757a7870a409f204dddd35fa961bb7",
+    "bytes": 850416
+  }
+}

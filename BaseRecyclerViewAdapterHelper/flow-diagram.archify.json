@@ -1,0 +1,182 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "BRVAH 列表渲染与加载更多主流程",
+    "subtitle": "submitList 触发 diff 与视图创建，绑定后放入场动画；尾部加载更多由独立的 LoadStateAdapter 在滚动时预加载。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/30-BaseRecyclerViewAdapterHelper/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/CymChad/BaseRecyclerViewAdapterHelper",
+      "provider": "github",
+      "revision": "40997b531652019b10ed2fdd2712da5709dd90d3"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "业务方" },
+    { "id": "adapter", "label": "内容适配器" },
+    { "id": "helper", "label": "装配助手" },
+    { "id": "state", "label": "加载状态" }
+  ],
+  "phases": [
+    { "id": "data", "label": "数据与装配", "fromCol": 0, "toCol": 1 },
+    { "id": "render", "label": "视图渲染", "fromCol": 2, "toCol": 3 },
+    { "id": "load", "label": "加载更多", "fromCol": 4, "toCol": 4, "variant": "emphasis" }
+  ],
+  "mainPath": ["n_submit", "n_differ", "n_type", "n_bind", "n_anim"],
+  "nodes": [
+    {
+      "id": "n_submit",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "提交数据",
+      "sublabel": "submitList",
+      "width": 144,
+      "sources": [
+        { "path": "library/src/main/java/com/chad/library/adapter4/BaseQuickAdapter.kt", "line": 620, "end_line": 660 }
+      ]
+    },
+    {
+      "id": "n_helper",
+      "lane": "helper",
+      "col": 0,
+      "type": "cloud",
+      "label": "构建助手",
+      "sublabel": "Builder",
+      "width": 144,
+      "sources": [
+        { "path": "library/src/main/java/com/chad/library/adapter4/QuickAdapterHelper.kt", "line": 329, "end_line": 340 },
+        { "path": "library/src/main/java/com/chad/library/adapter4/QuickAdapterHelper.kt", "line": 442, "end_line": 451 }
+      ]
+    },
+    {
+      "id": "n_differ",
+      "lane": "adapter",
+      "col": 1,
+      "type": "backend",
+      "label": "Diff 计算",
+      "sublabel": "AsyncListDiffer",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/chad/library/adapter4/BaseQuickAdapter.kt", "line": 61, "end_line": 62 },
+        { "path": "library/src/main/java/com/chad/library/adapter4/BaseQuickAdapter.kt", "line": 620, "end_line": 645 }
+      ]
+    },
+    {
+      "id": "n_trail",
+      "lane": "state",
+      "col": 1,
+      "type": "messagebus",
+      "label": "尾部加载器",
+      "sublabel": "TrailingLoad",
+      "width": 156,
+      "sources": [
+        { "path": "library/src/main/java/com/chad/library/adapter4/loadState/trailing/TrailingLoadStateAdapter.kt", "line": 17, "end_line": 46 },
+        { "path": "library/src/main/java/com/chad/library/adapter4/QuickAdapterHelper.kt", "line": 110, "end_line": 150 }
+      ]
+    },
+    {
+      "id": "n_type",
+      "lane": "adapter",
+      "col": 2,
+      "type": "backend",
+      "label": "判断类型",
+      "sublabel": "getItemViewType",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/chad/library/adapter4/BaseQuickAdapter.kt", "line": 299, "end_line": 302 }
+      ]
+    },
+    {
+      "id": "n_preload",
+      "lane": "state",
+      "col": 2,
+      "type": "messagebus",
+      "label": "预加载检查",
+      "sublabel": "checkPreload",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/chad/library/adapter4/loadState/trailing/TrailingLoadStateAdapter.kt", "line": 102, "end_line": 108 }
+      ]
+    },
+    {
+      "id": "n_bind",
+      "lane": "adapter",
+      "col": 3,
+      "type": "backend",
+      "label": "创建并绑定",
+      "sublabel": "VH + item",
+      "width": 156,
+      "sources": [
+        { "path": "library/src/main/java/com/chad/library/adapter4/BaseQuickAdapter.kt", "line": 304, "end_line": 339 }
+      ]
+    },
+    {
+      "id": "n_state",
+      "lane": "state",
+      "col": 3,
+      "type": "backend",
+      "label": "空状态布局",
+      "sublabel": "StateLayoutVH",
+      "width": 156,
+      "sources": [
+        { "path": "library/src/main/java/com/chad/library/adapter4/BaseQuickAdapter.kt", "line": 283, "end_line": 298 },
+        { "path": "library/src/main/java/com/chad/library/adapter4/viewholder/StateLayoutVH.kt", "line": 17, "end_line": 32 }
+      ]
+    },
+    {
+      "id": "n_callback",
+      "lane": "app",
+      "col": 3,
+      "type": "external",
+      "label": "加载回调",
+      "sublabel": "onLoad()",
+      "width": 144,
+      "sources": [
+        { "path": "library/src/main/java/com/chad/library/adapter4/loadState/trailing/TrailingLoadStateAdapter.kt", "line": 110, "end_line": 113 }
+      ]
+    },
+    {
+      "id": "n_anim",
+      "lane": "adapter",
+      "col": 4,
+      "type": "frontend",
+      "label": "入场动画",
+      "sublabel": "ItemAnimator",
+      "width": 144,
+      "sources": [
+        { "path": "library/src/main/java/com/chad/library/adapter4/BaseQuickAdapter.kt", "line": 560, "end_line": 570 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_submit_differ", "from": "n_submit", "to": "n_differ", "label": "diff+notify", "role": "main" },
+    { "id": "e_differ_type", "from": "n_differ", "to": "n_type", "label": "列表变化", "role": "main" },
+    { "id": "e_type_bind", "from": "n_type", "to": "n_bind", "label": "按类型创建", "role": "main" },
+    { "id": "e_bind_anim", "from": "n_bind", "to": "n_anim", "label": "首次显示", "role": "main" },
+    { "id": "e_helper_trail", "from": "n_helper", "to": "n_trail", "label": "拼接", "role": "branch", "variant": "dashed" },
+    { "id": "e_trail_preload", "from": "n_trail", "to": "n_preload", "label": "滚动近尾", "role": "main" },
+    { "id": "e_preload_callback", "from": "n_preload", "to": "n_callback", "label": "invokeLoadMore", "role": "main" },
+    { "id": "e_type_state", "from": "n_type", "to": "n_state", "label": "空列表", "role": "branch", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "渲染侧要点",
+      "items": [
+        "getItemCount / getItemViewType / onCreateViewHolder 都是 final，空状态和内容共享同一个 Adapter",
+        "runAnimator 只在 holder.layoutPosition 超过水位线时执行，滚动复用不会重复播放"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "加载侧要点",
+      "items": [
+        "QuickAdapterHelper 用 ConcatAdapter 把内容、首尾 LoadStateAdapter 拼成一个 adapter 挂到列表",
+        "preloadSize 为 0 时在 footer 附着时触发，否则由 checkPreload 按距尾部条数提前加载"
+      ]
+    }
+  ]
+}

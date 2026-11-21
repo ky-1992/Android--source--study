@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "class",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/30-BaseRecyclerViewAdapterHelper/class-diagram.archify.json",
+    "sha256": "364a464ec5a74fc34463ad927beff2418bfc7a12b941aaf7a3d82c85d273c6ec",
+    "bytes": 18664
+  },
+  "artifact": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/30-BaseRecyclerViewAdapterHelper/class-diagram.html",
+    "sha256": "e178032903ab7e7188f8adc0d1f46ffc6d7ac58037814e718f351aaa20934f3b",
+    "bytes": 901356
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/30-BaseRecyclerViewAdapterHelper/class-diagram.finalize.json",
+    "summaryReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/30-BaseRecyclerViewAdapterHelper/class-diagram.finalize-summary.json",
+    "browserCheckReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/30-BaseRecyclerViewAdapterHelper/class-diagram.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-19T14:45:18.953Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 15764,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "routesOverSuggestedBends": 3
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [],
+      "detours": [
+        {
+          "relationship": {
+            "id": "single_extends_base",
+            "from": "base_single_item_adapter",
+            "to": "base_quick_adapter",
+            "label": "",
+            "collectionIndex": 3,
+            "artifactIndex": 3
+          },
+          "bends": 3,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "node_extends_base",
+            "from": "base_node_adapter",
+            "to": "base_quick_adapter",
+            "label": "",
+            "collectionIndex": 4,
+            "artifactIndex": 4
+          },
+          "bends": 3,
+          "stretch": 1.041,
+          "directCorridorBlockers": [
+            {
+              "id": "base_multi_item_adapter",
+              "label": "BaseMultiItemAdapter",
+              "box": [
+                460,
+                608,
+                300,
+                324
+              ]
+            },
+            {
+              "id": "quick_drag_and_swipe",
+              "label": "QuickDragAndSwipe",
+              "box": [
+                460,
+                1016,
+                300,
+                314
+              ]
+            }
+          ]
+        },
+        {
+          "relationship": {
+            "id": "drag_uses_base",
+            "from": "quick_drag_and_swipe",
+            "to": "base_quick_adapter",
+            "label": "位置变更回调",
+            "collectionIndex": 8,
+            "artifactIndex": 8
+          },
+          "bends": 3,
+          "stretch": 1.06,
+          "directCorridorBlockers": [
+            {
+              "id": "base_multi_item_adapter",
+              "label": "BaseMultiItemAdapter",
+              "box": [
+                460,
+                608,
+                300,
+                324
+              ]
+            }
+          ]
+        }
+      ],
+      "truncated": false
+    },
+    "repair": "Advisory only: this mode places or routes these relationships itself. Report them; do not remove relationships or meaning to reduce crossings."
+  }
+}
