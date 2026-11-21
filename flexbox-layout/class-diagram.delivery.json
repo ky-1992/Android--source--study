@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "f84ced8e-cf99-4eaa-a7cb-e070b87c3702",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/25-flexbox-layout/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/25-flexbox-layout/class-diagram.html",
+  "specification": {
+    "sha256": "1614f30eb80bc2b6ec9522faf64653f96c42e3f4b78f36938d2c1d1bf7ebbee6",
+    "bytes": 18972
+  },
+  "artifact": {
+    "sha256": "f0703e3b0d0e421d2641b4042b2f5dc4d6a97fd091e8266b7709654dbc428b49",
+    "bytes": 904725
+  }
+}

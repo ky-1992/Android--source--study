@@ -1,0 +1,753 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "flexbox-layout 核心类型结构",
+    "subtitle": "FlexboxLayout 与 FlexboxLayoutManager 共用 FlexContainer 抽象，把测量、换行与对齐委托给 FlexboxHelper，行信息落在 FlexLine。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/25-flexbox-layout/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/google/flexbox-layout",
+      "provider": "github",
+      "revision": "366b461fd0425bfaa9872b1d9af9da3055d3bc74"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "flexbox_layout",
+      "label": "FlexboxLayout",
+      "kind": "class",
+      "sublabel": "ViewGroup 版弹性容器",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mFlexDirection",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mFlexWrap",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mJustifyContent",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mAlignItems",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mAlignContent",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mFlexLines",
+          "type": "List<FlexLine>",
+          "visibility": "private"
+        },
+        {
+          "name": "mFlexboxHelper",
+          "type": "FlexboxHelper",
+          "visibility": "private"
+        },
+        {
+          "name": "mReorderedIndices",
+          "type": "int[]",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onMeasure",
+          "parameters": "widthMeasureSpec: int, heightMeasureSpec: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "measureHorizontal",
+          "parameters": "widthMeasureSpec: int, heightMeasureSpec: int",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "onLayout",
+          "parameters": "changed: boolean, left, top, right, bottom: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "layoutHorizontal",
+          "parameters": "isRtl: boolean, left, top, right, bottom: int",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "setFlexDirection",
+          "parameters": "flexDirection: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onNewFlexLineAdded",
+          "parameters": "flexLine: FlexLine",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayout.java",
+          "line": 78,
+          "end_line": 80
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayout.java",
+          "line": 263,
+          "end_line": 288
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayout.java",
+          "line": 345,
+          "end_line": 393
+        }
+      ]
+    },
+    {
+      "id": "flex_container",
+      "label": "FlexContainer",
+      "kind": "interface",
+      "sublabel": "容器能力抽象",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "NOT_SET",
+          "type": "int",
+          "visibility": "package",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "getFlexItemCount",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getFlexItemAt",
+          "parameters": "index: int",
+          "returns": "View",
+          "visibility": "public"
+        },
+        {
+          "name": "getFlexDirection",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getAlignItems",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getSumOfCrossSize",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getFlexLinesInternal",
+          "parameters": "",
+          "returns": "List<FlexLine>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexContainer.java",
+          "line": 27,
+          "end_line": 31
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexContainer.java",
+          "line": 34,
+          "end_line": 34
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexContainer.java",
+          "line": 163,
+          "end_line": 163
+        }
+      ]
+    },
+    {
+      "id": "layout_manager",
+      "label": "FlexboxLayoutManager",
+      "kind": "class",
+      "sublabel": "RecyclerView 版容器",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mFlexDirection",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mFlexWrap",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mJustifyContent",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mAlignItems",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setFlexDirection",
+          "parameters": "flexDirection: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "updateFlexLines",
+          "parameters": "childCount: int",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayoutManager.java",
+          "line": 48,
+          "end_line": 50
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayoutManager.java",
+          "line": 280,
+          "end_line": 285
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayoutManager.java",
+          "line": 864,
+          "end_line": 870
+        }
+      ]
+    },
+    {
+      "id": "layout_params",
+      "label": "LayoutParams",
+      "kind": "class",
+      "sublabel": "FlexboxLayout 的子项参数",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mOrder",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mFlexGrow",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mFlexShrink",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mAlignSelf",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mFlexBasisPercent",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mMaxWidth",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getOrder",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getFlexGrow",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public"
+        },
+        {
+          "name": "getAlignSelf",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getFlexBasisPercent",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayout.java",
+          "line": 1571,
+          "end_line": 1573
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayout.java",
+          "line": 1576,
+          "end_line": 1596
+        }
+      ]
+    },
+    {
+      "id": "flex_item",
+      "label": "FlexItem",
+      "kind": "interface",
+      "sublabel": "子项属性抽象",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "ORDER_DEFAULT",
+          "type": "int",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "FLEX_GROW_DEFAULT",
+          "type": "float",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "FLEX_SHRINK_DEFAULT",
+          "type": "float",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "FLEX_BASIS_PERCENT_DEFAULT",
+          "type": "float",
+          "visibility": "package",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "getOrder",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getFlexGrow",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public"
+        },
+        {
+          "name": "getFlexShrink",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public"
+        },
+        {
+          "name": "getAlignSelf",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getFlexBasisPercent",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public"
+        },
+        {
+          "name": "getMinWidth",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexItem.java",
+          "line": 27,
+          "end_line": 33
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexItem.java",
+          "line": 102,
+          "end_line": 102
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexItem.java",
+          "line": 140,
+          "end_line": 140
+        }
+      ]
+    },
+    {
+      "id": "manager_params",
+      "label": "LayoutParams",
+      "kind": "class",
+      "sublabel": "LayoutManager 的子项参数",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mOrder",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mFlexGrow",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mFlexShrink",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mAlignSelf",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getOrder",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getFlexGrow",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public"
+        },
+        {
+          "name": "getAlignSelf",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayoutManager.java",
+          "line": 2576,
+          "end_line": 2578
+        }
+      ]
+    },
+    {
+      "id": "flexbox_helper",
+      "label": "FlexboxHelper",
+      "kind": "class",
+      "sublabel": "测量/换行/对齐算法",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mFlexContainer",
+          "type": "FlexContainer",
+          "visibility": "private"
+        },
+        {
+          "name": "mChildrenFrozen",
+          "type": "boolean[]",
+          "visibility": "private"
+        },
+        {
+          "name": "mIndexToFlexLine",
+          "type": "int[]",
+          "visibility": "package"
+        }
+      ],
+      "methods": [
+        {
+          "name": "calculateFlexLines",
+          "parameters": "result, mainMeasureSpec, crossMeasureSpec, needsCalcAmount, fromIndex, toIndex, existingLines",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "determineMainSize",
+          "parameters": "widthMeasureSpec: int, heightMeasureSpec: int",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "determineCrossSize",
+          "parameters": "widthMeasureSpec, heightMeasureSpec, paddingAlongCrossAxis",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "stretchViews",
+          "parameters": "fromIndex: int",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "isWrapRequired",
+          "parameters": "view, mode, maxSize, currentLength, childLength, flexItem, index, indexInFlexLine, flexLinesSize",
+          "returns": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "addFlexLine",
+          "parameters": "flexLines, flexLine, viewIndex, usedCrossSizeSoFar",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java",
+          "line": 47,
+          "end_line": 49
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java",
+          "line": 388,
+          "end_line": 406
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java",
+          "line": 867,
+          "end_line": 870
+        }
+      ]
+    },
+    {
+      "id": "flex_line",
+      "label": "FlexLine",
+      "kind": "class",
+      "sublabel": "一条轴线的尺寸与索引",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mMainSize",
+          "type": "int",
+          "visibility": "package"
+        },
+        {
+          "name": "mCrossSize",
+          "type": "int",
+          "visibility": "package"
+        },
+        {
+          "name": "mItemCount",
+          "type": "int",
+          "visibility": "package"
+        },
+        {
+          "name": "mFirstIndex",
+          "type": "int",
+          "visibility": "package"
+        },
+        {
+          "name": "mLastIndex",
+          "type": "int",
+          "visibility": "package"
+        },
+        {
+          "name": "mSumCrossSizeBefore",
+          "type": "int",
+          "visibility": "package"
+        },
+        {
+          "name": "mAnyItemsHaveFlexGrow",
+          "type": "boolean",
+          "visibility": "package"
+        },
+        {
+          "name": "mIndicesAlignSelfStretch",
+          "type": "List<Integer>",
+          "visibility": "package"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getMainSize",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getCrossSize",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getItemCount",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getItemCountNotGone",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexLine.java",
+          "line": 29,
+          "end_line": 31
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexLine.java",
+          "line": 43,
+          "end_line": 52
+        },
+        {
+          "path": "flexbox/src/main/java/com/google/android/flexbox/FlexLine.java",
+          "line": 89,
+          "end_line": 97
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r1",
+      "from": "flexbox_layout",
+      "to": "flex_container",
+      "kind": "realization",
+      "label": "实现容器"
+    },
+    {
+      "id": "r2",
+      "from": "layout_manager",
+      "to": "flex_container",
+      "kind": "realization",
+      "label": "实现容器"
+    },
+    {
+      "id": "r5",
+      "from": "flexbox_layout",
+      "to": "layout_params",
+      "kind": "composition",
+      "label": "内部类"
+    },
+    {
+      "id": "r6",
+      "from": "layout_manager",
+      "to": "manager_params",
+      "kind": "composition",
+      "label": "内部类"
+    },
+    {
+      "id": "r7",
+      "from": "flexbox_layout",
+      "to": "flexbox_helper",
+      "kind": "dependency",
+      "label": "委托测量"
+    },
+    {
+      "id": "r8",
+      "from": "flexbox_helper",
+      "to": "flex_line",
+      "kind": "association",
+      "label": "产出行"
+    },
+    {
+      "id": "r3",
+      "from": "layout_params",
+      "to": "flex_item",
+      "kind": "realization",
+      "label": "实现子项"
+    },
+    {
+      "id": "r4",
+      "from": "manager_params",
+      "to": "flex_item",
+      "kind": "realization",
+      "label": "实现子项"
+    },
+    {
+      "id": "r9",
+      "from": "flex_line",
+      "to": "flex_item",
+      "kind": "association",
+      "label": "索引区间"
+    },
+    {
+      "id": "r10",
+      "from": "flexbox_helper",
+      "to": "flex_item",
+      "kind": "association",
+      "label": "读取属性"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两套容器一份算法",
+      "items": [
+        "FlexboxLayout 与 FlexboxLayoutManager 都实现 FlexContainer",
+        "FlexboxHelper 只依赖 FlexContainer 接口，测量/换行逻辑完全复用"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "子项属性从 LayoutParams 来",
+      "items": [
+        "order 参与重排：createReorderedIndices 生成 mReorderedIndices",
+        "flexGrow / flexShrink / alignSelf / flexBasisPercent 决定主轴伸缩"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "FlexLine 是行的账本",
+      "items": [
+        "记录 mMainSize、mCrossSize 与 first/last index",
+        "mIndicesAlignSelfStretch 保存需要拉伸的子项下标"
+      ]
+    }
+  ]
+}

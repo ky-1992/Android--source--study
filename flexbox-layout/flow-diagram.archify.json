@@ -1,0 +1,191 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "FlexboxLayout 测量与换行主流程",
+    "subtitle": "onMeasure 按主轴分派到 measureHorizontal，FlexboxHelper 逐个测量子项并判断是否换行，再定主轴与交叉轴尺寸，最后 onLayout 摆放子项。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/25-flexbox-layout/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/google/flexbox-layout",
+      "provider": "github",
+      "revision": "366b461fd0425bfaa9872b1d9af9da3055d3bc74"
+    }
+  },
+  "lanes": [
+    { "id": "host", "label": "测量入口" },
+    { "id": "container", "label": "FlexboxLayout" },
+    { "id": "helper", "label": "FlexboxHelper" },
+    { "id": "child", "label": "子项 View" }
+  ],
+  "phases": [
+    { "id": "measure", "label": "测量", "fromCol": 0, "toCol": 1 },
+    { "id": "wrap", "label": "折行", "fromCol": 2, "toCol": 3 },
+    { "id": "finish", "label": "尺寸与布局", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "measure",
+    "dispatch",
+    "calc_lines",
+    "item_measure",
+    "wrap",
+    "new_line",
+    "flex_size",
+    "on_layout",
+    "place"
+  ],
+  "nodes": [
+    {
+      "id": "measure",
+      "lane": "host",
+      "col": 0,
+      "type": "external",
+      "label": "触发测量",
+      "sublabel": "onMeasure",
+      "width": 148,
+      "sources": [
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayout.java", "line": 263, "end_line": 288 }
+      ]
+    },
+    {
+      "id": "dispatch",
+      "lane": "container",
+      "col": 1,
+      "type": "frontend",
+      "label": "主轴分派",
+      "sublabel": "Row/Column",
+      "width": 152,
+      "sources": [
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayout.java", "line": 345, "end_line": 356 },
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayout.java", "line": 406, "end_line": 420 }
+      ]
+    },
+    {
+      "id": "calc_lines",
+      "lane": "helper",
+      "col": 2,
+      "type": "backend",
+      "label": "循环累加",
+      "sublabel": "flexLines",
+      "width": 152,
+      "sources": [
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java", "line": 388, "end_line": 430 }
+      ]
+    },
+    {
+      "id": "item_measure",
+      "lane": "child",
+      "col": 2,
+      "type": "frontend",
+      "label": "子项量算",
+      "sublabel": "child.measure",
+      "width": 148,
+      "sources": [
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java", "line": 477, "end_line": 490 }
+      ]
+    },
+    {
+      "id": "wrap",
+      "lane": "helper",
+      "col": 3,
+      "type": "backend",
+      "label": "是否换行",
+      "sublabel": "isWrapRequired",
+      "width": 152,
+      "sources": [
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java", "line": 867, "end_line": 892 }
+      ]
+    },
+    {
+      "id": "new_line",
+      "lane": "container",
+      "col": 3,
+      "type": "frontend",
+      "label": "新建一行",
+      "sublabel": "new FlexLine",
+      "width": 150,
+      "sources": [
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java", "line": 554, "end_line": 566 },
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java", "line": 897, "end_line": 903 }
+      ]
+    },
+    {
+      "id": "flex_size",
+      "lane": "helper",
+      "col": 4,
+      "type": "backend",
+      "label": "伸缩对齐",
+      "sublabel": "grow/shrink",
+      "width": 152,
+      "sources": [
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java", "line": 962, "end_line": 1000 },
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java", "line": 1438, "end_line": 1470 },
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java", "line": 1601, "end_line": 1615 }
+      ]
+    },
+    {
+      "id": "on_layout",
+      "lane": "container",
+      "col": 4,
+      "type": "frontend",
+      "label": "计算坐标",
+      "sublabel": "layoutHorizontal",
+      "width": 156,
+      "sources": [
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayout.java", "line": 564, "end_line": 593 },
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxLayout.java", "line": 614, "end_line": 640 }
+      ]
+    },
+    {
+      "id": "place",
+      "lane": "child",
+      "col": 4,
+      "type": "frontend",
+      "label": "摆放子项",
+      "sublabel": "view.layout",
+      "width": 148,
+      "sources": [
+        { "path": "flexbox/src/main/java/com/google/android/flexbox/FlexboxHelper.java", "line": 1771, "end_line": 1806 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e1", "from": "measure", "to": "dispatch", "label": "进入测量", "variant": "default", "role": "main" },
+    { "id": "e2", "from": "dispatch", "to": "calc_lines", "label": "委托算法", "variant": "default", "role": "main" },
+    { "id": "e3", "from": "calc_lines", "to": "item_measure", "label": "逐个测量", "variant": "default", "role": "main" },
+    { "id": "e4", "from": "item_measure", "to": "wrap", "label": "得到主轴尺寸", "variant": "default", "role": "main" },
+    { "id": "e5", "from": "wrap", "to": "new_line", "label": "超过可用宽", "variant": "emphasis", "role": "main" },
+    { "id": "e6", "from": "new_line", "to": "flex_size", "label": "行入列表", "variant": "default", "role": "main" },
+    { "id": "e7", "from": "flex_size", "to": "on_layout", "label": "尺寸就绪", "variant": "default", "role": "main" },
+    { "id": "e8", "from": "on_layout", "to": "place", "label": "逐行摆放", "variant": "default", "role": "main" },
+    { "id": "e9", "from": "wrap", "to": "item_measure", "label": "继续下一项", "variant": "dashed", "role": "return" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "换行判定条件",
+      "items": [
+        "flexWrap 为 NOWRAP、MeasureSpec 为 UNSPECIFIED 时直接不换行",
+        "达到 maxLine 上限也停止拆行；否则比较 maxSize < currentLength + childLength"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "尺寸三步走",
+      "items": [
+        "calculateFlexLines 先量出每行的主轴长度与交叉轴最大值",
+        "determineMainSize 按 flexGrow/flexShrink 伸缩，determineCrossSize 处理 alignContent",
+        "stretchViews 把 alignSelf=STRETCH 的子项撑满行高"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "布局阶段",
+      "items": [
+        "onLayout 先按方向与 RTL / WRAP_REVERSE 求 isRtl",
+        "layoutSingleChildHorizontal 结合 alignItems 与 margin 计算每条边的最终坐标"
+      ]
+    }
+  ]
+}
