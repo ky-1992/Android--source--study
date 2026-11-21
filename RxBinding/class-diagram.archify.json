@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "RxBinding 核心类型结构",
+    "subtitle": "Kotlin 扩展函数返回私有 Observable；监听器继承 MainThreadDisposable，订阅时先 checkMainThread。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/44-RxBinding/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/JakeWharton/RxBinding",
+      "provider": "github",
+      "revision": "78f7ebdeb9dcf373abb9fc43bde838cfe2fef62a"
+    }
+  },
+  "layout": { "mode": "grid" },
+  "types": [
+    {
+      "id": "init_obs",
+      "label": "InitialValueObservable",
+      "kind": "abstract",
+      "sublabel": "订阅即补发首值",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "initialValue", "type": "T", "visibility": "protected" }
+      ],
+      "methods": [
+        { "name": "subscribeActual", "parameters": "observer: Observer", "returns": "void", "visibility": "protected" },
+        { "name": "subscribeListener", "parameters": "observer: Observer", "returns": "void", "visibility": "protected", "abstract": true },
+        { "name": "skipInitialValue", "parameters": "", "returns": "Observable<T>", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/InitialValueObservable.kt", "line": 6, "end_line": 22 }
+      ]
+    },
+    {
+      "id": "text_changes",
+      "label": "TextViewTextChanges",
+      "kind": "class",
+      "sublabel": "textChanges 实现",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        { "name": "view", "type": "TextView", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "subscribeListener", "parameters": "observer: Observer", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/widget/TextViewTextChangesObservable.kt", "line": 30, "end_line": 44 },
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/widget/TextViewTextChangesObservable.kt", "line": 46, "end_line": 66 }
+      ]
+    },
+    {
+      "id": "text_change_events",
+      "label": "TextViewTextChangeEvents",
+      "kind": "class",
+      "sublabel": "textChangeEvents 实现",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "view", "type": "TextView", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "subscribeListener", "parameters": "observer: Observer", "returns": "void", "visibility": "public" },
+        { "name": "initialValue", "parameters": "", "returns": "TextViewTextChangeEvent", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/widget/TextViewTextChangeEventObservable.kt", "line": 30, "end_line": 32 },
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/widget/TextViewTextChangeEventObservable.kt", "line": 49, "end_line": 59 }
+      ]
+    },
+    {
+      "id": "adapter_data",
+      "label": "AdapterDataChange",
+      "kind": "class",
+      "sublabel": "dataChanges 实现",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        { "name": "adapter", "type": "T : Adapter", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "subscribeListener", "parameters": "observer: Observer", "returns": "void", "visibility": "public" },
+        { "name": "dataChanges", "parameters": "", "returns": "InitialValueObservable<T>", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/widget/AdapterDataChangeObservable.kt", "line": 21, "end_line": 38 },
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/widget/AdapterDataChangeObservable.kt", "line": 40, "end_line": 55 }
+      ]
+    },
+    {
+      "id": "view_click",
+      "label": "ViewClickObservable",
+      "kind": "class",
+      "sublabel": "clicks 的私有实现",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        { "name": "view", "type": "View", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "clicks", "parameters": "", "returns": "Observable<Unit>", "visibility": "public" },
+        { "name": "subscribeActual", "parameters": "observer: Observer", "returns": "void", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewClickObservable.kt", "line": 26, "end_line": 41 }
+      ]
+    },
+    {
+      "id": "view_attach",
+      "label": "ViewAttachEvents",
+      "kind": "class",
+      "sublabel": "attachEvents 实现",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "view", "type": "View", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "attachEvents", "parameters": "", "returns": "Observable<ViewAttachEvent>", "visibility": "public" },
+        { "name": "subscribeActual", "parameters": "observer: Observer", "returns": "void", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewAttachEventObservable.kt", "line": 22, "end_line": 37 }
+      ]
+    },
+    {
+      "id": "view_layout",
+      "label": "ViewLayoutChange",
+      "kind": "class",
+      "sublabel": "layoutChanges 实现",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        { "name": "view", "type": "View", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "layoutChanges", "parameters": "", "returns": "Observable<Unit>", "visibility": "public" },
+        { "name": "subscribeActual", "parameters": "observer: Observer", "returns": "void", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewLayoutChangeObservable.kt", "line": 23, "end_line": 38 }
+      ]
+    },
+    {
+      "id": "click_listener",
+      "label": "ViewClick.Listener",
+      "kind": "class",
+      "sublabel": "主线程监听器",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        { "name": "view", "type": "View", "visibility": "private" },
+        { "name": "observer", "type": "Observer", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onClick", "parameters": "v: View", "returns": "void", "visibility": "public" },
+        { "name": "onDispose", "parameters": "", "returns": "void", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewClickObservable.kt", "line": 43, "end_line": 57 }
+      ]
+    },
+    {
+      "id": "text_change_event",
+      "label": "TextViewTextChangeEvent",
+      "kind": "class",
+      "sublabel": "不可缓存的可变值",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        { "name": "view", "type": "TextView", "visibility": "public" },
+        { "name": "text", "type": "CharSequence", "visibility": "public" },
+        { "name": "start", "type": "int", "visibility": "public" },
+        { "name": "before", "type": "int", "visibility": "public" },
+        { "name": "count", "type": "int", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "component6", "parameters": "", "returns": "int", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/widget/TextViewTextChangeEventObservable.kt", "line": 40, "end_line": 47 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "r_text_changes_init", "from": "text_changes", "to": "init_obs", "kind": "inheritance", "label": "继承" },
+    { "id": "r_text_events_init", "from": "text_change_events", "to": "init_obs", "kind": "inheritance", "label": "继承" },
+    { "id": "r_adapter_data_init", "from": "adapter_data", "to": "init_obs", "kind": "inheritance", "label": "继承" },
+    { "id": "r_events_construct", "from": "text_change_events", "to": "text_change_event", "kind": "dependency", "label": "构造事件" },
+    { "id": "r_click_listener", "from": "view_click", "to": "click_listener", "kind": "composition", "label": "内部类" },
+    { "id": "r_view_attach_layout", "from": "view_attach", "to": "view_layout", "kind": "dependency", "label": "同族视图流" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "主线程契约",
+      "items": [
+        "订阅前 checkMainThread：非主线程先 onSubscribe(空 Disposable) 再 onError(IllegalStateException)，直接返回",
+        "监听器继承 MainThreadDisposable，onDispose 里把 View 的 listener 置空，避免互相强引用"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "首值语义",
+      "items": [
+        "InitialValueObservable.subscribeActual 先 subscribeListener 再 onNext(initialValue)，textChanges 因此立即拿到 view.text",
+        "skipInitialValue 返回内部 Skipped，只挂监听器不发首值"
+      ]
+    }
+  ]
+}

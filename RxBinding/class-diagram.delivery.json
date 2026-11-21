@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "a14172b1-39b6-4251-b9bc-42cefa91332d",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/44-RxBinding/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/44-RxBinding/class-diagram.html",
+  "specification": {
+    "sha256": "978160e0b381df1d2bdc98bae3fdcf3e4468ea4ad98d5a98db5ab0aa2de4970f",
+    "bytes": 9027
+  },
+  "artifact": {
+    "sha256": "044032f58885211f331fa5aea23d7fb0db7c68910497f00db5c0d4782e4a66ae",
+    "bytes": 871202
+  }
+}

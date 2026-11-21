@@ -1,0 +1,276 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "RxBinding 点击绑定订阅流程",
+    "subtitle": "扩展函数创建私有 Observable，订阅时校验主线程并注册系统监听器，事件回调直接 onNext，解绑时反注册。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/44-RxBinding/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/JakeWharton/RxBinding",
+      "provider": "github",
+      "revision": "78f7ebdeb9dcf373abb9fc43bde838cfe2fef62a"
+    }
+  },
+  "lanes": [
+    {
+      "id": "app",
+      "label": "调用方"
+    },
+    {
+      "id": "rx",
+      "label": "Observable 层"
+    },
+    {
+      "id": "ui",
+      "label": "监听器与主线程"
+    }
+  ],
+  "phases": [
+    {
+      "id": "p_bind",
+      "label": "创建绑定",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "p_sub",
+      "label": "订阅校验",
+      "fromCol": 2,
+      "toCol": 2
+    },
+    {
+      "id": "p_run",
+      "label": "注册与发射",
+      "fromCol": 3,
+      "toCol": 4
+    }
+  ],
+  "mainPath": [
+    "bind",
+    "obs",
+    "sub",
+    "chk",
+    "onsub",
+    "reg",
+    "tap",
+    "emit"
+  ],
+  "nodes": [
+    {
+      "id": "bind",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "View.clicks()",
+      "sublabel": "扩展函数",
+      "width": 140,
+      "sources": [
+        {
+          "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewClickObservable.kt",
+          "line": 26,
+          "end_line": 28
+        }
+      ]
+    },
+    {
+      "id": "obs",
+      "lane": "rx",
+      "col": 1,
+      "type": "backend",
+      "label": "创建绑定流",
+      "sublabel": "私有实现类",
+      "width": 148,
+      "sources": [
+        {
+          "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewClickObservable.kt",
+          "line": 30,
+          "end_line": 32
+        }
+      ]
+    },
+    {
+      "id": "sub",
+      "lane": "rx",
+      "col": 2,
+      "type": "backend",
+      "label": "subscribeActual",
+      "sublabel": "订阅入口",
+      "width": 152,
+      "sources": [
+        {
+          "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewClickObservable.kt",
+          "line": 34,
+          "end_line": 41
+        }
+      ]
+    },
+    {
+      "id": "chk",
+      "lane": "ui",
+      "col": 2,
+      "type": "security",
+      "label": "主线程校验",
+      "sublabel": "checkMainThread",
+      "width": 152,
+      "sources": [
+        {
+          "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/internal/mainThread.kt",
+          "line": 25,
+          "end_line": 33
+        }
+      ]
+    },
+    {
+      "id": "onsub",
+      "lane": "ui",
+      "col": 3,
+      "type": "backend",
+      "label": "下发 Disposable",
+      "sublabel": "onSubscribe",
+      "width": 148,
+      "sources": [
+        {
+          "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewClickObservable.kt",
+          "line": 39,
+          "end_line": 39
+        }
+      ]
+    },
+    {
+      "id": "reg",
+      "lane": "rx",
+      "col": 3,
+      "type": "backend",
+      "label": "注册监听器",
+      "sublabel": "setListener",
+      "width": 148,
+      "sources": [
+        {
+          "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewClickObservable.kt",
+          "line": 40,
+          "end_line": 40
+        }
+      ]
+    },
+    {
+      "id": "tap",
+      "lane": "app",
+      "col": 3,
+      "type": "external",
+      "label": "用户点击",
+      "sublabel": "onClick",
+      "width": 140,
+      "sources": [
+        {
+          "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewClickObservable.kt",
+          "line": 48,
+          "end_line": 52
+        }
+      ]
+    },
+    {
+      "id": "emit",
+      "lane": "ui",
+      "col": 4,
+      "type": "backend",
+      "label": "onNext 发射",
+      "sublabel": "isDisposed",
+      "width": 148,
+      "sources": [
+        {
+          "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewClickObservable.kt",
+          "line": 48,
+          "end_line": 52
+        }
+      ]
+    },
+    {
+      "id": "dispose",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "解除订阅",
+      "sublabel": "onDispose",
+      "width": 140,
+      "sources": [
+        {
+          "path": "rxbinding/src/main/java/com/jakewharton/rxbinding4/view/ViewClickObservable.kt",
+          "line": 54,
+          "end_line": 56
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_bind_obs",
+      "from": "bind",
+      "to": "obs",
+      "label": "clicks()"
+    },
+    {
+      "id": "e_obs_sub",
+      "from": "obs",
+      "to": "sub",
+      "label": "subscribe"
+    },
+    {
+      "id": "e_sub_chk",
+      "from": "sub",
+      "to": "chk",
+      "label": "先校验"
+    },
+    {
+      "id": "e_chk_onsub",
+      "from": "chk",
+      "to": "onsub",
+      "label": "通过"
+    },
+    {
+      "id": "e_onsub_reg",
+      "from": "onsub",
+      "to": "reg",
+      "label": "建立监听"
+    },
+    {
+      "id": "e_reg_tap",
+      "from": "reg",
+      "to": "tap",
+      "label": "等待事件"
+    },
+    {
+      "id": "e_tap_emit",
+      "from": "tap",
+      "to": "emit",
+      "label": "onClick"
+    },
+    {
+      "id": "e_emit_dispose",
+      "from": "emit",
+      "to": "dispose",
+      "label": "unsubscribe",
+      "variant": "dashed",
+      "role": "branch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "订阅前校验",
+      "items": [
+        "checkMainThread 比较 Looper.myLooper() 与 getMainLooper()，失败走 onError 而不是抛异常",
+        "校验失败时并未注册系统监听器，因此不会泄漏 View"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "事件与解绑",
+      "items": [
+        "onClick 只在 !isDisposed 时 onNext(Unit)，点击值本身无意义，仅作通知",
+        "onDispose 调用 view.setOnClickListener(null)；同 View 同时只能有一个绑定流"
+      ]
+    }
+  ]
+}
