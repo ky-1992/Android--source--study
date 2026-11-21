@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "receiptId": "df0dc75e-2aa4-4673-aa4b-b422de8f86b9",
+  "receiptId": "adddbff8-2d56-4cdf-936d-c61d76a37c3b",
   "status": "current",
   "command": "deliver",
   "type": "workflow",
-  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/20-Material-Animations/flow-diagram.archify.json",
-  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/20-Material-Animations/flow-diagram.html",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/Material-Animations/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/Material-Animations/flow-diagram.html",
   "specification": {
     "sha256": "f163be70af01b84cad936700d28da9de746bc7f6cecc610ceb3f4c7361c00f9b",
     "bytes": 8092
