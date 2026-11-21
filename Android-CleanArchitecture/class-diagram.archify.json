@@ -1,0 +1,517 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Android-CleanArchitecture 核心类型结构",
+    "subtitle": "presentation 依赖 domain 的 UseCase 与 Repository 抽象，data 层实现 UserRepository 并向上映射成领域模型，层间只靠接口与 RxJava 数据流耦合。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/23-Android-CleanArchitecture/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/android10/Android-CleanArchitecture",
+      "provider": "github",
+      "revision": "8ed4222c537e40db05e9e685bbc253fafb6b8e1f"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "use_case",
+      "label": "UseCase",
+      "kind": "abstract",
+      "sublabel": "执行单元模板",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "threadExecutor",
+          "type": "ThreadExecutor",
+          "visibility": "private"
+        },
+        {
+          "name": "postExecutionThread",
+          "type": "PostExecutionThread",
+          "visibility": "private"
+        },
+        {
+          "name": "disposables",
+          "type": "CompositeDisposable",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "buildUseCaseObservable",
+          "parameters": "params: Params",
+          "returns": "Observable<T>",
+          "visibility": "package",
+          "abstract": true
+        },
+        {
+          "name": "execute",
+          "parameters": "observer, params",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "dispose",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "domain/src/main/java/com/fernandocejas/android10/sample/domain/interactor/UseCase.java",
+          "line": 35,
+          "end_line": 65
+        }
+      ]
+    },
+    {
+      "id": "get_user_list",
+      "label": "GetUserList",
+      "kind": "class",
+      "sublabel": "取用户列表用例",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "userRepository",
+          "type": "UserRepository",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "buildUseCaseObservable",
+          "parameters": "unused: Void",
+          "returns": "Observable<List<User>>",
+          "visibility": "package"
+        }
+      ],
+      "sources": [
+        {
+          "path": "domain/src/main/java/com/fernandocejas/android10/sample/domain/interactor/GetUserList.java",
+          "line": 30,
+          "end_line": 43
+        }
+      ]
+    },
+    {
+      "id": "user_repository",
+      "label": "UserRepository",
+      "kind": "interface",
+      "sublabel": "领域层数据契约",
+      "row": 2,
+      "col": 1,
+      "methods": [
+        {
+          "name": "users",
+          "parameters": "",
+          "returns": "Observable<List<User>>",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "user",
+          "parameters": "userId: int",
+          "returns": "Observable<User>",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "domain/src/main/java/com/fernandocejas/android10/sample/domain/repository/UserRepository.java",
+          "line": 25,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "id": "presenter",
+      "label": "Presenter",
+      "kind": "interface",
+      "sublabel": "视图生命周期契约",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        {
+          "name": "resume",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "pause",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "destroy",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "presentation/src/main/java/com/fernandocejas/android10/sample/presentation/presenter/Presenter.java",
+          "line": 21,
+          "end_line": 38
+        }
+      ]
+    },
+    {
+      "id": "user_list_presenter",
+      "label": "UserListPresenter",
+      "kind": "class",
+      "sublabel": "列表页编排者",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "viewListView",
+          "type": "UserListView",
+          "visibility": "private"
+        },
+        {
+          "name": "getUserListUseCase",
+          "type": "GetUserList",
+          "visibility": "private"
+        },
+        {
+          "name": "userModelDataMapper",
+          "type": "UserModelDataMapper",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setView",
+          "parameters": "view: UserListView",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "initialize",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "loadUserList",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "onUserClicked",
+          "parameters": "userModel: UserModel",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "presentation/src/main/java/com/fernandocejas/android10/sample/presentation/presenter/UserListPresenter.java",
+          "line": 38,
+          "end_line": 115
+        }
+      ]
+    },
+    {
+      "id": "user_data_repository",
+      "label": "UserDataRepository",
+      "kind": "class",
+      "sublabel": "数据层仓库实现",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "userDataStoreFactory",
+          "type": "UserDataStoreFactory",
+          "visibility": "private"
+        },
+        {
+          "name": "userEntityDataMapper",
+          "type": "UserEntityDataMapper",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "users",
+          "parameters": "",
+          "returns": "Observable<List<User>>",
+          "visibility": "public"
+        },
+        {
+          "name": "user",
+          "parameters": "userId: int",
+          "returns": "Observable<User>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "data/src/main/java/com/fernandocejas/android10/sample/data/repository/UserDataRepository.java",
+          "line": 31,
+          "end_line": 59
+        }
+      ]
+    },
+    {
+      "id": "user_data_store_factory",
+      "label": "UserDataStoreFactory",
+      "kind": "class",
+      "sublabel": "选择磁盘或云端",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "context",
+          "type": "Context",
+          "visibility": "private"
+        },
+        {
+          "name": "userCache",
+          "type": "UserCache",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "create",
+          "parameters": "userId: int",
+          "returns": "UserDataStore",
+          "visibility": "public"
+        },
+        {
+          "name": "createCloudDataStore",
+          "parameters": "",
+          "returns": "UserDataStore",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "data/src/main/java/com/fernandocejas/android10/sample/data/repository/datasource/UserDataStoreFactory.java",
+          "line": 30,
+          "end_line": 65
+        }
+      ]
+    },
+    {
+      "id": "user_list_view",
+      "label": "UserListView",
+      "kind": "interface",
+      "sublabel": "列表页视图契约",
+      "row": 2,
+      "col": 0,
+      "methods": [
+        {
+          "name": "showLoading",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "renderUserList",
+          "parameters": "users: Collection<UserModel>",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "viewUser",
+          "parameters": "userModel: UserModel",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "showError",
+          "parameters": "message: String",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "presentation/src/main/java/com/fernandocejas/android10/sample/presentation/view/UserListView.java",
+          "line": 14,
+          "end_line": 27
+        }
+      ]
+    },
+    {
+      "id": "user_entity_data_mapper",
+      "label": "UserEntityDataMapper",
+      "kind": "class",
+      "sublabel": "实体转领域模型",
+      "row": 3,
+      "col": 1,
+      "methods": [
+        {
+          "name": "transform",
+          "parameters": "entity: UserEntity",
+          "returns": "User",
+          "visibility": "public"
+        },
+        {
+          "name": "transform",
+          "parameters": "entities: Collection<UserEntity>",
+          "returns": "List<User>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "data/src/main/java/com/fernandocejas/android10/sample/data/entity/mapper/UserEntityDataMapper.java",
+          "line": 31,
+          "end_line": 53
+        }
+      ]
+    },
+    {
+      "id": "rest_api_impl",
+      "label": "RestApiImpl",
+      "kind": "class",
+      "sublabel": "网络请求实现",
+      "row": 4,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "context",
+          "type": "Context",
+          "visibility": "private"
+        },
+        {
+          "name": "userEntityJsonMapper",
+          "type": "UserEntityJsonMapper",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "userEntityList",
+          "parameters": "",
+          "returns": "Observable<List<UserEntity>>",
+          "visibility": "public"
+        },
+        {
+          "name": "userEntityById",
+          "parameters": "userId: int",
+          "returns": "Observable<UserEntity>",
+          "visibility": "public"
+        },
+        {
+          "name": "isThereInternetConnection",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "data/src/main/java/com/fernandocejas/android10/sample/data/net/RestApiImpl.java",
+          "line": 31,
+          "end_line": 68
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "get_user_list_extends",
+      "from": "get_user_list",
+      "to": "use_case",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "presenter_impl",
+      "from": "user_list_presenter",
+      "to": "presenter",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "presenter_uses_case",
+      "from": "user_list_presenter",
+      "to": "get_user_list",
+      "kind": "dependency",
+      "label": "注入"
+    },
+    {
+      "id": "presenter_uses_view",
+      "from": "user_list_presenter",
+      "to": "user_list_view",
+      "kind": "dependency",
+      "label": "渲染"
+    },
+    {
+      "id": "repo_impl",
+      "from": "user_data_repository",
+      "to": "user_repository",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "repo_uses_mapper",
+      "from": "user_data_repository",
+      "to": "user_entity_data_mapper",
+      "kind": "dependency",
+      "label": "转换"
+    },
+    {
+      "id": "repo_uses_factory",
+      "from": "user_data_repository",
+      "to": "user_data_store_factory",
+      "kind": "dependency",
+      "label": "建数据源"
+    },
+    {
+      "id": "factory_creates_api",
+      "from": "user_data_store_factory",
+      "to": "rest_api_impl",
+      "kind": "dependency",
+      "label": "new"
+    },
+    {
+      "id": "case_uses_repo",
+      "from": "get_user_list",
+      "to": "user_repository",
+      "kind": "dependency",
+      "label": "users()"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "依赖方向",
+      "items": [
+        "presentation → domain ← data：data 实现 domain 的 UserRepository，domain 不认识任何 Android 类",
+        "UseCase 把线程调度收口：subscribeOn(ThreadExecutor)、observeOn(PostExecutionThread)"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "两次模型转换",
+      "items": [
+        "data 层 UserEntity → User（UserEntityDataMapper），去掉 JSON/网络字样",
+        "presentation 层 User → UserModel（UserModelDataMapper），换成 UI 需要的字段"
+      ]
+    }
+  ]
+}

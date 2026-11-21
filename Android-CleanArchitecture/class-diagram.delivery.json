@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "9d38cd37-0baf-4231-bed7-4fb353875dac",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/23-Android-CleanArchitecture/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/23-Android-CleanArchitecture/class-diagram.html",
+  "specification": {
+    "sha256": "2fcaa1e3545145f23b7368bb8349328b91f6c1c9251dbb7cbffd60d695abcb6f",
+    "bytes": 13247
+  },
+  "artifact": {
+    "sha256": "042f584e54dafec23ffb633f5a28ab2ac82ef0af6283060af5fca266f6f0b59c",
+    "bytes": 880236
+  }
+}

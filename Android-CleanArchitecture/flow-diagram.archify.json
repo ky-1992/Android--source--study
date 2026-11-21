@@ -1,0 +1,176 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Android-CleanArchitecture 用户列表加载流程",
+    "subtitle": "Fragment 把自身设为 View，Presenter 触发 GetUserList；UseCase 在后台线程取数、切回主线程，DataRepository 经 DataStore 走网络并映射成领域模型，最后由 Presenter 转 UserModel 渲染。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/23-Android-CleanArchitecture/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/android10/Android-CleanArchitecture",
+      "provider": "github",
+      "revision": "8ed4222c537e40db05e9e685bbc253fafb6b8e1f"
+    }
+  },
+  "lanes": [
+    { "id": "view", "label": "View 层" },
+    { "id": "presenter", "label": "Presenter 层" },
+    { "id": "domain", "label": "Domain 层" },
+    { "id": "data", "label": "Data 层" }
+  ],
+  "phases": [
+    { "id": "trigger", "label": "触发", "fromCol": 0, "toCol": 1 },
+    { "id": "execute", "label": "取数", "fromCol": 2, "toCol": 3 },
+    { "id": "render", "label": "回渲", "fromCol": 4, "toCol": 4, "variant": "emphasis" }
+  ],
+  "mainPath": [
+    "n_view",
+    "n_init",
+    "n_loading",
+    "n_exec",
+    "n_repo",
+    "n_net",
+    "n_map",
+    "n_obs",
+    "n_render"
+  ],
+  "nodes": [
+    {
+      "id": "n_view",
+      "lane": "view",
+      "col": 0,
+      "type": "frontend",
+      "label": "页面创建",
+      "sublabel": "setView",
+      "width": 146,
+      "sources": [
+        { "path": "presentation/src/main/java/com/fernandocejas/android10/sample/presentation/view/fragment/UserListFragment.java", "line": 76, "end_line": 82 }
+      ]
+    },
+    {
+      "id": "n_init",
+      "lane": "presenter",
+      "col": 1,
+      "type": "backend",
+      "label": "初始化",
+      "sublabel": "initialize",
+      "width": 146,
+      "sources": [
+        { "path": "presentation/src/main/java/com/fernandocejas/android10/sample/presentation/presenter/UserListPresenter.java", "line": 65, "end_line": 79 }
+      ]
+    },
+    {
+      "id": "n_loading",
+      "lane": "presenter",
+      "col": 2,
+      "type": "backend",
+      "label": "显示加载",
+      "sublabel": "showLoading",
+      "width": 148,
+      "sources": [
+        { "path": "presentation/src/main/java/com/fernandocejas/android10/sample/presentation/presenter/UserListPresenter.java", "line": 85, "end_line": 99 }
+      ]
+    },
+    {
+      "id": "n_exec",
+      "lane": "domain",
+      "col": 2,
+      "type": "backend",
+      "label": "执行用例",
+      "sublabel": "UseCase",
+      "width": 150,
+      "sources": [
+        { "path": "domain/src/main/java/com/fernandocejas/android10/sample/domain/interactor/UseCase.java", "line": 59, "end_line": 65 }
+      ]
+    },
+    {
+      "id": "n_repo",
+      "lane": "data",
+      "col": 3,
+      "type": "backend",
+      "label": "仓库取数",
+      "sublabel": "users()",
+      "width": 148,
+      "sources": [
+        { "path": "data/src/main/java/com/fernandocejas/android10/sample/data/repository/UserDataRepository.java", "line": 50, "end_line": 54 }
+      ]
+    },
+    {
+      "id": "n_net",
+      "lane": "data",
+      "col": 4,
+      "type": "cloud",
+      "label": "网络请求",
+      "sublabel": "RestApiImpl",
+      "width": 150,
+      "sources": [
+        { "path": "data/src/main/java/com/fernandocejas/android10/sample/data/net/RestApiImpl.java", "line": 50, "end_line": 69 }
+      ]
+    },
+    {
+      "id": "n_map",
+      "lane": "domain",
+      "col": 4,
+      "type": "backend",
+      "label": "转域模型",
+      "sublabel": "DataMapper",
+      "width": 148,
+      "sources": [
+        { "path": "data/src/main/java/com/fernandocejas/android10/sample/data/entity/mapper/UserEntityDataMapper.java", "line": 42, "end_line": 53 }
+      ]
+    },
+    {
+      "id": "n_obs",
+      "lane": "presenter",
+      "col": 4,
+      "type": "backend",
+      "label": "回调结果",
+      "sublabel": "onNext",
+      "width": 146,
+      "sources": [
+        { "path": "presentation/src/main/java/com/fernandocejas/android10/sample/presentation/presenter/UserListPresenter.java", "line": 107, "end_line": 132 }
+      ]
+    },
+    {
+      "id": "n_render",
+      "lane": "view",
+      "col": 4,
+      "type": "frontend",
+      "label": "渲染列表",
+      "sublabel": "renderUserList",
+      "width": 150,
+      "sources": [
+        { "path": "presentation/src/main/java/com/fernandocejas/android10/sample/presentation/view/fragment/UserListFragment.java", "line": 128, "end_line": 132 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e1", "from": "n_view", "to": "n_init", "label": "initialize" },
+    { "id": "e2", "from": "n_init", "to": "n_loading", "label": "loadUserList" },
+    { "id": "e3", "from": "n_loading", "to": "n_exec", "label": "execute" },
+    { "id": "e4", "from": "n_exec", "to": "n_repo", "label": "users()" },
+    { "id": "e5", "from": "n_repo", "to": "n_net", "label": "云数据源" },
+    { "id": "e6", "from": "n_net", "to": "n_map", "label": "UserEntity" },
+    { "id": "e7", "from": "n_map", "to": "n_obs", "label": "onNext" },
+    { "id": "e8", "from": "n_obs", "to": "n_render", "label": "主线程" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "线程调度",
+      "items": [
+        "UseCase.execute 统一装配 subscribeOn(Schedulers.from(threadExecutor)) 与 observeOn(postExecutionThread.getScheduler())",
+        "UIThread 用 AndroidSchedulers.mainThread() 实现 PostExecutionThread，presentation 只依赖接口"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "失败路径",
+      "items": [
+        "RestApiImpl 无网络或解析失败时发 NetworkConnectionException，Observer.onError 收到",
+        "Presenter 把异常包成 DefaultErrorBundle，经 ErrorMessageFactory 转文案后 showError + showRetry"
+      ]
+    }
+  ]
+}
