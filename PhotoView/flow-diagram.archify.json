@@ -1,0 +1,207 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "PhotoView 图片加载与手势缩放流程",
+    "subtitle": "设置图片触发 attacher.update 建立基准矩阵；触摸事件由手势识别器转成矩阵增量，经边界校验后刷新显示。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/15-PhotoView/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/chrisbanes/PhotoView",
+      "provider": "github",
+      "revision": "565505d5cb84f5977771b5d2ccb7726338e77224"
+    }
+  },
+  "lanes": [
+    { "id": "caller", "label": "调用方" },
+    { "id": "view", "label": "PhotoView" },
+    { "id": "attacher", "label": "Attacher" },
+    { "id": "gesture", "label": "手势检测" },
+    { "id": "matrix", "label": "矩阵绘制" }
+  ],
+  "phases": [
+    { "id": "load", "label": "载入", "fromCol": 0, "toCol": 1 },
+    { "id": "base", "label": "建立基准", "fromCol": 2, "toCol": 2 },
+    { "id": "touch", "label": "手势识别", "fromCol": 3, "toCol": 3 },
+    { "id": "draw", "label": "变换与绘制", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "call_set",
+    "pv_override",
+    "base_matrix",
+    "touch_dispatch",
+    "gesture_recognize",
+    "gesture_delta",
+    "supp_matrix",
+    "display"
+  ],
+  "nodes": [
+    {
+      "id": "call_set",
+      "lane": "caller",
+      "col": 0,
+      "type": "external",
+      "label": "设置图片",
+      "sublabel": "setImageDrawable",
+      "width": 148,
+      "sources": [
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoView.java", "line": 103, "end_line": 110 }
+      ]
+    },
+    {
+      "id": "pv_override",
+      "lane": "view",
+      "col": 1,
+      "type": "frontend",
+      "label": "覆写入口",
+      "sublabel": "attacher.update",
+      "width": 146,
+      "sources": [
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoView.java", "line": 104, "end_line": 109 },
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java", "line": 498, "end_line": 506 }
+      ]
+    },
+    {
+      "id": "base_matrix",
+      "lane": "attacher",
+      "col": 2,
+      "type": "backend",
+      "label": "基准矩阵",
+      "sublabel": "updateBaseMatrix",
+      "width": 152,
+      "sources": [
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java", "line": 602, "end_line": 653 }
+      ]
+    },
+    {
+      "id": "touch_dispatch",
+      "lane": "attacher",
+      "col": 3,
+      "type": "backend",
+      "label": "分发触摸",
+      "sublabel": "onTouch",
+      "width": 146,
+      "sources": [
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java", "line": 339, "end_line": 391 }
+      ]
+    },
+    {
+      "id": "gesture_recognize",
+      "lane": "gesture",
+      "col": 3,
+      "type": "frontend",
+      "label": "手势识别",
+      "sublabel": "双击与缩放",
+      "width": 146,
+      "sources": [
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/CustomGestureDetector.java", "line": 112, "end_line": 213 }
+      ]
+    },
+    {
+      "id": "gesture_delta",
+      "lane": "gesture",
+      "col": 4,
+      "type": "frontend",
+      "label": "生成增量",
+      "sublabel": "onScale/onDrag",
+      "width": 148,
+      "sources": [
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java", "line": 98, "end_line": 161 }
+      ]
+    },
+    {
+      "id": "supp_matrix",
+      "lane": "matrix",
+      "col": 4,
+      "type": "backend",
+      "label": "叠加矩阵",
+      "sublabel": "mSuppMatrix",
+      "width": 146,
+      "sources": [
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java", "line": 574, "end_line": 578 },
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java", "line": 655, "end_line": 711 }
+      ]
+    },
+    {
+      "id": "display",
+      "lane": "attacher",
+      "col": 4,
+      "type": "backend",
+      "label": "刷新显示",
+      "sublabel": "setImageMatrix",
+      "width": 150,
+      "sources": [
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java", "line": 560, "end_line": 569 }
+      ]
+    },
+    {
+      "id": "notify",
+      "lane": "caller",
+      "col": 4,
+      "type": "external",
+      "label": "通知监听",
+      "sublabel": "onMatrixChanged",
+      "width": 152,
+      "sources": [
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java", "line": 560, "end_line": 569 }
+      ]
+    },
+    {
+      "id": "layout_change",
+      "lane": "view",
+      "col": 2,
+      "type": "frontend",
+      "label": "布局变化",
+      "sublabel": "onLayoutChange",
+      "width": 150,
+      "sources": [
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java", "line": 329, "end_line": 336 }
+      ]
+    },
+    {
+      "id": "fling",
+      "lane": "matrix",
+      "col": 3,
+      "type": "frontend",
+      "label": "惯性滑动",
+      "sublabel": "FlingRunnable",
+      "width": 148,
+      "sources": [
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java", "line": 137, "end_line": 143 },
+        { "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java", "line": 806, "end_line": 821 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_set_override", "from": "call_set", "to": "pv_override", "label": "设置" },
+    { "id": "e_override_base", "from": "pv_override", "to": "base_matrix", "label": "update" },
+    { "id": "e_base_touch", "from": "base_matrix", "to": "touch_dispatch", "label": "图片就绪" },
+    { "id": "e_touch_recognize", "from": "touch_dispatch", "to": "gesture_recognize", "label": "分发给识别器" },
+    { "id": "e_recognize_delta", "from": "gesture_recognize", "to": "gesture_delta", "label": "手势回调" },
+    { "id": "e_delta_supp", "from": "gesture_delta", "to": "supp_matrix", "label": "postScale" },
+    { "id": "e_supp_display", "from": "supp_matrix", "to": "display", "label": "边界校验" },
+    { "id": "e_display_notify", "from": "display", "to": "notify", "label": "回调" },
+    { "id": "e_layout_base", "from": "layout_change", "to": "base_matrix", "label": "尺寸变化", "variant": "dashed", "role": "branch" },
+    { "id": "e_recognize_fling", "from": "gesture_recognize", "to": "fling", "label": "快速滑动", "variant": "dashed", "role": "branch" },
+    { "id": "e_fling_display", "from": "fling", "to": "display", "label": "滚动", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "基准矩阵何时重算",
+      "items": [
+        "setImageDrawable / setImageResource / setImageURI 与 setFrame 变化都会调用 attacher.update()",
+        "onLayoutChange 检测到边界变化时只重算 updateBaseMatrix，不重置用户已缩放的 Supp 矩阵"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "越界回弹",
+      "items": [
+        "ACTION_UP / ACTION_CANCEL 时若 getScale() 小于 min 或大于 max，会 post AnimatedZoomRunnable 动画归位",
+        "checkMatrixBounds 在宽高小于视口时按 ScaleType 对齐，否则把空白边贴回视口"
+      ]
+    }
+  ]
+}

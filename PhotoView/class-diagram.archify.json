@@ -1,0 +1,512 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "PhotoView 核心类型结构",
+    "subtitle": "PhotoView 只做 ImageView 转发，PhotoViewAttacher 独占矩阵与手势，CustomGestureDetector 把触摸翻译成增量。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/15-PhotoView/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/chrisbanes/PhotoView",
+      "provider": "github",
+      "revision": "565505d5cb84f5977771b5d2ccb7726338e77224"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "photoview",
+      "label": "PhotoView",
+      "kind": "class",
+      "sublabel": "可缩放 ImageView 门面",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "attacher",
+          "type": "PhotoViewAttacher",
+          "visibility": "private"
+        },
+        {
+          "name": "pendingScaleType",
+          "type": "ScaleType",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "init",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "getAttacher",
+          "parameters": "",
+          "returns": "PhotoViewAttacher",
+          "visibility": "public"
+        },
+        {
+          "name": "setImageDrawable",
+          "parameters": "drawable: Drawable",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setFrame",
+          "parameters": "l, t, r, b: int",
+          "returns": "boolean",
+          "visibility": "protected"
+        },
+        {
+          "name": "setScale",
+          "parameters": "scale: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getScale",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public"
+        },
+        {
+          "name": "getDisplayRect",
+          "parameters": "",
+          "returns": "RectF",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoView.java",
+          "line": 33,
+          "end_line": 36
+        },
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoView.java",
+          "line": 51,
+          "end_line": 61
+        },
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoView.java",
+          "line": 103,
+          "end_line": 135
+        }
+      ]
+    },
+    {
+      "id": "attacher",
+      "label": "PhotoViewAttacher",
+      "kind": "class",
+      "sublabel": "矩阵、手势与边界中枢",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mImageView",
+          "type": "ImageView",
+          "visibility": "private"
+        },
+        {
+          "name": "mBaseMatrix",
+          "type": "Matrix",
+          "visibility": "private"
+        },
+        {
+          "name": "mSuppMatrix",
+          "type": "Matrix",
+          "visibility": "private"
+        },
+        {
+          "name": "mDrawMatrix",
+          "type": "Matrix",
+          "visibility": "private"
+        },
+        {
+          "name": "mScaleDragDetector",
+          "type": "CustomGestureDetector",
+          "visibility": "private"
+        },
+        {
+          "name": "mZoomEnabled",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onTouch",
+          "parameters": "v: View, ev: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "update",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setScale",
+          "parameters": "scale: float, animate: boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getDisplayRect",
+          "parameters": "",
+          "returns": "RectF",
+          "visibility": "public"
+        },
+        {
+          "name": "checkAndDisplayMatrix",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "updateBaseMatrix",
+          "parameters": "drawable: Drawable",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "checkMatrixBounds",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java",
+          "line": 39,
+          "end_line": 40
+        },
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java",
+          "line": 73,
+          "end_line": 77
+        },
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/PhotoViewAttacher.java",
+          "line": 339,
+          "end_line": 391
+        }
+      ]
+    },
+    {
+      "id": "gesture",
+      "label": "CustomGestureDetector",
+      "kind": "class",
+      "sublabel": "缩放与拖拽识别器",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mDetector",
+          "type": "ScaleGestureDetector",
+          "visibility": "private"
+        },
+        {
+          "name": "mListener",
+          "type": "OnGestureListener",
+          "visibility": "private"
+        },
+        {
+          "name": "mVelocityTracker",
+          "type": "VelocityTracker",
+          "visibility": "private"
+        },
+        {
+          "name": "mIsDragging",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "mTouchSlop",
+          "type": "float",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onTouchEvent",
+          "parameters": "ev: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "processTouchEvent",
+          "parameters": "ev: MotionEvent",
+          "returns": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "isScaling",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "isDragging",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/CustomGestureDetector.java",
+          "line": 27,
+          "end_line": 41
+        },
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/CustomGestureDetector.java",
+          "line": 112,
+          "end_line": 120
+        },
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/CustomGestureDetector.java",
+          "line": 122,
+          "end_line": 213
+        }
+      ]
+    },
+    {
+      "id": "on_gesture",
+      "label": "OnGestureListener",
+      "kind": "interface",
+      "sublabel": "手势增量回调契约",
+      "row": 3,
+      "col": 0,
+      "methods": [
+        {
+          "name": "onDrag",
+          "parameters": "dx: float, dy: float",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onFling",
+          "parameters": "startX, startY, velocityX, velocityY: float",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onScale",
+          "parameters": "scaleFactor, focusX, focusY: float",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onScale",
+          "parameters": "scaleFactor, focusX, focusY, dx, dy: float",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/OnGestureListener.java",
+          "line": 18,
+          "end_line": 27
+        }
+      ]
+    },
+    {
+      "id": "util",
+      "label": "Util",
+      "kind": "class",
+      "sublabel": "缩放范围与触摸工具",
+      "row": 3,
+      "col": 1,
+      "methods": [
+        {
+          "name": "checkZoomLevels",
+          "parameters": "minZoom, midZoom, maxZoom: float",
+          "returns": "void",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "hasDrawable",
+          "parameters": "imageView: ImageView",
+          "returns": "boolean",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "isSupportedScaleType",
+          "parameters": "scaleType: ScaleType",
+          "returns": "boolean",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "getPointerIndex",
+          "parameters": "action: int",
+          "returns": "int",
+          "visibility": "package",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/Util.java",
+          "line": 6,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "id": "scale_listener",
+      "label": "OnScaleChangedListener",
+      "kind": "interface",
+      "sublabel": "缩放变化回调",
+      "row": 2,
+      "col": 2,
+      "methods": [
+        {
+          "name": "onScaleChange",
+          "parameters": "scaleFactor, focusX, focusY: float",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/OnScaleChangedListener.java",
+          "line": 7,
+          "end_line": 16
+        }
+      ]
+    },
+    {
+      "id": "matrix_listener",
+      "label": "OnMatrixChangedListener",
+      "kind": "interface",
+      "sublabel": "显示矩阵变化回调",
+      "row": 2,
+      "col": 1,
+      "methods": [
+        {
+          "name": "onMatrixChanged",
+          "parameters": "rect: RectF",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/OnMatrixChangedListener.java",
+          "line": 9,
+          "end_line": 17
+        }
+      ]
+    },
+    {
+      "id": "drag_listener",
+      "label": "OnViewDragListener",
+      "kind": "interface",
+      "sublabel": "拖动位移回调",
+      "row": 3,
+      "col": 2,
+      "methods": [
+        {
+          "name": "onDrag",
+          "parameters": "dx: float, dy: float",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "photoview/src/main/java/com/github/chrisbanes/photoview/OnViewDragListener.java",
+          "line": 6,
+          "end_line": 15
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "pv_owns_attacher",
+      "from": "photoview",
+      "to": "attacher",
+      "kind": "composition",
+      "label": "init 创建"
+    },
+    {
+      "id": "attacher_owns_gesture",
+      "from": "attacher",
+      "to": "gesture",
+      "kind": "composition",
+      "label": "mScaleDragDetector"
+    },
+    {
+      "id": "gesture_uses_listener",
+      "from": "gesture",
+      "to": "on_gesture",
+      "kind": "association",
+      "label": "mListener"
+    },
+    {
+      "id": "attacher_matrix",
+      "from": "attacher",
+      "to": "matrix_listener",
+      "kind": "association",
+      "label": "矩阵通知"
+    },
+    {
+      "id": "attacher_scale",
+      "from": "attacher",
+      "to": "scale_listener",
+      "kind": "association",
+      "label": "缩放通知"
+    },
+    {
+      "id": "attacher_drag",
+      "from": "attacher",
+      "to": "drag_listener",
+      "kind": "association",
+      "label": "拖动通知"
+    },
+    {
+      "id": "gesture_util",
+      "from": "gesture",
+      "to": "util",
+      "kind": "dependency",
+      "label": "getPointerIndex"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "矩阵三层结构",
+      "items": [
+        "mBaseMatrix 由 updateBaseMatrix 按 ScaleType 算出，只随尺寸与旋转变化",
+        "mSuppMatrix 承接手势增量，getDrawMatrix 把两者 postConcat 后交给 ImageView"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "触摸优先级",
+      "items": [
+        "CustomGestureDetector 先消费缩放与拖拽，GestureDetector 再判断单击/双击",
+        "onTouch 在 ACTION_UP 时若越界，会 post AnimatedZoomRunnable 回弹到 min/max"
+      ]
+    }
+  ]
+}
