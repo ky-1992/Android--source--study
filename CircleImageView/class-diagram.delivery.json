@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "cd17dbed-aae9-4ea9-ad58-9a39c75e5bd3",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/34-CircleImageView/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/34-CircleImageView/class-diagram.html",
+  "specification": {
+    "sha256": "757b79bb961a22a1b95a197be46742998d10245d4c1a3a6b4408b1d696db55b1",
+    "bytes": 14489
+  },
+  "artifact": {
+    "sha256": "5e73fc50be0cfaad2cb05a8a6e7b3bd94f352bb15f215459e3774650ed265e66",
+    "bytes": 884791
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "d18f4459-f4e9-446b-bde4-1859f54bbe6a",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/34-CircleImageView/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/34-CircleImageView/flow-diagram.html",
+  "specification": {
+    "sha256": "f17fd16e6a7515fb18f12451cc2d75b3c15009e7c62816558867d9f7a8b90f0f",
+    "bytes": 6533
+  },
+  "artifact": {
+    "sha256": "668e556f682f0f650a62e87ed7ba675b01e07cb98b4af877f49f494a56131167",
+    "bytes": 848630
+  }
+}

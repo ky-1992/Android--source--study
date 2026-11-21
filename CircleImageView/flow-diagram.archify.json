@@ -1,0 +1,173 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "CircleImageView 圆形绘制主流程",
+    "subtitle": "构造时读 civ_* 属性，setImage* 把 Drawable 转 Bitmap，onSizeChanged 算半径，onDraw 用 BitmapShader 画圆再描边框。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/34-CircleImageView/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/hdodenhof/CircleImageView",
+      "provider": "github",
+      "revision": "59ee0a11d7199cdeb2d454ebeaaa8396238c418f"
+    }
+  },
+  "lanes": [
+    { "id": "view", "label": "宿主 View" },
+    { "id": "init", "label": "属性与位图" },
+    { "id": "draw", "label": "绘制管线" },
+    { "id": "outline", "label": "轮廓与交互" }
+  ],
+  "phases": [
+    { "id": "parse", "label": "读取属性", "fromCol": 0, "toCol": 0 },
+    { "id": "prepare", "label": "准备位图", "fromCol": 1, "toCol": 2 },
+    { "id": "measure", "label": "尺寸与矩阵", "fromCol": 3, "toCol": 3 },
+    { "id": "paint", "label": "绘制与轮廓", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": ["inflate", "make_paints", "load_bitmap", "update_bounds", "rebuild_shader", "draw_circle", "draw_border"],
+  "nodes": [
+    {
+      "id": "inflate",
+      "lane": "view",
+      "col": 0,
+      "type": "frontend",
+      "label": "读取自定义属性",
+      "sublabel": "civ_* 四项",
+      "width": 152,
+      "sources": [
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 100, "end_line": 113 },
+        { "path": "circleimageview/src/main/res/values/attrs.xml", "line": 3, "end_line": 8 }
+      ]
+    },
+    {
+      "id": "make_paints",
+      "lane": "init",
+      "col": 1,
+      "type": "backend",
+      "label": "初始化三支画笔",
+      "sublabel": "init()",
+      "width": 152,
+      "sources": [
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 115, "end_line": 138 }
+      ]
+    },
+    {
+      "id": "load_bitmap",
+      "lane": "init",
+      "col": 2,
+      "type": "backend",
+      "label": "载入位图",
+      "sublabel": "initializeBitmap",
+      "width": 152,
+      "sources": [
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 405, "end_line": 423 },
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 377, "end_line": 403 }
+      ]
+    },
+    {
+      "id": "update_bounds",
+      "lane": "init",
+      "col": 3,
+      "type": "backend",
+      "label": "换算圆心半径",
+      "sublabel": "updateDimensions",
+      "width": 152,
+      "sources": [
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 197, "end_line": 202 },
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 425, "end_line": 436 }
+      ]
+    },
+    {
+      "id": "rebuild_shader",
+      "lane": "draw",
+      "col": 3,
+      "type": "backend",
+      "label": "重建着色器",
+      "sublabel": "BitmapShader",
+      "width": 152,
+      "sources": [
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 174, "end_line": 181 },
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 450, "end_line": 476 }
+      ]
+    },
+    {
+      "id": "draw_circle",
+      "lane": "draw",
+      "col": 4,
+      "type": "backend",
+      "label": "圆内裁剪绘制",
+      "sublabel": "drawCircle",
+      "width": 152,
+      "yOffset": -56,
+      "sources": [
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 166, "end_line": 184 }
+      ]
+    },
+    {
+      "id": "draw_border",
+      "lane": "draw",
+      "col": 4,
+      "type": "backend",
+      "label": "描边框",
+      "sublabel": "STROKE 画笔",
+      "width": 152,
+      "yOffset": 56,
+      "sources": [
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 186, "end_line": 188 }
+      ]
+    },
+    {
+      "id": "outline",
+      "lane": "outline",
+      "col": 4,
+      "type": "cloud",
+      "label": "上报圆形轮廓",
+      "sublabel": "OutlineProvider",
+      "width": 152,
+      "sources": [
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 496, "end_line": 510 }
+      ]
+    },
+    {
+      "id": "touch",
+      "lane": "outline",
+      "col": 1,
+      "type": "external",
+      "label": "触摸命中判定",
+      "sublabel": "inTouchableArea",
+      "width": 152,
+      "sources": [
+        { "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java", "line": 478, "end_line": 494 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_attr_init", "from": "inflate", "to": "make_paints", "label": "构造回调" },
+    { "id": "e_init_bitmap", "from": "make_paints", "to": "load_bitmap", "label": "setImage*" },
+    { "id": "e_bitmap_bounds", "from": "load_bitmap", "to": "update_bounds", "label": "尺寸变化" },
+    { "id": "e_bounds_shader", "from": "update_bounds", "to": "rebuild_shader", "label": "更新矩阵" },
+    { "id": "e_shader_circle", "from": "rebuild_shader", "to": "draw_circle", "label": "着色器就绪" },
+    { "id": "e_circle_border", "from": "draw_circle", "to": "draw_border", "label": "边框宽>0" },
+    { "id": "e_inflate_touch", "from": "inflate", "to": "touch", "label": "用户点击", "variant": "dashed", "role": "branch" },
+    { "id": "e_circle_outline", "from": "draw_circle", "to": "outline", "label": "API 21 轮廓", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两次 drawCircle",
+      "items": [
+        "内容圆用 mBitmapPaint（BitmapShader + mDrawableRadius），边框圆用 mBorderPaint（STROKE + mBorderRadius）",
+        "mBorderOverlay 为 false 时 mDrawableRect 先 inset 边框宽度减 1，内容不会盖住边框"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "CENTER_CROP 的等价实现",
+      "items": [
+        "updateShaderMatrix 比较位图与内容矩形的宽高比，取较大缩放并居中平移",
+        "mRebuildShader 用标记位延后到 onDraw 才 new BitmapShader，避免每帧重新分配"
+      ]
+    }
+  ]
+}

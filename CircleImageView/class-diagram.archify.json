@@ -1,0 +1,570 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "CircleImageView 绘制协作类型",
+    "subtitle": "CircleImageView 继承 ImageView，把 Bitmap 交给 BitmapShader 后按 RectF 半径画圆；框架类型按其在该类中的用法标注。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/34-CircleImageView/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/hdodenhof/CircleImageView",
+      "provider": "github",
+      "revision": "59ee0a11d7199cdeb2d454ebeaaa8396238c418f"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "image_view",
+      "label": "ImageView",
+      "kind": "class",
+      "sublabel": "宿主 View 基类",
+      "row": 0,
+      "col": 1,
+      "methods": [
+        {
+          "name": "setScaleType",
+          "parameters": "scaleType: ScaleType",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setImageDrawable",
+          "parameters": "drawable: Drawable",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onDraw",
+          "parameters": "canvas: Canvas",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 49,
+          "end_line": 49
+        },
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 140,
+          "end_line": 145
+        },
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 312,
+          "end_line": 317
+        }
+      ]
+    },
+    {
+      "id": "circle_image_view",
+      "label": "CircleImageView",
+      "kind": "class",
+      "sublabel": "圆形裁剪的 ImageView",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mDrawableRect",
+          "type": "RectF",
+          "visibility": "private"
+        },
+        {
+          "name": "mBorderRect",
+          "type": "RectF",
+          "visibility": "private"
+        },
+        {
+          "name": "mShaderMatrix",
+          "type": "Matrix",
+          "visibility": "private"
+        },
+        {
+          "name": "mBitmapPaint",
+          "type": "Paint",
+          "visibility": "private"
+        },
+        {
+          "name": "mBorderPaint",
+          "type": "Paint",
+          "visibility": "private"
+        },
+        {
+          "name": "mCircleBackgroundPaint",
+          "type": "Paint",
+          "visibility": "private"
+        },
+        {
+          "name": "mBitmap",
+          "type": "Bitmap",
+          "visibility": "private"
+        },
+        {
+          "name": "mBorderWidth",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mBorderColor",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mBorderOverlay",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "mDrawableRadius",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mBorderRadius",
+          "type": "float",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "init",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "initializeBitmap",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "getBitmapFromDrawable",
+          "parameters": "drawable: Drawable",
+          "returns": "Bitmap",
+          "visibility": "private"
+        },
+        {
+          "name": "updateDimensions",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "updateShaderMatrix",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "calculateBounds",
+          "parameters": "",
+          "returns": "RectF",
+          "visibility": "private"
+        },
+        {
+          "name": "onDraw",
+          "parameters": "canvas: Canvas",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onSizeChanged",
+          "parameters": "w, h, oldw, oldh: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setBorderWidth",
+          "parameters": "borderWidth: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onTouchEvent",
+          "parameters": "event: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 62,
+          "end_line": 88
+        },
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 115,
+          "end_line": 138
+        },
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 154,
+          "end_line": 189
+        }
+      ]
+    },
+    {
+      "id": "paint",
+      "label": "Paint",
+      "kind": "class",
+      "sublabel": "位图/边框/底色画笔",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mBitmapPaint",
+          "type": "Paint",
+          "visibility": "private"
+        },
+        {
+          "name": "mBorderPaint",
+          "type": "Paint",
+          "visibility": "private"
+        },
+        {
+          "name": "mCircleBackgroundPaint",
+          "type": "Paint",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setAntiAlias",
+          "parameters": "flag: boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setStyle",
+          "parameters": "style: Style",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setShader",
+          "parameters": "shader: Shader",
+          "returns": "Shader",
+          "visibility": "public"
+        },
+        {
+          "name": "setStrokeWidth",
+          "parameters": "width: float",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 66,
+          "end_line": 68
+        },
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 120,
+          "end_line": 133
+        }
+      ]
+    },
+    {
+      "id": "view_outline_provider",
+      "label": "ViewOutlineProvider",
+      "kind": "abstract",
+      "sublabel": "系统轮廓抽象",
+      "row": 1,
+      "col": 0,
+      "methods": [
+        {
+          "name": "getOutline",
+          "parameters": "view: View, outline: Outline",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 135,
+          "end_line": 137
+        },
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 496,
+          "end_line": 497
+        }
+      ]
+    },
+    {
+      "id": "bitmap_shader",
+      "label": "BitmapShader",
+      "kind": "class",
+      "sublabel": "把位图铺进圆内",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mBitmap",
+          "type": "Bitmap",
+          "visibility": "private"
+        },
+        {
+          "name": "tileMode",
+          "type": "TileMode",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "setLocalMatrix",
+          "parameters": "localM: Matrix",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 174,
+          "end_line": 181
+        }
+      ]
+    },
+    {
+      "id": "rect_f",
+      "label": "RectF",
+      "kind": "class",
+      "sublabel": "内容矩形与边框矩形",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mDrawableRect",
+          "type": "RectF",
+          "visibility": "private"
+        },
+        {
+          "name": "mBorderRect",
+          "type": "RectF",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "set",
+          "parameters": "rect: RectF",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "inset",
+          "parameters": "dx: float, dy: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "centerX",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 62,
+          "end_line": 63
+        },
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 425,
+          "end_line": 433
+        },
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 438,
+          "end_line": 448
+        }
+      ]
+    },
+    {
+      "id": "outline_provider",
+      "label": "OutlineProvider",
+      "kind": "class",
+      "sublabel": "内部类：圆形轮廓",
+      "row": 2,
+      "col": 0,
+      "methods": [
+        {
+          "name": "getOutline",
+          "parameters": "view: View, outline: Outline",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 496,
+          "end_line": 510
+        }
+      ]
+    },
+    {
+      "id": "matrix",
+      "label": "Matrix",
+      "kind": "class",
+      "sublabel": "CENTER_CROP 变换",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mShaderMatrix",
+          "type": "Matrix",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setScale",
+          "parameters": "sx: float, sy: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "postTranslate",
+          "parameters": "dx: float, dy: float",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 459,
+          "end_line": 475
+        }
+      ]
+    },
+    {
+      "id": "canvas",
+      "label": "Canvas",
+      "kind": "class",
+      "sublabel": "两次 drawCircle",
+      "row": 3,
+      "col": 2,
+      "methods": [
+        {
+          "name": "drawCircle",
+          "parameters": "cx, cy, radius: float, paint: Paint",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 162,
+          "end_line": 164
+        },
+        {
+          "path": "circleimageview/src/main/java/de/hdodenhof/circleimageview/CircleImageView.java",
+          "line": 182,
+          "end_line": 188
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "civ_extends",
+      "from": "circle_image_view",
+      "to": "image_view",
+      "kind": "inheritance",
+      "label": "extends"
+    },
+    {
+      "id": "outline_extends",
+      "from": "outline_provider",
+      "to": "view_outline_provider",
+      "kind": "inheritance",
+      "label": "extends"
+    },
+    {
+      "id": "civ_owns_outline",
+      "from": "circle_image_view",
+      "to": "outline_provider",
+      "kind": "composition",
+      "label": "内部类"
+    },
+    {
+      "id": "civ_owns_paint",
+      "from": "circle_image_view",
+      "to": "paint",
+      "kind": "composition",
+      "label": "三支画笔"
+    },
+    {
+      "id": "civ_owns_rect",
+      "from": "circle_image_view",
+      "to": "rect_f",
+      "kind": "composition",
+      "label": "半径来源"
+    },
+    {
+      "id": "civ_owns_matrix",
+      "from": "circle_image_view",
+      "to": "matrix",
+      "kind": "composition",
+      "label": "着色器矩阵"
+    },
+    {
+      "id": "civ_builds_shader",
+      "from": "circle_image_view",
+      "to": "bitmap_shader",
+      "kind": "dependency",
+      "label": "onDraw 重建"
+    },
+    {
+      "id": "civ_draws_canvas",
+      "from": "circle_image_view",
+      "to": "canvas",
+      "kind": "dependency",
+      "label": "绘制"
+    },
+    {
+      "id": "outline_uses_rect",
+      "from": "outline_provider",
+      "to": "rect_f",
+      "kind": "dependency",
+      "label": "roundOut"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "为什么不用 clipPath",
+      "items": [
+        "BitmapShader 在 onDraw 只做一次 drawCircle，硬件加速下也能抗锯齿",
+        "不复制位图、不用 setXfermode，因此只绘制一遍画布"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "两个矩形两支半径",
+      "items": [
+        "mBorderRect 管外沿，mBorderRadius 减去边框宽度的一半；mBorderOverlay 决定内容是否向内缩进",
+        "mDrawableRect 管内容圆，mDrawableRadius 同时给出着色器缩放和触摸命中范围"
+      ]
+    }
+  ]
+}
