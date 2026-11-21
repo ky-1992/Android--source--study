@@ -1,0 +1,179 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "greenDAO 一次 insert 的主流程",
+    "subtitle": "AbstractDao.insert 取预编译语句，在事务内绑定并执行，提交后回填主键并挂到身份域，最后把 rowId 返回调用方。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/28-greenDAO/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/greenrobot/greenDAO",
+      "provider": "github",
+      "revision": "0bbb338e17c4cf28aba5aae62d42f73f50186157"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "dao", "label": "DAO 内核" },
+    { "id": "stmt", "label": "SQL 语句" },
+    { "id": "db", "label": "SQLite" }
+  ],
+  "phases": [
+    { "id": "prepare", "label": "准备语句", "fromCol": 0, "toCol": 1 },
+    { "id": "execute", "label": "事务内执行", "fromCol": 2, "toCol": 3 },
+    { "id": "attach", "label": "提交与挂载", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "app_insert",
+    "open_tx",
+    "get_stmt",
+    "compile_stmt",
+    "bind_values",
+    "exec_sql",
+    "commit_tx",
+    "attach_key",
+    "return_rowid"
+  ],
+  "nodes": [
+    {
+      "id": "app_insert",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "写入实体",
+      "sublabel": "insert()",
+      "width": 146,
+      "sources": [
+        { "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java", "line": 318, "end_line": 320 }
+      ]
+    },
+    {
+      "id": "open_tx",
+      "lane": "dao",
+      "col": 1,
+      "type": "backend",
+      "label": "开启事务",
+      "sublabel": "executeInsert",
+      "width": 150,
+      "sources": [
+        { "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java", "line": 343, "end_line": 350 }
+      ]
+    },
+    {
+      "id": "get_stmt",
+      "lane": "dao",
+      "col": 2,
+      "type": "backend",
+      "label": "取插入语句",
+      "sublabel": "getStatement",
+      "width": 152,
+      "sources": [
+        { "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java", "line": 318, "end_line": 320 },
+        { "path": "DaoCore/src/main/java/org/greenrobot/greendao/internal/TableStatements.java", "line": 49, "end_line": 64 }
+      ]
+    },
+    {
+      "id": "compile_stmt",
+      "lane": "stmt",
+      "col": 2,
+      "type": "backend",
+      "label": "编译 SQL",
+      "sublabel": "compileStmt",
+      "width": 150,
+      "sources": [
+        { "path": "DaoCore/src/main/java/org/greenrobot/greendao/internal/TableStatements.java", "line": 51, "end_line": 62 }
+      ]
+    },
+    {
+      "id": "bind_values",
+      "lane": "dao",
+      "col": 3,
+      "type": "backend",
+      "label": "绑定字段",
+      "sublabel": "bindValues",
+      "width": 150,
+      "sources": [
+        { "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java", "line": 363, "end_line": 374 }
+      ]
+    },
+    {
+      "id": "exec_sql",
+      "lane": "db",
+      "col": 3,
+      "type": "database",
+      "label": "执行 INSERT",
+      "sublabel": "executeInsert",
+      "width": 152,
+      "sources": [
+        { "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java", "line": 367, "end_line": 373 }
+      ]
+    },
+    {
+      "id": "commit_tx",
+      "lane": "db",
+      "col": 4,
+      "type": "database",
+      "label": "提交事务",
+      "sublabel": "setSuccessful",
+      "width": 150,
+      "sources": [
+        { "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java", "line": 351, "end_line": 360 }
+      ]
+    },
+    {
+      "id": "attach_key",
+      "lane": "dao",
+      "col": 4,
+      "type": "backend",
+      "label": "回填主键",
+      "sublabel": "updateKey",
+      "width": 152,
+      "sources": [
+        { "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java", "line": 376, "end_line": 385 },
+        { "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java", "line": 834, "end_line": 843 }
+      ]
+    },
+    {
+      "id": "return_rowid",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "拿到 rowId",
+      "sublabel": "return long",
+      "width": 146,
+      "sources": [
+        { "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java", "line": 343, "end_line": 361 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_insert_tx", "from": "app_insert", "to": "open_tx", "label": "insert()" },
+    { "id": "e_tx_stmt", "from": "open_tx", "to": "get_stmt", "label": "取语句" },
+    { "id": "e_stmt_compile", "from": "get_stmt", "to": "compile_stmt", "label": "首次缓存" },
+    { "id": "e_compile_bind", "from": "compile_stmt", "to": "bind_values", "label": "语句就绪" },
+    { "id": "e_bind_exec", "from": "bind_values", "to": "exec_sql", "label": "执行" },
+    { "id": "e_exec_commit", "from": "exec_sql", "to": "commit_tx", "label": "成功" },
+    { "id": "e_commit_attach", "from": "commit_tx", "to": "attach_key", "label": "结束事务" },
+    { "id": "e_attach_return", "from": "attach_key", "to": "return_rowid", "label": "rowId" },
+    { "id": "e_tx_bind", "from": "open_tx", "to": "bind_values", "label": "已在事务内", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "事务策略",
+      "items": [
+        "executeInsert 先用 isDbLockedByCurrentThread 判断是否已在事务中，避免嵌套 beginTransaction",
+        "批量入口 executeInsertInTx 只开一次事务并锁住 statement，identityScope 用 putNoLock 减少重复加锁"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "语句缓存与主键",
+      "items": [
+        "TableStatements 用双检锁按表缓存 INSERT / UPDATE / DELETE 预编译语句，SQL 只拼一次",
+        "updateKeyAfterInsertAndAttach 回填主键后 attachEntity 把对象放进 IdentityScope，使内存中同一主键只有一份实例"
+      ]
+    }
+  ]
+}

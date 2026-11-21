@@ -1,0 +1,959 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "greenDAO 核心类型结构",
+    "subtitle": "DaoMaster 用 DaoConfig 登记每个 DAO；Session 持有 DAO 映射；AbstractDao 借 TableStatements 与身份域完成读写；QueryBuilder 把 Property 条件编译成 Query。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/28-greenDAO/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/greenrobot/greenDAO",
+      "provider": "github",
+      "revision": "0bbb338e17c4cf28aba5aae62d42f73f50186157"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "dao_master",
+      "label": "AbstractDaoMaster",
+      "kind": "abstract",
+      "sublabel": "数据库连接与 DAO 配置的登记处",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "db",
+          "type": "Database",
+          "visibility": "protected"
+        },
+        {
+          "name": "schemaVersion",
+          "type": "int",
+          "visibility": "protected"
+        },
+        {
+          "name": "daoConfigMap",
+          "type": "Map<Class<? extends AbstractDao<?, ?>>, DaoConfig>",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "registerDaoClass",
+          "parameters": "daoClass: Class<? extends AbstractDao<?, ?>>",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "newSession",
+          "parameters": "",
+          "returns": "AbstractDaoSession",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "newSession",
+          "parameters": "type: IdentityScopeType",
+          "returns": "AbstractDaoSession",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getSchemaVersion",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getDatabase",
+          "parameters": "",
+          "returns": "Database",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDaoMaster.java",
+          "line": 31,
+          "end_line": 46
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDaoMaster.java",
+          "line": 57,
+          "end_line": 59
+        }
+      ]
+    },
+    {
+      "id": "dao_session",
+      "label": "AbstractDaoSession",
+      "kind": "class",
+      "sublabel": "实体到 DAO 的映射与事务门面",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "db",
+          "type": "Database",
+          "visibility": "private"
+        },
+        {
+          "name": "entityToDao",
+          "type": "Map<Class<?>, AbstractDao<?, ?>>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "registerDao",
+          "parameters": "entityClass: Class<T>, dao: AbstractDao<T, ?>",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "insert",
+          "parameters": "entity: T",
+          "returns": "long",
+          "visibility": "public"
+        },
+        {
+          "name": "insertOrReplace",
+          "parameters": "entity: T",
+          "returns": "long",
+          "visibility": "public"
+        },
+        {
+          "name": "getDao",
+          "parameters": "entityClass: Class<? extends Object>",
+          "returns": "AbstractDao<?, ?>",
+          "visibility": "public"
+        },
+        {
+          "name": "queryBuilder",
+          "parameters": "entityClass: Class<T>",
+          "returns": "QueryBuilder<T>",
+          "visibility": "public"
+        },
+        {
+          "name": "runInTx",
+          "parameters": "runnable: Runnable",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "callInTx",
+          "parameters": "callable: Callable<V>",
+          "returns": "V",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDaoSession.java",
+          "line": 52,
+          "end_line": 66
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDaoSession.java",
+          "line": 69,
+          "end_line": 73
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDaoSession.java",
+          "line": 149,
+          "end_line": 157
+        }
+      ]
+    },
+    {
+      "id": "dao_config",
+      "label": "DaoConfig",
+      "kind": "class",
+      "sublabel": "从生成类反射出的表结构元数据",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "db",
+          "type": "Database",
+          "visibility": "public"
+        },
+        {
+          "name": "tablename",
+          "type": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "properties",
+          "type": "Property[]",
+          "visibility": "public"
+        },
+        {
+          "name": "allColumns",
+          "type": "String[]",
+          "visibility": "public"
+        },
+        {
+          "name": "pkColumns",
+          "type": "String[]",
+          "visibility": "public"
+        },
+        {
+          "name": "pkProperty",
+          "type": "Property",
+          "visibility": "public"
+        },
+        {
+          "name": "keyIsNumeric",
+          "type": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "statements",
+          "type": "TableStatements",
+          "visibility": "public"
+        },
+        {
+          "name": "identityScope",
+          "type": "IdentityScope<?, ?>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "DaoConfig",
+          "parameters": "db: Database, daoClass: Class<? extends AbstractDao<?, ?>>",
+          "visibility": "public"
+        },
+        {
+          "name": "reflectProperties",
+          "parameters": "daoClass: Class<? extends AbstractDao<?, ?>>",
+          "returns": "Property[]",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "initIdentityScope",
+          "parameters": "type: IdentityScopeType",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "clone",
+          "parameters": "",
+          "returns": "DaoConfig",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/internal/DaoConfig.java",
+          "line": 36,
+          "end_line": 52
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/internal/DaoConfig.java",
+          "line": 54,
+          "end_line": 104
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/internal/DaoConfig.java",
+          "line": 163,
+          "end_line": 176
+        }
+      ]
+    },
+    {
+      "id": "table_statements",
+      "label": "TableStatements",
+      "kind": "class",
+      "sublabel": "按表缓存预编译语句",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "db",
+          "type": "Database",
+          "visibility": "private"
+        },
+        {
+          "name": "tablename",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "allColumns",
+          "type": "String[]",
+          "visibility": "private"
+        },
+        {
+          "name": "pkColumns",
+          "type": "String[]",
+          "visibility": "private"
+        },
+        {
+          "name": "insertStatement",
+          "type": "DatabaseStatement",
+          "visibility": "private"
+        },
+        {
+          "name": "insertOrReplaceStatement",
+          "type": "DatabaseStatement",
+          "visibility": "private"
+        },
+        {
+          "name": "updateStatement",
+          "type": "DatabaseStatement",
+          "visibility": "private"
+        },
+        {
+          "name": "deleteStatement",
+          "type": "DatabaseStatement",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getInsertStatement",
+          "parameters": "",
+          "returns": "DatabaseStatement",
+          "visibility": "public"
+        },
+        {
+          "name": "getInsertOrReplaceStatement",
+          "parameters": "",
+          "returns": "DatabaseStatement",
+          "visibility": "public"
+        },
+        {
+          "name": "getUpdateStatement",
+          "parameters": "",
+          "returns": "DatabaseStatement",
+          "visibility": "public"
+        },
+        {
+          "name": "getDeleteStatement",
+          "parameters": "",
+          "returns": "DatabaseStatement",
+          "visibility": "public"
+        },
+        {
+          "name": "getCountStatement",
+          "parameters": "",
+          "returns": "DatabaseStatement",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/internal/TableStatements.java",
+          "line": 25,
+          "end_line": 38
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/internal/TableStatements.java",
+          "line": 49,
+          "end_line": 64
+        }
+      ]
+    },
+    {
+      "id": "abstract_dao",
+      "label": "AbstractDao",
+      "kind": "abstract",
+      "sublabel": "CRUD 与事务的主实现",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "config",
+          "type": "DaoConfig",
+          "visibility": "protected"
+        },
+        {
+          "name": "db",
+          "type": "Database",
+          "visibility": "protected"
+        },
+        {
+          "name": "identityScope",
+          "type": "IdentityScope<K, T>",
+          "visibility": "protected"
+        },
+        {
+          "name": "identityScopeLong",
+          "type": "IdentityScopeLong<T>",
+          "visibility": "protected"
+        },
+        {
+          "name": "statements",
+          "type": "TableStatements",
+          "visibility": "protected"
+        },
+        {
+          "name": "session",
+          "type": "AbstractDaoSession",
+          "visibility": "protected"
+        },
+        {
+          "name": "pkOrdinal",
+          "type": "int",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "insert",
+          "parameters": "entity: T",
+          "returns": "long",
+          "visibility": "public"
+        },
+        {
+          "name": "insertOrReplace",
+          "parameters": "entity: T",
+          "returns": "long",
+          "visibility": "public"
+        },
+        {
+          "name": "insertInTx",
+          "parameters": "entities: Iterable<T>, setPrimaryKey: boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "executeInsert",
+          "parameters": "entity: T, stmt: DatabaseStatement, setKeyAndAttach: boolean",
+          "returns": "long",
+          "visibility": "private"
+        },
+        {
+          "name": "attachEntity",
+          "parameters": "key: K, entity: T, lock: boolean",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "queryBuilder",
+          "parameters": "",
+          "returns": "QueryBuilder<T>",
+          "visibility": "public"
+        },
+        {
+          "name": "bindValues",
+          "parameters": "stmt: DatabaseStatement, entity: T",
+          "returns": "void",
+          "visibility": "protected",
+          "abstract": true
+        },
+        {
+          "name": "readEntity",
+          "parameters": "cursor: Cursor, offset: int",
+          "returns": "T",
+          "visibility": "protected",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java",
+          "line": 62,
+          "end_line": 71
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java",
+          "line": 318,
+          "end_line": 320
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/AbstractDao.java",
+          "line": 792,
+          "end_line": 794
+        }
+      ]
+    },
+    {
+      "id": "property",
+      "label": "Property",
+      "kind": "class",
+      "sublabel": "列元数据与条件工厂",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "ordinal",
+          "type": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "type",
+          "type": "Class<?>",
+          "visibility": "public"
+        },
+        {
+          "name": "name",
+          "type": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "primaryKey",
+          "type": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "columnName",
+          "type": "String",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "eq",
+          "parameters": "value: Object",
+          "returns": "WhereCondition",
+          "visibility": "public"
+        },
+        {
+          "name": "notEq",
+          "parameters": "value: Object",
+          "returns": "WhereCondition",
+          "visibility": "public"
+        },
+        {
+          "name": "between",
+          "parameters": "value1: Object, value2: Object",
+          "returns": "WhereCondition",
+          "visibility": "public"
+        },
+        {
+          "name": "in",
+          "parameters": "inValues: Object...",
+          "returns": "WhereCondition",
+          "visibility": "public"
+        },
+        {
+          "name": "notIn",
+          "parameters": "notInValues: Object...",
+          "returns": "WhereCondition",
+          "visibility": "public"
+        },
+        {
+          "name": "isNull",
+          "parameters": "",
+          "returns": "WhereCondition",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/Property.java",
+          "line": 30,
+          "end_line": 43
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/Property.java",
+          "line": 46,
+          "end_line": 48
+        }
+      ]
+    },
+    {
+      "id": "query_builder",
+      "label": "QueryBuilder",
+      "kind": "class",
+      "sublabel": "链式拼 SQL 的查询构造器",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "dao",
+          "type": "AbstractDao<T, ?>",
+          "visibility": "private"
+        },
+        {
+          "name": "whereCollector",
+          "type": "WhereCollector<T>",
+          "visibility": "private"
+        },
+        {
+          "name": "values",
+          "type": "List<Object>",
+          "visibility": "private"
+        },
+        {
+          "name": "orderBuilder",
+          "type": "StringBuilder",
+          "visibility": "private"
+        },
+        {
+          "name": "limit",
+          "type": "Integer",
+          "visibility": "private"
+        },
+        {
+          "name": "offset",
+          "type": "Integer",
+          "visibility": "private"
+        },
+        {
+          "name": "distinct",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "internalCreate",
+          "parameters": "dao: AbstractDao<T2, ?>",
+          "returns": "QueryBuilder<T2>",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "where",
+          "parameters": "cond: WhereCondition, condMore: WhereCondition...",
+          "returns": "QueryBuilder<T>",
+          "visibility": "public"
+        },
+        {
+          "name": "whereOr",
+          "parameters": "cond1: WhereCondition, cond2: WhereCondition",
+          "returns": "QueryBuilder<T>",
+          "visibility": "public"
+        },
+        {
+          "name": "orderAsc",
+          "parameters": "properties: Property...",
+          "returns": "QueryBuilder<T>",
+          "visibility": "public"
+        },
+        {
+          "name": "limit",
+          "parameters": "limit: int",
+          "returns": "QueryBuilder<T>",
+          "visibility": "public"
+        },
+        {
+          "name": "build",
+          "parameters": "",
+          "returns": "Query<T>",
+          "visibility": "public"
+        },
+        {
+          "name": "list",
+          "parameters": "",
+          "returns": "List<T>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/query/QueryBuilder.java",
+          "line": 48,
+          "end_line": 69
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/query/QueryBuilder.java",
+          "line": 281,
+          "end_line": 290
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/query/QueryBuilder.java",
+          "line": 424,
+          "end_line": 426
+        }
+      ]
+    },
+    {
+      "id": "query",
+      "label": "Query",
+      "kind": "class",
+      "sublabel": "可复用的实体查询对象",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "queryData",
+          "type": "QueryData<T>",
+          "visibility": "private"
+        },
+        {
+          "name": "rxTxPlain",
+          "type": "RxQuery",
+          "visibility": "private"
+        },
+        {
+          "name": "rxTxIo",
+          "type": "RxQuery",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "create",
+          "parameters": "dao: AbstractDao<T2, ?>, sql: String, initialValues: Object[]",
+          "returns": "Query<T2>",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "forCurrentThread",
+          "parameters": "",
+          "returns": "Query<T>",
+          "visibility": "public"
+        },
+        {
+          "name": "list",
+          "parameters": "",
+          "returns": "List<T>",
+          "visibility": "public"
+        },
+        {
+          "name": "listLazy",
+          "parameters": "",
+          "returns": "LazyList<T>",
+          "visibility": "public"
+        },
+        {
+          "name": "unique",
+          "parameters": "",
+          "returns": "T",
+          "visibility": "public"
+        },
+        {
+          "name": "uniqueOrThrow",
+          "parameters": "",
+          "returns": "T",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/query/Query.java",
+          "line": 37,
+          "end_line": 52
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/query/Query.java",
+          "line": 57,
+          "end_line": 63
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/query/Query.java",
+          "line": 81,
+          "end_line": 90
+        }
+      ]
+    },
+    {
+      "id": "where_condition",
+      "label": "WhereCondition",
+      "kind": "interface",
+      "sublabel": "可拼接的 WHERE 片段",
+      "row": 3,
+      "col": 0,
+      "methods": [
+        {
+          "name": "appendTo",
+          "parameters": "builder: StringBuilder, tableAlias: String",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "appendValuesTo",
+          "parameters": "values: List<Object>",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/query/WhereCondition.java",
+          "line": 29,
+          "end_line": 33
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/query/WhereCondition.java",
+          "line": 71,
+          "end_line": 76
+        },
+        {
+          "path": "DaoCore/src/main/java/org/greenrobot/greendao/query/WhereCondition.java",
+          "line": 137,
+          "end_line": 140
+        }
+      ]
+    },
+    {
+      "id": "dao_generator",
+      "label": "DaoGenerator",
+      "kind": "class",
+      "sublabel": "编译期生成 DaoMaster/DaoSession/DAO",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "templateDao",
+          "type": "Template",
+          "visibility": "private"
+        },
+        {
+          "name": "templateDaoMaster",
+          "type": "Template",
+          "visibility": "private"
+        },
+        {
+          "name": "templateDaoSession",
+          "type": "Template",
+          "visibility": "private"
+        },
+        {
+          "name": "templateEntity",
+          "type": "Template",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "generateAll",
+          "parameters": "schema: Schema, outDir: String",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "generateAll",
+          "parameters": "schema: Schema, outDir: String, outDirEntity: String, outDirTest: String",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "generate",
+          "parameters": "template: Template, outDirFile: File, javaPackage: String, className: String",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "DaoGenerator/src/org/greenrobot/greendao/generator/DaoGenerator.java",
+          "line": 40,
+          "end_line": 51
+        },
+        {
+          "path": "DaoGenerator/src/org/greenrobot/greendao/generator/DaoGenerator.java",
+          "line": 108,
+          "end_line": 146
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "master_creates_session",
+      "from": "dao_master",
+      "to": "dao_session",
+      "kind": "dependency",
+      "label": "newSession()"
+    },
+    {
+      "id": "master_holds_config",
+      "from": "dao_master",
+      "to": "dao_config",
+      "kind": "composition",
+      "label": "daoConfigMap"
+    },
+    {
+      "id": "session_holds_dao",
+      "from": "dao_session",
+      "to": "abstract_dao",
+      "kind": "aggregation",
+      "label": "entityToDao"
+    },
+    {
+      "id": "dao_holds_config",
+      "from": "abstract_dao",
+      "to": "dao_config",
+      "kind": "composition",
+      "label": "config"
+    },
+    {
+      "id": "dao_builds_query",
+      "from": "abstract_dao",
+      "to": "query_builder",
+      "kind": "dependency",
+      "label": "queryBuilder()"
+    },
+    {
+      "id": "config_holds_statements",
+      "from": "dao_config",
+      "to": "table_statements",
+      "kind": "composition",
+      "label": "statements"
+    },
+    {
+      "id": "builder_builds_query",
+      "from": "query_builder",
+      "to": "query",
+      "kind": "composition",
+      "label": "build()"
+    },
+    {
+      "id": "builder_uses_condition",
+      "from": "query_builder",
+      "to": "where_condition",
+      "kind": "dependency",
+      "label": "where()"
+    },
+    {
+      "id": "builder_orders_by_property",
+      "from": "query_builder",
+      "to": "property",
+      "kind": "dependency",
+      "label": "orderAsc()"
+    },
+    {
+      "id": "property_creates_condition",
+      "from": "property",
+      "to": "where_condition",
+      "kind": "dependency",
+      "label": "eq() 工厂"
+    },
+    {
+      "id": "query_reads_dao",
+      "from": "query",
+      "to": "abstract_dao",
+      "kind": "association",
+      "label": "dao"
+    },
+    {
+      "id": "generator_emits_master",
+      "from": "dao_generator",
+      "to": "dao_master",
+      "kind": "dependency",
+      "label": "生成子类"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "amber",
+      "title": "代码生成是核心",
+      "items": [
+        "DaoGenerator 用 FreeMarker 模板生成 DaoMaster、DaoSession、DAO 与实体，DAO 的 Properties 内部类提供 Property 常量",
+        "DaoConfig 通过反射读 TABLENAME 与 $Properties 静态字段，把表结构、主键和预编译语句一次装配好"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "性能取舍",
+      "items": [
+        "TableStatements 双检锁缓存 insert/update/delete 语句，避免重复 compileStatement；绑定与执行都在 synchronized(stmt) 内",
+        "Query 用 ThreadLocal 副本（QueryData.forCurrentThread）保证同一条 SQL 在多线程复用，参数副本不共享"
+      ]
+    }
+  ]
+}
