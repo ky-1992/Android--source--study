@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "DroidPlugin 核心类型结构",
+    "subtitle": "宿主侧 PluginManager 通过 AIDL 访问插件包服务；HookFactory 装配 IActivityManagerHook，用动态代理把系统调用换成占坑组件。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/52-DroidPlugin/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/DroidPluginTeam/DroidPlugin",
+      "provider": "github",
+      "revision": "c6ebf652e0f73aa0e5746766e117e51efaf41dbd"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "plugin_helper",
+      "label": "PluginHelper",
+      "kind": "class",
+      "sublabel": "框架初始化入口",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        { "name": "sInstance", "type": "PluginHelper", "visibility": "private", "static": true },
+        { "name": "mContext", "type": "Context", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "getInstance", "parameters": "", "returns": "PluginHelper", "visibility": "public", "static": true },
+        { "name": "applicationOnCreate", "parameters": "baseContext: Context", "returns": "void", "visibility": "public" },
+        { "name": "applicationAttachBaseContext", "parameters": "baseContext: Context", "returns": "void", "visibility": "public" },
+        { "name": "initPlugin", "parameters": "baseContext: Context", "returns": "void", "visibility": "private" },
+        { "name": "onServiceConnected", "parameters": "name: ComponentName, binder: IBinder", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/PluginHelper.java", "line": 46, "end_line": 106 }
+      ]
+    },
+    {
+      "id": "plugin_manager",
+      "label": "PluginManager",
+      "kind": "class",
+      "sublabel": "插件包服务客户端",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "sInstance", "type": "PluginManager", "visibility": "private", "static": true },
+        { "name": "mHostContext", "type": "Context", "visibility": "private" },
+        { "name": "mPluginManager", "type": "IPluginManager", "visibility": "private" },
+        { "name": "sServiceConnection", "type": "List<WeakReference<ServiceConnection>>", "visibility": "private", "static": true }
+      ],
+      "methods": [
+        { "name": "getInstance", "parameters": "", "returns": "PluginManager", "visibility": "public", "static": true },
+        { "name": "init", "parameters": "hostContext: Context", "returns": "void", "visibility": "public" },
+        { "name": "installPackage", "parameters": "filepath: String, flags: int", "returns": "int", "visibility": "public" },
+        { "name": "selectStubActivityInfo", "parameters": "pluginInfo: ActivityInfo", "returns": "ActivityInfo", "visibility": "public" },
+        { "name": "onServiceConnected", "parameters": "name: ComponentName, binder: IBinder", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/pm/PluginManager.java", "line": 66, "end_line": 96 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/pm/PluginManager.java", "line": 661, "end_line": 674 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/pm/PluginManager.java", "line": 871, "end_line": 886 }
+      ]
+    },
+    {
+      "id": "plugin_manager_impl",
+      "label": "IPluginManagerImpl",
+      "kind": "class",
+      "sublabel": "插件包服务服务端",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        { "name": "mPluginCache", "type": "Map<String, PluginPackageParser>", "visibility": "private" },
+        { "name": "mActivityManagerService", "type": "BaseActivityManagerService", "visibility": "private" },
+        { "name": "mSignatureCache", "type": "Map<String, Signature[]>", "visibility": "private" },
+        { "name": "mHostRequestedPermission", "type": "Set<String>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "installPackage", "parameters": "filepath: String, flags: int", "returns": "int", "visibility": "public" },
+        { "name": "deletePackage", "parameters": "packageName: String, flags: int", "returns": "int", "visibility": "public" },
+        { "name": "selectStubActivityInfo", "parameters": "pluginInfo: ActivityInfo", "returns": "ActivityInfo", "visibility": "public" },
+        { "name": "getPackageInfo", "parameters": "packageName: String, flags: int", "returns": "PackageInfo", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/pm/IPluginManagerImpl.java", "line": 75, "end_line": 95 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/pm/IPluginManagerImpl.java", "line": 819, "end_line": 921 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/pm/IPluginManagerImpl.java", "line": 1117, "end_line": 1119 }
+      ]
+    },
+    {
+      "id": "plugin_package_parser",
+      "label": "PluginPackageParser",
+      "kind": "class",
+      "sublabel": "解析插件 APK 元数据",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "mPluginFile", "type": "File", "visibility": "private" },
+        { "name": "mParser", "type": "PackageParser", "visibility": "private" },
+        { "name": "mActivityInfoCache", "type": "Map<ComponentName, ActivityInfo>", "visibility": "private" },
+        { "name": "mActivityIntentFilterCache", "type": "Map<ComponentName, List<IntentFilter>>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "PluginPackageParser", "parameters": "hostContext: Context, pluginFile: File", "returns": "PluginPackageParser", "visibility": "public" },
+        { "name": "collectCertificates", "parameters": "flags: int", "returns": "void", "visibility": "public" },
+        { "name": "getPackageInfo", "parameters": "flags: int", "returns": "PackageInfo", "visibility": "public" },
+        { "name": "getActivityInfo", "parameters": "className: ComponentName, flags: int", "returns": "ActivityInfo", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/pm/parser/PluginPackageParser.java", "line": 57, "end_line": 96 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/pm/parser/PluginPackageParser.java", "line": 231, "end_line": 233 }
+      ]
+    },
+    {
+      "id": "plugin_class_loader",
+      "label": "PluginClassLoader",
+      "kind": "class",
+      "sublabel": "插件 Dex 类加载器",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        { "name": "sPreLoader", "type": "List<String>", "visibility": "private", "static": true }
+      ],
+      "methods": [
+        { "name": "PluginClassLoader", "parameters": "apkfile: String, optimizedDirectory: String, libraryPath: String, systemClassLoader: ClassLoader", "returns": "PluginClassLoader", "visibility": "public" },
+        { "name": "loadClass", "parameters": "className: String, resolve: boolean", "returns": "Class<?>", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/core/PluginClassLoader.java", "line": 37, "end_line": 75 }
+      ]
+    },
+    {
+      "id": "hook_factory",
+      "label": "HookFactory",
+      "kind": "class",
+      "sublabel": "Hook 装配与开关",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        { "name": "sInstance", "type": "HookFactory", "visibility": "private", "static": true },
+        { "name": "mHookList", "type": "List<Hook>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "getInstance", "parameters": "", "returns": "HookFactory", "visibility": "public", "static": true },
+        { "name": "installHook", "parameters": "context: Context, classLoader: ClassLoader", "returns": "void", "visibility": "public" },
+        { "name": "installHook", "parameters": "hook: Hook, cl: ClassLoader", "returns": "void", "visibility": "public" },
+        { "name": "setHookEnable", "parameters": "enable: boolean", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/HookFactory.java", "line": 67, "end_line": 122 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/HookFactory.java", "line": 125, "end_line": 199 }
+      ]
+    },
+    {
+      "id": "activity_manager_hook",
+      "label": "IActivityManagerHook",
+      "kind": "class",
+      "sublabel": "AMS 动态代理 Hook",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        { "name": "mOldObj", "type": "Object", "visibility": "protected" }
+      ],
+      "methods": [
+        { "name": "createHookHandle", "parameters": "", "returns": "BaseHookHandle", "visibility": "public" },
+        { "name": "onInstall", "parameters": "classLoader: ClassLoader", "returns": "void", "visibility": "public" },
+        { "name": "invoke", "parameters": "proxy: Object, method: Method, args: Object[]", "returns": "Object", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/proxy/IActivityManagerHook.java", "line": 49, "end_line": 72 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/proxy/IActivityManagerHook.java", "line": 74, "end_line": 141 }
+      ]
+    },
+    {
+      "id": "activity_manager_hook_handle",
+      "label": "IActivityManagerHookHandle",
+      "kind": "class",
+      "sublabel": "按方法名分发改写",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "sHookedMethodHandlers", "type": "Map<String, HookedMethodHandler>", "visibility": "protected" }
+      ],
+      "methods": [
+        { "name": "init", "parameters": "", "returns": "void", "visibility": "protected" },
+        { "name": "selectProxyActivity", "parameters": "intent: Intent", "returns": "ComponentName", "visibility": "private", "static": true },
+        { "name": "findFirstIntentIndexInArgs", "parameters": "args: Object[]", "returns": "int", "visibility": "private", "static": true }
+      ],
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/handle/IActivityManagerHookHandle.java", "line": 80, "end_line": 110 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/handle/IActivityManagerHookHandle.java", "line": 154, "end_line": 206 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/handle/IActivityManagerHookHandle.java", "line": 2104, "end_line": 2116 }
+      ]
+    },
+    {
+      "id": "my_activity_manager_service",
+      "label": "MyActivityManagerService",
+      "kind": "class",
+      "sublabel": "占坑组件与进程调度",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        { "name": "mStaticProcessList", "type": "StaticProcessList", "visibility": "private" },
+        { "name": "mRunningProcessList", "type": "RunningProcessList", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "selectStubActivityInfo", "parameters": "callingPid: int, callingUid: int, targetInfo: ActivityInfo", "returns": "ActivityInfo", "visibility": "public" },
+        { "name": "selectStubServiceInfo", "parameters": "callingPid: int, callingUid: int, targetInfo: ServiceInfo", "returns": "ServiceInfo", "visibility": "public" },
+        { "name": "selectStubProviderInfo", "parameters": "callingPid: int, callingUid: int, targetInfo: ProviderInfo", "returns": "ProviderInfo", "visibility": "public" },
+        { "name": "onActivityCreated", "parameters": "callingPid, callingUid, stubInfo, targetInfo", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/am/MyActivityManagerService.java", "line": 58, "end_line": 67 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/am/MyActivityManagerService.java", "line": 277, "end_line": 330 }
+      ]
+    },
+    {
+      "id": "activity_stub",
+      "label": "ActivityStub",
+      "kind": "class",
+      "sublabel": "预注册的空壳 Activity",
+      "row": 3,
+      "col": 2,
+      "methods": [
+        { "name": "ActivityStub", "parameters": "", "returns": "ActivityStub", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/stub/ActivityStub.java", "line": 31, "end_line": 47 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "helper_init_manager", "from": "plugin_helper", "to": "plugin_manager", "kind": "dependency", "label": "init" },
+    { "id": "helper_install_hook", "from": "plugin_helper", "to": "hook_factory", "kind": "dependency", "label": "installHook" },
+    { "id": "manager_binder", "from": "plugin_manager", "to": "plugin_manager_impl", "kind": "dependency", "label": "AIDL 代理" },
+    { "id": "impl_owns_parser", "from": "plugin_manager_impl", "to": "plugin_package_parser", "kind": "composition", "label": "mPluginCache" },
+    { "id": "impl_owns_ams", "from": "plugin_manager_impl", "to": "my_activity_manager_service", "kind": "composition", "label": "分包调度" },
+    { "id": "impl_creates_classloader", "from": "plugin_manager_impl", "to": "plugin_class_loader", "kind": "dependency", "label": "dexOpt 创建" },
+    { "id": "factory_installs_hook", "from": "hook_factory", "to": "activity_manager_hook", "kind": "dependency", "label": "installHook" },
+    { "id": "hook_owns_handle", "from": "activity_manager_hook", "to": "activity_manager_hook_handle", "kind": "composition", "label": "createHookHandle" },
+    { "id": "handle_asks_manager", "from": "activity_manager_hook_handle", "to": "plugin_manager", "kind": "dependency", "label": "selectStub" },
+    { "id": "ams_picks_stub", "from": "my_activity_manager_service", "to": "activity_stub", "kind": "dependency", "label": "选出桩组件" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "安装路径",
+      "items": [
+        "installPackage 先用宿主 PackageManager 读包名，把 apk 复制到私有目录，再用 PluginPackageParser 解析组件列表",
+        "解析后 mPluginCache.put(包名, parser)，触发 onPkgInstalled 与 PACKAGE_ADDED 广播；dexOpt 里只构造 PluginClassLoader 触发优化"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "占坑与 Hook",
+      "items": [
+        "IActivityManagerHook.onInstall 反射拿到 IActivityManager 的 gDefault/Singleton，用 MyProxy 生成动态代理替换回去",
+        "IActivityManagerHookHandle 用方法名映射把 startActivity 等改写成「桩组件 + EXTRA_TARGET_INTENT」，桩组件由 ActivityStub 预注册"
+      ]
+    }
+  ]
+}

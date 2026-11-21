@@ -1,0 +1,195 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "DroidPlugin 插件安装与启动主流程",
+    "subtitle": "宿主先装 Hook，再把插件 apk 交给独立进程的插件包服务解析；启动时 Hook 把 Intent 换成预注册的桩组件，插件进程再拦截消息换回真实组件与 ClassLoader。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/52-DroidPlugin/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/DroidPluginTeam/DroidPlugin",
+      "provider": "github",
+      "revision": "c6ebf652e0f73aa0e5746766e117e51efaf41dbd"
+    }
+  },
+  "lanes": [
+    { "id": "host", "label": "宿主进程" },
+    { "id": "hook", "label": "Hook 层" },
+    { "id": "pms", "label": "插件服务" },
+    { "id": "plugin", "label": "插件组件" }
+  ],
+  "phases": [
+    { "id": "p_init", "label": "初始化", "fromCol": 0, "toCol": 0 },
+    { "id": "p_install", "label": "装 Hook 与装包", "fromCol": 1, "toCol": 2 },
+    { "id": "p_launch", "label": "启动拦截", "fromCol": 3, "toCol": 3 },
+    { "id": "p_resolve", "label": "落地还原", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "n_init",
+    "n_hook",
+    "n_install",
+    "n_parse",
+    "n_launch",
+    "n_replace",
+    "n_select",
+    "n_callback",
+    "n_class",
+    "n_activity"
+  ],
+  "nodes": [
+    {
+      "id": "n_init",
+      "lane": "host",
+      "col": 0,
+      "type": "frontend",
+      "label": "初始化框架",
+      "sublabel": "PluginHelper",
+      "width": 150,
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/PluginHelper.java", "line": 62, "end_line": 106 }
+      ]
+    },
+    {
+      "id": "n_hook",
+      "lane": "hook",
+      "col": 1,
+      "type": "security",
+      "label": "安装钩子",
+      "sublabel": "HookFactory",
+      "width": 148,
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/HookFactory.java", "line": 125, "end_line": 199 }
+      ]
+    },
+    {
+      "id": "n_install",
+      "lane": "host",
+      "col": 2,
+      "type": "frontend",
+      "label": "安装插件",
+      "sublabel": "installPackage",
+      "width": 150,
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/pm/PluginManager.java", "line": 871, "end_line": 886 }
+      ]
+    },
+    {
+      "id": "n_parse",
+      "lane": "pms",
+      "col": 2,
+      "type": "backend",
+      "label": "解析插件包",
+      "sublabel": "PackageParser",
+      "width": 152,
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/pm/IPluginManagerImpl.java", "line": 819, "end_line": 870 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/pm/parser/PluginPackageParser.java", "line": 90, "end_line": 96 }
+      ]
+    },
+    {
+      "id": "n_launch",
+      "lane": "host",
+      "col": 3,
+      "type": "frontend",
+      "label": "启动插件",
+      "sublabel": "startActivity",
+      "width": 148,
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/handle/IActivityManagerHookHandle.java", "line": 255, "end_line": 292 }
+      ]
+    },
+    {
+      "id": "n_replace",
+      "lane": "hook",
+      "col": 3,
+      "type": "security",
+      "label": "替换组件",
+      "sublabel": "桩+原Intent",
+      "width": 152,
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/handle/IActivityManagerHookHandle.java", "line": 160, "end_line": 206 }
+      ]
+    },
+    {
+      "id": "n_select",
+      "lane": "pms",
+      "col": 3,
+      "type": "backend",
+      "label": "选占坑组件",
+      "sublabel": "selectStub",
+      "width": 150,
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/am/MyActivityManagerService.java", "line": 277, "end_line": 330 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/handle/IActivityManagerHookHandle.java", "line": 2104, "end_line": 2116 }
+      ]
+    },
+    {
+      "id": "n_callback",
+      "lane": "hook",
+      "col": 4,
+      "type": "security",
+      "label": "拦截消息",
+      "sublabel": "PluginCallback",
+      "width": 154,
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/handle/PluginCallback.java", "line": 352, "end_line": 420 }
+      ]
+    },
+    {
+      "id": "n_class",
+      "lane": "pms",
+      "col": 4,
+      "type": "backend",
+      "label": "取类加载器",
+      "sublabel": "ClassLoader",
+      "width": 150,
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/core/PluginProcessManager.java", "line": 160, "end_line": 169 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/core/PluginClassLoader.java", "line": 37, "end_line": 47 }
+      ]
+    },
+    {
+      "id": "n_activity",
+      "lane": "plugin",
+      "col": 4,
+      "type": "external",
+      "label": "启动桩页面",
+      "sublabel": "ActivityStub",
+      "width": 150,
+      "sources": [
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/stub/ActivityStub.java", "line": 31, "end_line": 47 },
+        { "path": "project/Libraries/DroidPlugin/src/main/java/com/morgoo/droidplugin/hook/handle/PluginInstrumentation.java", "line": 78, "end_line": 114 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_init_hook", "from": "n_init", "to": "n_hook", "label": "installHook", "variant": "default", "role": "main" },
+    { "id": "e_hook_install", "from": "n_hook", "to": "n_install", "label": "Hook 就绪", "variant": "default", "role": "main" },
+    { "id": "e_install_parse", "from": "n_install", "to": "n_parse", "label": "Binder 转交", "variant": "default", "role": "main" },
+    { "id": "e_parse_launch", "from": "n_parse", "to": "n_launch", "label": "进入缓存", "variant": "default", "role": "main" },
+    { "id": "e_launch_replace", "from": "n_launch", "to": "n_replace", "label": "被拦截", "variant": "default", "role": "main" },
+    { "id": "e_replace_select", "from": "n_replace", "to": "n_select", "label": "查占坑", "variant": "default", "role": "main" },
+    { "id": "e_select_callback", "from": "n_select", "to": "n_callback", "label": "桩 Intent", "variant": "default", "role": "main" },
+    { "id": "e_callback_class", "from": "n_callback", "to": "n_class", "label": "取加载器", "variant": "default", "role": "main" },
+    { "id": "e_class_activity", "from": "n_class", "to": "n_activity", "label": "换回真实信息", "variant": "emphasis", "role": "main" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "为什么要桩组件",
+      "items": [
+        "插件里的 Activity/Service/Provider 没有在宿主 AndroidManifest 预注册，系统 AMS 会直接拒绝；ActivityStub 与它内部的 P00~P08 系列子类在宿主清单里预先占坑",
+        "插件包服务为每次启动分配一个桩组件并登记 pid/uid，插件专属进程由 StaticProcessList / RunningProcessList 调度"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "多进程与类加载",
+      "items": [
+        "插件包管理服务跑在独立进程，宿主通过 IPluginManager.Stub 的 AIDL 接口访问；插件本身在各自进程里运行",
+        "PluginProcessManager.preLoadApk 把插件的 LoadedApk 塞进 ActivityThread.mPackages，PluginClassLoader（DexClassLoader 子类）负责加载插件 dex"
+      ]
+    }
+  ]
+}
