@@ -1,0 +1,793 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "OkHttp 核心类型结构",
+    "subtitle": "OkHttpClient 持有调度器与连接池；RealCall 组出 RealInterceptorChain，连接由 ExchangeFinder 向 RealConnectionPool 申请。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/02-okhttp/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/square/okhttp",
+      "provider": "github",
+      "revision": "aa0888e202350532463981d8e51125f54bdce777"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "okhttp_client",
+      "label": "OkHttpClient",
+      "kind": "class",
+      "sublabel": "不可变配置门面",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "dispatcher",
+          "type": "Dispatcher",
+          "visibility": "public"
+        },
+        {
+          "name": "interceptors",
+          "type": "List<Interceptor>",
+          "visibility": "public"
+        },
+        {
+          "name": "connectionPool",
+          "type": "ConnectionPool",
+          "visibility": "public"
+        },
+        {
+          "name": "retryOnConnectionFailure",
+          "type": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "callTimeoutMillis",
+          "type": "int",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "newCall",
+          "parameters": "request: Request",
+          "returns": "Call",
+          "visibility": "public"
+        },
+        {
+          "name": "newBuilder",
+          "parameters": "",
+          "returns": "Builder",
+          "visibility": "public"
+        },
+        {
+          "name": "newWebSocket",
+          "parameters": "request, listener",
+          "returns": "WebSocket",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/OkHttpClient.kt",
+          "line": 135,
+          "end_line": 140
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/OkHttpClient.kt",
+          "line": 356,
+          "end_line": 358
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/OkHttpClient.kt",
+          "line": 380,
+          "end_line": 380
+        }
+      ]
+    },
+    {
+      "id": "connection_pool",
+      "label": "ConnectionPool",
+      "kind": "class",
+      "sublabel": "连接池公开壳，委托内部池",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "delegate",
+          "type": "RealConnectionPool",
+          "visibility": "package"
+        }
+      ],
+      "methods": [
+        {
+          "name": "idleConnectionCount",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "connectionCount",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "evictAll",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/ConnectionPool.kt",
+          "line": 37,
+          "end_line": 39
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/ConnectionPool.kt",
+          "line": 90,
+          "end_line": 97
+        }
+      ]
+    },
+    {
+      "id": "dispatcher",
+      "label": "Dispatcher",
+      "kind": "class",
+      "sublabel": "并发额度与异步队列",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "maxRequests",
+          "type": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "maxRequestsPerHost",
+          "type": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "executorService",
+          "type": "ExecutorService",
+          "visibility": "public"
+        },
+        {
+          "name": "readyAsyncCalls",
+          "type": "ArrayDeque<AsyncCall>",
+          "visibility": "private"
+        },
+        {
+          "name": "runningAsyncCalls",
+          "type": "ArrayDeque<AsyncCall>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "enqueue",
+          "parameters": "call: AsyncCall",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "promoteAndExecute",
+          "parameters": "enqueuedCall, finishedAsyncCall, finishedCall",
+          "returns": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "executed",
+          "parameters": "call: RealCall",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "cancelAll",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Dispatcher.kt",
+          "line": 44,
+          "end_line": 52
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Dispatcher.kt",
+          "line": 130,
+          "end_line": 132
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Dispatcher.kt",
+          "line": 170,
+          "end_line": 190
+        }
+      ]
+    },
+    {
+      "id": "call",
+      "label": "Call",
+      "kind": "interface",
+      "sublabel": "一次请求/响应会话",
+      "row": 0,
+      "col": 2,
+      "methods": [
+        {
+          "name": "request",
+          "parameters": "",
+          "returns": "Request",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "execute",
+          "parameters": "",
+          "returns": "Response",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "enqueue",
+          "parameters": "responseCallback: Callback",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "cancel",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Call.kt",
+          "line": 26,
+          "end_line": 28
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Call.kt",
+          "line": 55,
+          "end_line": 72
+        }
+      ]
+    },
+    {
+      "id": "real_connection_pool",
+      "label": "RealConnectionPool",
+      "kind": "class",
+      "sublabel": "复用与清理连接",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "maxIdleConnections",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "keepAliveDurationNs",
+          "type": "long",
+          "visibility": "private"
+        },
+        {
+          "name": "connections",
+          "type": "ConcurrentLinkedQueue<RealConnection>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "callAcquirePooledConnection",
+          "parameters": "doExtensiveHealthChecks, address, call, routes, requireMultiplexed",
+          "returns": "RealConnection?",
+          "visibility": "package"
+        },
+        {
+          "name": "put",
+          "parameters": "connection: RealConnection",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "connectionBecameIdle",
+          "parameters": "connection: RealConnection",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "closeConnections",
+          "parameters": "now: Long",
+          "returns": "long",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealConnectionPool.kt",
+          "line": 37,
+          "end_line": 44
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealConnectionPool.kt",
+          "line": 84,
+          "end_line": 90
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealConnectionPool.kt",
+          "line": 190,
+          "end_line": 196
+        }
+      ]
+    },
+    {
+      "id": "real_call",
+      "label": "RealCall",
+      "kind": "class",
+      "sublabel": "Call 的执行实现",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "client",
+          "type": "OkHttpClient",
+          "visibility": "public"
+        },
+        {
+          "name": "originalRequest",
+          "type": "Request",
+          "visibility": "public"
+        },
+        {
+          "name": "exchangeFinder",
+          "type": "ExchangeFinder?",
+          "visibility": "private"
+        },
+        {
+          "name": "connection",
+          "type": "RealConnection?",
+          "visibility": "public"
+        },
+        {
+          "name": "canceled",
+          "type": "volatile boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "execute",
+          "parameters": "",
+          "returns": "Response",
+          "visibility": "public"
+        },
+        {
+          "name": "enqueue",
+          "parameters": "responseCallback: Callback",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getResponseWithInterceptorChain",
+          "parameters": "",
+          "returns": "Response",
+          "visibility": "package"
+        },
+        {
+          "name": "enterNetworkInterceptorExchange",
+          "parameters": "request, newRoutePlanner, chain",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "retryAfterFailure",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealCall.kt",
+          "line": 66,
+          "end_line": 79
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealCall.kt",
+          "line": 182,
+          "end_line": 205
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealCall.kt",
+          "line": 210,
+          "end_line": 241
+        }
+      ]
+    },
+    {
+      "id": "interceptor",
+      "label": "Interceptor",
+      "kind": "interface",
+      "sublabel": "责任链上的一环",
+      "row": 3,
+      "col": 1,
+      "methods": [
+        {
+          "name": "intercept",
+          "parameters": "chain: Chain",
+          "returns": "Response",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Interceptor.kt",
+          "line": 66,
+          "end_line": 68
+        }
+      ]
+    },
+    {
+      "id": "real_connection",
+      "label": "RealConnection",
+      "kind": "class",
+      "sublabel": "一条 TCP/TLS 连接",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "route",
+          "type": "Route",
+          "visibility": "public"
+        },
+        {
+          "name": "allocationLimit",
+          "type": "int",
+          "visibility": "package"
+        },
+        {
+          "name": "noNewExchanges",
+          "type": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "http2Connection",
+          "type": "Http2Connection?",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "newCodec",
+          "parameters": "client: OkHttpClient, chain: RealInterceptorChain",
+          "returns": "ExchangeCodec",
+          "visibility": "package"
+        },
+        {
+          "name": "isHealthy",
+          "parameters": "doExtensiveChecks: Boolean",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "connectFailed",
+          "parameters": "routePlanner, plan, e",
+          "returns": "void",
+          "visibility": "package"
+        }
+      ],
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealConnection.kt",
+          "line": 64,
+          "end_line": 78
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealConnection.kt",
+          "line": 270,
+          "end_line": 275
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealConnection.kt",
+          "line": 302,
+          "end_line": 310
+        }
+      ]
+    },
+    {
+      "id": "real_interceptor_chain",
+      "label": "RealInterceptorChain",
+      "kind": "class",
+      "sublabel": "按 index 递进的责任链",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "interceptors",
+          "type": "List<Interceptor>",
+          "visibility": "private"
+        },
+        {
+          "name": "index",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "exchange",
+          "type": "Exchange?",
+          "visibility": "package"
+        },
+        {
+          "name": "calls",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "proceed",
+          "parameters": "request: Request",
+          "returns": "Response",
+          "visibility": "public"
+        },
+        {
+          "name": "copy",
+          "parameters": "index, exchange, request, ...",
+          "returns": "RealInterceptorChain",
+          "visibility": "package"
+        },
+        {
+          "name": "withConnectTimeout",
+          "parameters": "timeout, unit",
+          "returns": "Chain",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/RealInterceptorChain.kt",
+          "line": 53,
+          "end_line": 61
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/RealInterceptorChain.kt",
+          "line": 312,
+          "end_line": 320
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/RealInterceptorChain.kt",
+          "line": 113,
+          "end_line": 120
+        }
+      ]
+    },
+    {
+      "id": "chain",
+      "label": "Interceptor.Chain",
+      "kind": "interface",
+      "sublabel": "拦截器可见的请求上下文",
+      "row": 3,
+      "col": 2,
+      "methods": [
+        {
+          "name": "request",
+          "parameters": "",
+          "returns": "Request",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "proceed",
+          "parameters": "request: Request",
+          "returns": "Response",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "connection",
+          "parameters": "",
+          "returns": "Connection?",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "call",
+          "parameters": "",
+          "returns": "Call",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Interceptor.kt",
+          "line": 84,
+          "end_line": 99
+        }
+      ]
+    },
+    {
+      "id": "exchange",
+      "label": "Exchange",
+      "kind": "class",
+      "sublabel": "一次请求-响应的收发事务",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "call",
+          "type": "RealCall",
+          "visibility": "package"
+        },
+        {
+          "name": "finder",
+          "type": "ExchangeFinder",
+          "visibility": "package"
+        },
+        {
+          "name": "codec",
+          "type": "ExchangeCodec",
+          "visibility": "private"
+        },
+        {
+          "name": "isDuplex",
+          "type": "boolean",
+          "visibility": "package"
+        }
+      ],
+      "methods": [
+        {
+          "name": "writeRequestHeaders",
+          "parameters": "request: Request",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "readResponseHeaders",
+          "parameters": "expectContinue: Boolean",
+          "returns": "Response.Builder?",
+          "visibility": "public"
+        },
+        {
+          "name": "bodyComplete",
+          "parameters": "responseDone, requestDone, e",
+          "returns": "IOException?",
+          "visibility": "package"
+        }
+      ],
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/Exchange.kt",
+          "line": 40,
+          "end_line": 54
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/Exchange.kt",
+          "line": 60,
+          "end_line": 70
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/Exchange.kt",
+          "line": 115,
+          "end_line": 120
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "client_owns_dispatcher",
+      "from": "okhttp_client",
+      "to": "dispatcher",
+      "kind": "composition",
+      "label": "持有"
+    },
+    {
+      "id": "client_owns_pool",
+      "from": "okhttp_client",
+      "to": "connection_pool",
+      "kind": "composition",
+      "label": "持有"
+    },
+    {
+      "id": "client_creates_call",
+      "from": "okhttp_client",
+      "to": "real_call",
+      "kind": "dependency",
+      "label": "newCall()"
+    },
+    {
+      "id": "real_call_is_call",
+      "from": "real_call",
+      "to": "call",
+      "kind": "realization"
+    },
+    {
+      "id": "real_call_builds_chain",
+      "from": "real_call",
+      "to": "real_interceptor_chain",
+      "kind": "composition",
+      "label": "组装"
+    },
+    {
+      "id": "chain_implements_iface",
+      "from": "real_interceptor_chain",
+      "to": "chain",
+      "kind": "realization"
+    },
+    {
+      "id": "chain_calls_interceptors",
+      "from": "real_interceptor_chain",
+      "to": "interceptor",
+      "kind": "aggregation",
+      "label": "依次调用"
+    },
+    {
+      "id": "pool_delegates",
+      "from": "connection_pool",
+      "to": "real_connection_pool",
+      "kind": "composition",
+      "label": "delegate"
+    },
+    {
+      "id": "pool_holds_connections",
+      "from": "real_connection_pool",
+      "to": "real_connection",
+      "kind": "aggregation",
+      "label": "连接池"
+    },
+    {
+      "id": "exchange_uses_connection",
+      "from": "exchange",
+      "to": "real_connection",
+      "kind": "association",
+      "label": "codec.carrier"
+    },
+    {
+      "id": "real_call_uses_exchange",
+      "from": "real_call",
+      "to": "exchange",
+      "kind": "association",
+      "label": "持有 exchange"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "不可变客户端",
+      "items": [
+        "OkHttpClient 全部字段都是 val，改配置要走 newBuilder() 复制出新实例",
+        "共享 ConnectionPool 与 Dispatcher 是复用连接与并发额度的前提，务必只 build 一次"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "责任链",
+      "items": [
+        "getResponseWithInterceptorChain 固定顺序装配 RetryAndFollowUp → Bridge → Cache → Connect → CallServer",
+        "RealInterceptorChain.proceed 用 index 前进一步，每次调用 copy(index+1) 生成新链，实现逐环嵌套"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "连接复用",
+      "items": [
+        "ExchangeFinder 先查 RealConnectionPool 里的健康连接，未命中才由 ConnectPlan 建 TCP/TLS",
+        "RealConnection 用 allocationLimit 控制 HTTP/2 多路复用上限，noNewExchanges 标记后不再接新流"
+      ]
+    }
+  ]
+}

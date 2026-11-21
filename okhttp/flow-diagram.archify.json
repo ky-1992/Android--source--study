@@ -1,0 +1,345 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "OkHttp 一次请求的执行主流程",
+    "subtitle": "newCall 拿到 RealCall，enqueue 后由 Dispatcher 调度，走拦截器责任链；ConnectInterceptor 向连接池要连接，未命中才建 TCP/TLS。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/02-okhttp/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/square/okhttp",
+      "provider": "github",
+      "revision": "aa0888e202350532463981d8e51125f54bdce777"
+    }
+  },
+  "lanes": [
+    {
+      "id": "app",
+      "label": "调用方"
+    },
+    {
+      "id": "dispatcher",
+      "label": "调度器"
+    },
+    {
+      "id": "chain",
+      "label": "拦截器链"
+    },
+    {
+      "id": "conn",
+      "label": "连接池"
+    },
+    {
+      "id": "net",
+      "label": "网络层"
+    }
+  ],
+  "phases": [
+    {
+      "id": "submit",
+      "label": "提交调用",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "chain",
+      "label": "责任链",
+      "fromCol": 2,
+      "toCol": 3
+    },
+    {
+      "id": "connect",
+      "label": "取连接与收发",
+      "fromCol": 4,
+      "toCol": 4
+    }
+  ],
+  "mainPath": [
+    "app_call",
+    "disp_enqueue",
+    "build_chain",
+    "pre_filters",
+    "connect",
+    "app_result"
+  ],
+  "nodes": [
+    {
+      "id": "app_call",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "发起调用",
+      "sublabel": "newCall()",
+      "width": 148,
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/OkHttpClient.kt",
+          "line": 356,
+          "end_line": 358
+        }
+      ]
+    },
+    {
+      "id": "disp_enqueue",
+      "lane": "dispatcher",
+      "col": 1,
+      "type": "backend",
+      "label": "入队调度",
+      "sublabel": "max 64 / 5",
+      "width": 152,
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Dispatcher.kt",
+          "line": 130,
+          "end_line": 132
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/Dispatcher.kt",
+          "line": 170,
+          "end_line": 190
+        }
+      ]
+    },
+    {
+      "id": "build_chain",
+      "lane": "chain",
+      "col": 2,
+      "type": "backend",
+      "label": "组装责任链",
+      "sublabel": "index=0",
+      "width": 156,
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealCall.kt",
+          "line": 210,
+          "end_line": 241
+        }
+      ]
+    },
+    {
+      "id": "app_interceptors",
+      "lane": "app",
+      "col": 2,
+      "type": "external",
+      "label": "业务拦截器",
+      "sublabel": "interceptors",
+      "width": 148,
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/OkHttpClient.kt",
+          "line": 142,
+          "end_line": 149
+        }
+      ]
+    },
+    {
+      "id": "pre_filters",
+      "lane": "chain",
+      "col": 3,
+      "type": "backend",
+      "label": "前置拦截",
+      "sublabel": "retry/cache",
+      "width": 156,
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/RetryAndFollowUpInterceptor.kt",
+          "line": 51,
+          "end_line": 90
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/BridgeInterceptor.kt",
+          "line": 34,
+          "end_line": 60
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/cache/CacheInterceptor.kt",
+          "line": 43,
+          "end_line": 80
+        }
+      ]
+    },
+    {
+      "id": "connect",
+      "lane": "chain",
+      "col": 4,
+      "type": "backend",
+      "label": "连接与收发",
+      "sublabel": "Connect/Server",
+      "width": 158,
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/ConnectInterceptor.kt",
+          "line": 28,
+          "end_line": 32
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/http/CallServerInterceptor.kt",
+          "line": 30,
+          "end_line": 34
+        }
+      ]
+    },
+    {
+      "id": "pool_conn",
+      "lane": "conn",
+      "col": 4,
+      "type": "database",
+      "label": "复用或新建",
+      "sublabel": "pool + plan",
+      "width": 152,
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealConnectionPool.kt",
+          "line": 84,
+          "end_line": 90
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/ExchangeFinder.kt",
+          "line": 20,
+          "end_line": 25
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealRoutePlanner.kt",
+          "line": 65,
+          "end_line": 75
+        }
+      ]
+    },
+    {
+      "id": "tcp_tls",
+      "lane": "net",
+      "col": 4,
+      "type": "cloud",
+      "label": "建立连接",
+      "sublabel": "connectTcp",
+      "width": 150,
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/ConnectPlan.kt",
+          "line": 134,
+          "end_line": 166
+        },
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/ConnectPlan.kt",
+          "line": 168,
+          "end_line": 175
+        }
+      ]
+    },
+    {
+      "id": "app_result",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "回调结果",
+      "sublabel": "onResponse",
+      "width": 148,
+      "sources": [
+        {
+          "path": "okhttp/src/commonJvmAndroid/kotlin/okhttp3/internal/connection/RealCall.kt",
+          "line": 577,
+          "end_line": 590
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_call_enqueue",
+      "from": "app_call",
+      "to": "disp_enqueue",
+      "label": "enqueue/execute"
+    },
+    {
+      "id": "e_enqueue_chain",
+      "from": "disp_enqueue",
+      "to": "build_chain",
+      "label": "promote"
+    },
+    {
+      "id": "e_chain_filters",
+      "from": "build_chain",
+      "to": "pre_filters",
+      "label": "proceed(0)"
+    },
+    {
+      "id": "e_app_interceptors",
+      "from": "build_chain",
+      "to": "app_interceptors",
+      "label": "最先注入",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e_filters_connect",
+      "from": "pre_filters",
+      "to": "connect",
+      "label": "proceed(3)"
+    },
+    {
+      "id": "e_connect_pool",
+      "from": "connect",
+      "to": "pool_conn",
+      "label": "find()",
+      "role": "branch",
+      "variant": "dashed"
+    },
+    {
+      "id": "e_pool_tcp",
+      "from": "pool_conn",
+      "to": "tcp_tls",
+      "label": "未命中",
+      "role": "branch"
+    },
+    {
+      "id": "e_tcp_connect",
+      "from": "tcp_tls",
+      "to": "connect",
+      "label": "Exchange",
+      "variant": "dashed",
+      "role": "return"
+    },
+    {
+      "id": "e_connect_result",
+      "from": "connect",
+      "to": "app_result",
+      "label": "Response",
+      "role": "main"
+    },
+    {
+      "id": "e_connect_retry",
+      "from": "connect",
+      "to": "pre_filters",
+      "label": "重试/重定向",
+      "variant": "dashed",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "同步与异步",
+      "items": [
+        "execute() 直接在调用线程排队执行，跑完才返回 Response",
+        "enqueue() 把 AsyncCall 交给 Dispatcher，运行在无界线程池的 worker 里"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "责任链顺序",
+      "items": [
+        "RealCall 固定装配：应用拦截器 → RetryAndFollowUp → Bridge → Cache → Connect → 网络拦截器 → CallServer",
+        "每个拦截器拿到的 chain 是 copy(index+1) 的新对象，所以 proceed 天然形成嵌套调用栈"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "连接复用",
+      "items": [
+        "RealRoutePlanner.plan 先试当前连接的复用、再查连接池，都没有才 planConnect 建新连接",
+        "连接池默认 5 个空闲连接、keep-alive 5 分钟，由 RealConnectionPool.closeConnections 定期清理"
+      ]
+    }
+  ]
+}
