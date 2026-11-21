@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "9410d683-6c8c-47d6-8fe5-de6ed7c5ded4",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/01-Retrofit/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/01-Retrofit/flow-diagram.html",
+  "specification": {
+    "sha256": "813b62a7001fb68b92cbd2838fc8b2b32a2b9bbd524e556f33a9661113ec7f22",
+    "bytes": 5504
+  },
+  "artifact": {
+    "sha256": "e811f9e18417b692c87d41586ee439fbf2ff3edd9777d2d76c88711e56867291",
+    "bytes": 850253
+  }
+}

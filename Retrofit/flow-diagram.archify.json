@@ -1,0 +1,80 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Retrofit 请求执行流程",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/01-Retrofit/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/square/retrofit",
+      "provider": "github",
+      "revision": "987fe7740c4bdcf28131062545df26ba1f9e1430"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "业务代码" },
+    { "id": "proxy", "label": "动态代理" },
+    { "id": "parse", "label": "解析与缓存" },
+    { "id": "exec", "label": "调用执行" },
+    { "id": "net", "label": "OkHttp 网络" },
+    { "id": "cb", "label": "回调适配" }
+  ],
+  "phases": [
+    { "id": "call", "label": "方法调用", "fromCol": 0, "toCol": 1, "variant": "default" },
+    { "id": "models", "label": "构建方法模型", "fromCol": 2, "toCol": 3, "variant": "emphasis" },
+    { "id": "io", "label": "执行与回调", "fromCol": 4, "toCol": 4, "variant": "dashed" }
+  ],
+  "mainPath": ["svc", "proxy", "invoke", "cache", "parse", "method", "call", "net", "callback"],
+  "nodes": [
+    { "id": "svc", "lane": "app", "col": 0, "type": "external", "label": "Service 接口", "sublabel": "create 生成代理", "width": 130, "sources": [{ "path": "retrofit/src/main/java/retrofit2/Retrofit.java", "line": 158, "end_line": 181 }] },
+    { "id": "proxy", "lane": "proxy", "col": 1, "type": "backend", "label": "动态代理", "sublabel": "newProxyInstance", "width": 150, "sources": [{ "path": "retrofit/src/main/java/retrofit2/Retrofit.java", "line": 160, "end_line": 180 }] },
+    { "id": "invoke", "lane": "proxy", "col": 2, "type": "backend", "label": "方法拦截", "sublabel": "InvocationHandler", "width": 150, "sources": [{ "path": "retrofit/src/main/java/retrofit2/Retrofit.java", "line": 167, "end_line": 180 }] },
+    { "id": "cache", "lane": "parse", "col": 2, "type": "database", "label": "models 缓存", "sublabel": "ConcurrentHashMap", "width": 140, "sources": [{ "path": "retrofit/src/main/java/retrofit2/Retrofit.java", "line": 215, "end_line": 262 }] },
+    { "id": "parse", "lane": "parse", "col": 3, "type": "backend", "label": "注解解析", "sublabel": "parseAnnotations", "width": 150, "sources": [{ "path": "retrofit/src/main/java/retrofit2/HttpServiceMethod.java", "line": 37, "end_line": 121 }] },
+    { "id": "factories", "lane": "parse", "col": 4, "type": "backend", "label": "双工厂", "sublabel": "适配器 + 转换器", "width": 150, "sources": [{ "path": "retrofit/src/main/java/retrofit2/HttpServiceMethod.java", "line": 123, "end_line": 141 }] },
+    { "id": "method", "lane": "exec", "col": 3, "type": "backend", "label": "HttpServiceMethod", "sublabel": "缓存复用", "width": 150, "sources": [{ "path": "retrofit/src/main/java/retrofit2/HttpServiceMethod.java", "line": 165, "end_line": 181 }] },
+    { "id": "call", "lane": "exec", "col": 4, "type": "backend", "label": "OkHttpCall", "sublabel": "invoke 创建并 adapt", "width": 145, "sources": [{ "path": "retrofit/src/main/java/retrofit2/HttpServiceMethod.java", "line": 157, "end_line": 163 }] },
+    { "id": "net", "lane": "net", "col": 4, "type": "cloud", "label": "okhttp3.Call", "sublabel": "拦截器链", "width": 140, "sources": [{ "path": "retrofit/src/main/java/retrofit2/OkHttpCall.java", "line": 150, "end_line": 175 }] },
+    { "id": "callback", "lane": "cb", "col": 4, "type": "backend", "label": "响应解析 → 回调", "sublabel": "Converter + 主线程", "width": 145, "sources": [{ "path": "retrofit/src/main/java/retrofit2/OkHttpCall.java", "line": 218, "end_line": 256 }] }
+  ],
+  "edges": [
+    { "id": "e1", "from": "svc", "to": "proxy", "label": "调用接口方法", "variant": "emphasis" },
+    { "id": "e2", "from": "proxy", "to": "invoke", "label": "拦截所有方法" },
+    { "id": "e3", "from": "invoke", "to": "cache", "label": "loadServiceMethod" },
+    { "id": "e4", "from": "cache", "to": "parse", "label": "未命中则解析", "variant": "dashed" },
+    { "id": "e5", "from": "cache", "to": "method", "label": "命中则复用", "variant": "dashed", "role": "branch" },
+    { "id": "e6", "from": "parse", "to": "factories", "label": "选择工厂" },
+    { "id": "e7", "from": "parse", "to": "method", "label": "生成并缓存" },
+    { "id": "e8", "from": "factories", "to": "call", "label": "注入", "variant": "emphasis" },
+    { "id": "e9", "from": "method", "to": "call", "label": "invoke → new OkHttpCall" },
+    { "id": "e10", "from": "call", "to": "net", "label": "getRawCall / enqueue", "variant": "emphasis" },
+    { "id": "e11", "from": "net", "to": "callback", "label": "ResponseBody", "variant": "emphasis" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "一句话主线",
+      "items": [
+        "接口 → 动态代理 → 缓存的 ServiceMethod → OkHttpCall → OkHttp → Converter → Callback",
+        "一次解析、多次复用：ServiceMethod 是 Retrofit 的性能核心"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "两条返回路径",
+      "items": [
+        "同步：execute() 在当前线程 parseResponse",
+        "异步：enqueue() 在 okhttp 线程解析，再由 callbackExecutor 切主线程"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "协程与取消",
+      "items": [
+        "suspend 方法走 SuspendForResponse / SuspendForBody",
+        "OkHttpCall.cancel() 直接转发到 okhttp3.Call.cancel()"
+      ]
+    }
+  ]
+}

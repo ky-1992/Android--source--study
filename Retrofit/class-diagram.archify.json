@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Retrofit 核心类型关系",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/01-Retrofit/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/square/retrofit",
+      "provider": "github",
+      "revision": "987fe7740c4bdcf28131062545df26ba1f9e1430"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "retrofit",
+      "label": "Retrofit",
+      "kind": "class",
+      "sublabel": "入口：为接口创建类型安全代理",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        { "name": "baseUrl", "type": "HttpUrl", "visibility": "private" },
+        { "name": "callFactory", "type": "okhttp3.Call.Factory", "visibility": "private" },
+        { "name": "serviceMethodCache", "type": "ConcurrentHashMap", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "create", "parameters": "Class<T>", "returns": "T", "visibility": "public" },
+        { "name": "callAdapter", "parameters": "Type, Annotation[]", "returns": "CallAdapter<?, ?>", "visibility": "public" },
+        { "name": "responseBodyConverter", "parameters": "Type, Annotation[]", "returns": "Converter<?, ?>", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "retrofit/src/main/java/retrofit2/Retrofit.java", "line": 65, "end_line": 78 },
+        { "path": "retrofit/src/main/java/retrofit2/Retrofit.java", "line": 158, "end_line": 181 },
+        { "path": "retrofit/src/main/java/retrofit2/Retrofit.java", "line": 215, "end_line": 262 }
+      ]
+    },
+    {
+      "id": "builder",
+      "label": "Retrofit.Builder",
+      "kind": "class",
+      "sublabel": "构造器：baseUrl / client / 工厂",
+      "row": 1,
+      "col": 0,
+      "methods": [
+        { "name": "baseUrl", "parameters": "String", "returns": "Builder", "visibility": "public" },
+        { "name": "client", "parameters": "OkHttpClient", "returns": "Builder", "visibility": "public" },
+        { "name": "addConverterFactory", "parameters": "Converter.Factory", "returns": "Builder", "visibility": "public" },
+        { "name": "addCallAdapterFactory", "parameters": "CallAdapter.Factory", "returns": "Builder", "visibility": "public" },
+        { "name": "build", "returns": "Retrofit", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "retrofit/src/main/java/retrofit2/Retrofit.java", "line": 484, "end_line": 490 },
+        { "path": "retrofit/src/main/java/retrofit2/Retrofit.java", "line": 670, "end_line": 700 }
+      ]
+    },
+    {
+      "id": "service_method",
+      "label": "ServiceMethod",
+      "kind": "abstract",
+      "sublabel": "服务方法模型：解析一次，缓存复用",
+      "row": 0,
+      "col": 1,
+      "methods": [
+        { "name": "parseAnnotations", "parameters": "Retrofit, Class<?>, Method", "returns": "ServiceMethod<T>", "visibility": "package", "static": true },
+        { "name": "invoke", "parameters": "Object, Object[]", "returns": "T", "visibility": "package", "abstract": true }
+      ],
+      "sources": [
+        { "path": "retrofit/src/main/java/retrofit2/ServiceMethod.java", "line": 24, "end_line": 43 }
+      ]
+    },
+    {
+      "id": "http_service_method",
+      "label": "HttpServiceMethod",
+      "kind": "abstract",
+      "sublabel": "注解解析结果：请求工厂 + 适配器 + 转换器",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "requestFactory", "type": "RequestFactory", "visibility": "private" },
+        { "name": "callFactory", "type": "okhttp3.Call.Factory", "visibility": "private" },
+        { "name": "responseConverter", "type": "Converter<ResponseBody, ResponseT>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "invoke", "parameters": "Object, Object[]", "returns": "ReturnT", "visibility": "package" },
+        { "name": "adapt", "parameters": "Call<ResponseT>, Object[]", "returns": "ReturnT", "visibility": "protected", "abstract": true }
+      ],
+      "sources": [
+        { "path": "retrofit/src/main/java/retrofit2/HttpServiceMethod.java", "line": 31, "end_line": 40 },
+        { "path": "retrofit/src/main/java/retrofit2/HttpServiceMethod.java", "line": 143, "end_line": 163 }
+      ]
+    },
+    {
+      "id": "call_adapter",
+      "label": "CallAdapter",
+      "kind": "interface",
+      "sublabel": "把 Call<R> 适配成方法返回类型",
+      "row": 0,
+      "col": 2,
+      "methods": [
+        { "name": "responseType", "returns": "Type", "visibility": "public", "abstract": true },
+        { "name": "adapt", "parameters": "Call<R>", "returns": "T", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "retrofit/src/main/java/retrofit2/CallAdapter.java", "line": 28, "end_line": 57 }
+      ]
+    },
+    {
+      "id": "converter",
+      "label": "Converter",
+      "kind": "interface",
+      "sublabel": "请求体序列化 / 响应体反序列化契约",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        { "name": "convert", "parameters": "F", "returns": "T", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "retrofit/src/main/java/retrofit2/Converter.java", "line": 41, "end_line": 43 }
+      ]
+    },
+    {
+      "id": "call",
+      "label": "Call",
+      "kind": "interface",
+      "sublabel": "可执行的请求句柄",
+      "row": 2,
+      "col": 0,
+      "methods": [
+        { "name": "execute", "returns": "Response<T>", "visibility": "public", "abstract": true },
+        { "name": "enqueue", "parameters": "Callback<T>", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "clone", "returns": "Call<T>", "visibility": "public", "abstract": true },
+        { "name": "cancel", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "retrofit/src/main/java/retrofit2/Call.java", "line": 35, "end_line": 60 }
+      ]
+    },
+    {
+      "id": "okhttp_call",
+      "label": "OkHttpCall",
+      "kind": "class",
+      "sublabel": "Call 实现：桥接 okhttp 并解析响应",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "requestFactory", "type": "RequestFactory", "visibility": "private" },
+        { "name": "callFactory", "type": "okhttp3.Call.Factory", "visibility": "private" },
+        { "name": "responseConverter", "type": "Converter<ResponseBody, T>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "enqueue", "parameters": "Callback<T>", "returns": "void", "visibility": "public" },
+        { "name": "execute", "returns": "Response<T>", "visibility": "public" },
+        { "name": "createRawCall", "returns": "okhttp3.Call", "visibility": "private" },
+        { "name": "parseResponse", "parameters": "okhttp3.Response", "returns": "Response<T>", "visibility": "package" }
+      ],
+      "sources": [
+        { "path": "retrofit/src/main/java/retrofit2/OkHttpCall.java", "line": 33, "end_line": 49 },
+        { "path": "retrofit/src/main/java/retrofit2/OkHttpCall.java", "line": 119, "end_line": 160 },
+        { "path": "retrofit/src/main/java/retrofit2/OkHttpCall.java", "line": 210, "end_line": 240 }
+      ]
+    },
+    {
+      "id": "request_factory",
+      "label": "RequestFactory",
+      "kind": "class",
+      "sublabel": "把注解与实参编译成 okhttp3.Request",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        { "name": "baseUrl", "type": "HttpUrl", "visibility": "private" },
+        { "name": "httpMethod", "type": "String", "visibility": "package" },
+        { "name": "relativeUrl", "type": "String", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "parseAnnotations", "parameters": "Retrofit, Class<?>, Method", "returns": "RequestFactory", "visibility": "package", "static": true },
+        { "name": "create", "parameters": "Object, Object[]", "returns": "okhttp3.Request", "visibility": "package" }
+      ],
+      "sources": [
+        { "path": "retrofit/src/main/java/retrofit2/RequestFactory.java", "line": 66, "end_line": 75 },
+        { "path": "retrofit/src/main/java/retrofit2/RequestFactory.java", "line": 99, "end_line": 145 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "builder_builds", "from": "builder", "to": "retrofit", "kind": "dependency", "label": "build() 产出" },
+    { "id": "hsm_extends_sm", "from": "http_service_method", "to": "service_method", "kind": "inheritance" },
+    { "id": "hsm_uses_adapter", "from": "http_service_method", "to": "call_adapter", "kind": "association", "label": "适配返回类型" },
+    { "id": "hsm_uses_converter", "from": "http_service_method", "to": "converter", "kind": "association", "label": "解析响应体" },
+    { "id": "hsm_asks_retrofit", "from": "http_service_method", "to": "retrofit", "kind": "dependency", "label": "查找工厂" },
+    { "id": "hsm_creates_call", "from": "http_service_method", "to": "okhttp_call", "kind": "dependency", "label": "invoke 创建" },
+    { "id": "retrofit_parses", "from": "retrofit", "to": "service_method", "kind": "dependency", "label": "解析并缓存" },
+    { "id": "okhttp_call_realizes", "from": "okhttp_call", "to": "call", "kind": "realization" },
+    { "id": "okhttp_call_builds_request", "from": "okhttp_call", "to": "request_factory", "kind": "dependency", "label": "生成请求" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "三步读源码",
+      "items": [
+        "Retrofit.create → 动态代理，所有方法调用进入 InvocationHandler",
+        "loadServiceMethod → 首次解析注解并写入 ConcurrentHashMap 缓存",
+        "HttpServiceMethod.invoke → new OkHttpCall + CallAdapter.adapt 得到返回类型"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "两组工厂",
+      "items": [
+        "CallAdapter.Factory 决定方法返回什么（Call、Observable、suspend）",
+        "Converter.Factory 决定请求体与响应体如何序列化"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "扩展点",
+      "items": [
+        "自定义 CallAdapter 实现 adapt(Call) 即可接入 RxJava / 协程",
+        "自定义 Converter 接管 Gson / Moshi / Protobuf 等格式"
+      ]
+    }
+  ]
+}
