@@ -1,0 +1,631 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "ListViewAnimations 核心类型结构",
+    "subtitle": "BaseAdapterDecorator 逐层包装原 Adapter；动画由 ViewAnimator 决策，手势由 SwipeTouchListener 家族接管。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/45-ListViewAnimations/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/nhaarman/ListViewAnimations",
+      "provider": "github",
+      "revision": "23617960178fb5af3099c07996569cc305a40945"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "list_wrapper",
+      "label": "ListViewWrapper",
+      "kind": "interface",
+      "sublabel": "列表能力的抽象",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        {
+          "name": "getListView",
+          "parameters": "",
+          "returns": "ViewGroup",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getChildAt",
+          "parameters": "index: int",
+          "returns": "View",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getFirstVisiblePosition",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "smoothScrollBy",
+          "parameters": "distance, duration",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/util/ListViewWrapper.java",
+          "line": 25,
+          "end_line": 49
+        }
+      ]
+    },
+    {
+      "id": "decorator",
+      "label": "BaseAdapterDecorator",
+      "kind": "abstract",
+      "sublabel": "装饰器基类，逐层委托",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mDecoratedBaseAdapter",
+          "type": "BaseAdapter",
+          "visibility": "private"
+        },
+        {
+          "name": "mListViewWrapper",
+          "type": "ListViewWrapper",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getRootAdapter",
+          "parameters": "",
+          "returns": "BaseAdapter",
+          "visibility": "protected"
+        },
+        {
+          "name": "setListViewWrapper",
+          "parameters": "wrapper: ListViewWrapper",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getView",
+          "parameters": "position, convertView, parent",
+          "returns": "View",
+          "visibility": "public"
+        },
+        {
+          "name": "swapItems",
+          "parameters": "positionOne, positionTwo",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/BaseAdapterDecorator.java",
+          "line": 39,
+          "end_line": 51
+        },
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/BaseAdapterDecorator.java",
+          "line": 74,
+          "end_line": 105
+        },
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/BaseAdapterDecorator.java",
+          "line": 165,
+          "end_line": 172
+        }
+      ]
+    },
+    {
+      "id": "abs_wrapper",
+      "label": "AbsListViewWrapper",
+      "kind": "class",
+      "sublabel": "包装 AbsListView",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mAbsListView",
+          "type": "AbsListView",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getChildAt",
+          "parameters": "index: int",
+          "returns": "View",
+          "visibility": "public"
+        },
+        {
+          "name": "getHeaderViewsCount",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "smoothScrollBy",
+          "parameters": "distance, duration",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/util/AbsListViewWrapper.java",
+          "line": 26,
+          "end_line": 45
+        },
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/util/AbsListViewWrapper.java",
+          "line": 86,
+          "end_line": 89
+        }
+      ]
+    },
+    {
+      "id": "anim_adapter",
+      "label": "AnimationAdapter",
+      "kind": "abstract",
+      "sublabel": "入场动画装饰器",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mViewAnimator",
+          "type": "ViewAnimator",
+          "visibility": "private"
+        },
+        {
+          "name": "mIsRootAdapter",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setListViewWrapper",
+          "parameters": "wrapper: ListViewWrapper",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getView",
+          "parameters": "position, convertView, parent",
+          "returns": "View",
+          "visibility": "public"
+        },
+        {
+          "name": "getAnimators",
+          "parameters": "parent, view",
+          "returns": "Animator[]",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "reset",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/appearance/AnimationAdapter.java",
+          "line": 36,
+          "end_line": 58
+        },
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/appearance/AnimationAdapter.java",
+          "line": 128,
+          "end_line": 148
+        },
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/appearance/AnimationAdapter.java",
+          "line": 157,
+          "end_line": 181
+        }
+      ]
+    },
+    {
+      "id": "swipe_adapter",
+      "label": "SwipeDismissAdapter",
+      "kind": "class",
+      "sublabel": "侧滑删除装饰器",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mOnDismissCallback",
+          "type": "OnDismissCallback",
+          "visibility": "private"
+        },
+        {
+          "name": "mDismissTouchListener",
+          "type": "SwipeDismissTouchListener",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setListViewWrapper",
+          "parameters": "wrapper: ListViewWrapper",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "dismiss",
+          "parameters": "position: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "notifyDataSetChanged",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeDismissAdapter.java",
+          "line": 30,
+          "end_line": 57
+        },
+        {
+          "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeDismissAdapter.java",
+          "line": 59,
+          "end_line": 73
+        }
+      ]
+    },
+    {
+      "id": "view_animator",
+      "label": "ViewAnimator",
+      "kind": "class",
+      "sublabel": "只让每个 View 播一次",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mListViewWrapper",
+          "type": "ListViewWrapper",
+          "visibility": "private"
+        },
+        {
+          "name": "mAnimators",
+          "type": "SparseArray<Animator>",
+          "visibility": "private"
+        },
+        {
+          "name": "mLastAnimatedPosition",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "animateViewIfNecessary",
+          "parameters": "position, view, animators",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "calculateAnimationDelay",
+          "parameters": "position: int",
+          "returns": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "cancelExistingAnimation",
+          "parameters": "view: View",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "reset",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/appearance/ViewAnimator.java",
+          "line": 39,
+          "end_line": 61
+        },
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/appearance/ViewAnimator.java",
+          "line": 226,
+          "end_line": 256
+        },
+        {
+          "path": "lib-core/src/main/java/com/nhaarman/listviewanimations/appearance/ViewAnimator.java",
+          "line": 258,
+          "end_line": 283
+        }
+      ]
+    },
+    {
+      "id": "swipe_listener",
+      "label": "SwipeTouchListener",
+      "kind": "abstract",
+      "sublabel": "侧滑手势状态机",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mListViewWrapper",
+          "type": "ListViewWrapper",
+          "visibility": "private"
+        },
+        {
+          "name": "mCurrentView",
+          "type": "View",
+          "visibility": "private"
+        },
+        {
+          "name": "mSwiping",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onTouch",
+          "parameters": "view, event",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "handleDownEvent",
+          "parameters": "view, event",
+          "returns": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "handleUpEvent",
+          "parameters": "event: MotionEvent",
+          "returns": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "fling",
+          "parameters": "position: int",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeTouchListener.java",
+          "line": 42,
+          "end_line": 46
+        },
+        {
+          "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeTouchListener.java",
+          "line": 287,
+          "end_line": 305
+        },
+        {
+          "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeTouchListener.java",
+          "line": 476,
+          "end_line": 524
+        }
+      ]
+    },
+    {
+      "id": "add_adapter",
+      "label": "AnimateAdditionAdapter",
+      "kind": "class",
+      "sublabel": "插入条目的高度动画",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mInsertable",
+          "type": "Insertable<T>",
+          "visibility": "private"
+        },
+        {
+          "name": "mInsertQueue",
+          "type": "InsertQueue<T>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "insert",
+          "parameters": "index, item",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setListView",
+          "parameters": "listView: ListView",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getView",
+          "parameters": "position, convertView, parent",
+          "returns": "View",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/animateaddition/AnimateAdditionAdapter.java",
+          "line": 55,
+          "end_line": 80
+        },
+        {
+          "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/animateaddition/AnimateAdditionAdapter.java",
+          "line": 153,
+          "end_line": 165
+        }
+      ]
+    },
+    {
+      "id": "dismiss_listener",
+      "label": "SwipeDismissListener",
+      "kind": "class",
+      "sublabel": "飞出与高度折叠",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mCallback",
+          "type": "OnDismissCallback",
+          "visibility": "private"
+        },
+        {
+          "name": "mDismissedPositions",
+          "type": "List<Integer>",
+          "visibility": "private"
+        },
+        {
+          "name": "mActiveDismissCount",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "fling",
+          "parameters": "position: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "performDismiss",
+          "parameters": "view, position",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "finalizeDismiss",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "notifyCallback",
+          "parameters": "positions: List",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeDismissTouchListener.java",
+          "line": 37,
+          "end_line": 58
+        },
+        {
+          "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeDismissTouchListener.java",
+          "line": 92,
+          "end_line": 108
+        },
+        {
+          "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeDismissTouchListener.java",
+          "line": 147,
+          "end_line": 171
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r_abs_impl",
+      "from": "abs_wrapper",
+      "to": "list_wrapper",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "r_deco_wrapper",
+      "from": "decorator",
+      "to": "list_wrapper",
+      "kind": "association",
+      "label": "绑定列表"
+    },
+    {
+      "id": "r_anim_ext",
+      "from": "anim_adapter",
+      "to": "decorator",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "r_anim_owns",
+      "from": "anim_adapter",
+      "to": "view_animator",
+      "kind": "composition",
+      "label": "创建持有"
+    },
+    {
+      "id": "r_swipe_ext",
+      "from": "swipe_adapter",
+      "to": "decorator",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "r_swipe_make",
+      "from": "swipe_adapter",
+      "to": "dismiss_listener",
+      "kind": "composition",
+      "label": "创建注册"
+    },
+    {
+      "id": "r_dismiss_ext",
+      "from": "dismiss_listener",
+      "to": "swipe_listener",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "r_add_ext",
+      "from": "add_adapter",
+      "to": "decorator",
+      "kind": "inheritance",
+      "label": "继承"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "装饰链",
+      "items": [
+        "BaseAdapterDecorator 把所有 BaseAdapter 方法原样转发，子类只覆盖需要增强的一两个",
+        "getRootAdapter 用 while 循环剥掉所有装饰器；setListViewWrapper 会向下传播给被装饰者"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "动画只播一次",
+      "items": [
+        "ViewAnimator 以 mLastAnimatedPosition 判断是否已播，convertView 复用前先 cancelExistingAnimation",
+        "AnimationAdapter 把子装饰器 Animator 与自身 Animator、alpha 0→1 合并后交给 AnimatorSet，并按位置计算 startDelay"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "手势分层",
+      "items": [
+        "SwipeTouchListener 只做手势状态机，SwipeDismissTouchListener 在 afterViewFling 里接高度折叠动画"
+      ]
+    }
+  ]
+}

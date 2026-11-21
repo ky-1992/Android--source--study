@@ -1,0 +1,173 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "ListViewAnimations 手势分发与条目操作流程",
+    "subtitle": "DynamicListView 先把每次触摸交给 DragAndDropHandler，未被接管再交给 SwipeTouchListener，手势结束后统一回调适配器刷新。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/45-ListViewAnimations/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/nhaarman/ListViewAnimations",
+      "provider": "github",
+      "revision": "23617960178fb5af3099c07996569cc305a40945"
+    }
+  },
+  "lanes": [
+    { "id": "ui", "label": "列表视图" },
+    { "id": "drag", "label": "拖拽处理" },
+    { "id": "swipe", "label": "侧滑处理" },
+    { "id": "adapter", "label": "适配器" }
+  ],
+  "phases": [
+    { "id": "p_dispatch", "label": "事件分发", "fromCol": 0, "toCol": 1 },
+    { "id": "p_gesture", "label": "手势处理", "fromCol": 2, "toCol": 3 },
+    { "id": "p_callback", "label": "回调与刷新", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": ["touch", "compete", "drag_start", "drag_move", "drop", "notify"],
+  "nodes": [
+    {
+      "id": "touch",
+      "lane": "ui",
+      "col": 0,
+      "type": "frontend",
+      "label": "触摸事件",
+      "sublabel": "dispatchTouch",
+      "width": 142,
+      "sources": [
+        { "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/DynamicListView.java", "line": 234, "end_line": 274 }
+      ]
+    },
+    {
+      "id": "compete",
+      "lane": "ui",
+      "col": 1,
+      "type": "backend",
+      "label": "处理器竞争",
+      "sublabel": "拖拽优先",
+      "width": 148,
+      "sources": [
+        { "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/DynamicListView.java", "line": 240, "end_line": 260 }
+      ]
+    },
+    {
+      "id": "drag_start",
+      "lane": "drag",
+      "col": 2,
+      "type": "backend",
+      "label": "开始拖拽",
+      "sublabel": "HoverDrawable",
+      "width": 148,
+      "sources": [
+        { "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/dragdrop/DragAndDropHandler.java", "line": 210, "end_line": 237 }
+      ]
+    },
+    {
+      "id": "drag_move",
+      "lane": "drag",
+      "col": 3,
+      "type": "backend",
+      "label": "移动与换位",
+      "sublabel": "switchViews",
+      "width": 148,
+      "sources": [
+        { "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/dragdrop/DragAndDropHandler.java", "line": 362, "end_line": 392 }
+      ]
+    },
+    {
+      "id": "drop",
+      "lane": "drag",
+      "col": 4,
+      "type": "backend",
+      "label": "落位回调",
+      "sublabel": "swapItems",
+      "width": 148,
+      "sources": [
+        { "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/dragdrop/DragAndDropHandler.java", "line": 448, "end_line": 471 }
+      ]
+    },
+    {
+      "id": "swipe_check",
+      "lane": "swipe",
+      "col": 2,
+      "type": "backend",
+      "label": "侧滑判定",
+      "sublabel": "handleUpEvent",
+      "width": 148,
+      "sources": [
+        { "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeTouchListener.java", "line": 476, "end_line": 524 }
+      ]
+    },
+    {
+      "id": "fling",
+      "lane": "swipe",
+      "col": 3,
+      "type": "backend",
+      "label": "飞出动画",
+      "sublabel": "translationX",
+      "width": 146,
+      "sources": [
+        { "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeTouchListener.java", "line": 538, "end_line": 556 }
+      ]
+    },
+    {
+      "id": "dismiss",
+      "lane": "swipe",
+      "col": 4,
+      "type": "backend",
+      "label": "移除条目",
+      "sublabel": "performDismiss",
+      "width": 148,
+      "sources": [
+        { "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeDismissTouchListener.java", "line": 147, "end_line": 171 }
+      ]
+    },
+    {
+      "id": "notify",
+      "lane": "adapter",
+      "col": 4,
+      "type": "database",
+      "label": "刷新数据",
+      "sublabel": "notifyDataSet",
+      "width": 146,
+      "sources": [
+        { "path": "lib-manipulation/src/main/java/com/nhaarman/listviewanimations/itemmanipulation/swipedismiss/SwipeDismissTouchListener.java", "line": 178, "end_line": 190 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_touch_compete", "from": "touch", "to": "compete", "label": "ACTION_DOWN" },
+    { "id": "e_compete_drag", "from": "compete", "to": "drag_start", "label": "允许拖拽" },
+    { "id": "e_drag_move", "from": "drag_start", "to": "drag_move", "label": "ACTION_MOVE" },
+    { "id": "e_move_drop", "from": "drag_move", "to": "drop", "label": "ACTION_UP" },
+    { "id": "e_drop_notify", "from": "drop", "to": "notify", "label": "OnItemMoved" },
+    { "id": "e_compete_swipe", "from": "compete", "to": "swipe_check", "label": "未接管", "variant": "dashed", "role": "branch" },
+    { "id": "e_swipe_fling", "from": "swipe_check", "to": "fling", "label": "超阈值", "variant": "dashed", "role": "branch" },
+    { "id": "e_fling_dismiss", "from": "fling", "to": "dismiss", "label": "动画结束", "variant": "dashed", "role": "branch" },
+    { "id": "e_dismiss_notify", "from": "dismiss", "to": "notify", "label": "OnDismiss", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "单一赢家",
+      "items": [
+        "DynamicListView.dispatchTouchEvent 记录 mCurrentHandlingTouchEventHandler，一方 isInteracting 后向另一方发 ACTION_CANCEL",
+        "手势结束（UP/CANCEL）清空该 handler，下一次按下重新竞争"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "拖拽落位",
+      "items": [
+        "handleMoveEvent 里 switchIfNecessary 交换相邻 View，松手后经 OnItemMovedListener 通知位置变化"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "侧滑收尾",
+      "items": [
+        "performDismiss 用 ValueAnimator 把高度从 view 高度折到 1，全部动画结束后 finalizeDismiss 汇总 positions 倒序回调 OnDismissCallback"
+      ]
+    }
+  ]
+}
