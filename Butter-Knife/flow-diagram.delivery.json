@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "e0b58b55-966d-4b4f-bec3-49f2b26b32b9",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/03-Butter-Knife/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/03-Butter-Knife/flow-diagram.html",
+  "specification": {
+    "sha256": "37222719ebfcb7324026c2419fe88c3ab7ba3561766898c30d1eee4fbca65cd8",
+    "bytes": 7071
+  },
+  "artifact": {
+    "sha256": "6dc2214be0f142347e49525ef49e52b7e6a4a78f2b9aada448090603e1c3ee26",
+    "bytes": 849260
+  }
+}

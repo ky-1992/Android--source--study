@@ -1,0 +1,720 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Butter Knife 核心类型结构",
+    "subtitle": "编译期 ButterKnifeProcessor 把注解归并成 BindingSet，用 JavaPoet 生成 Xxx_ViewBinding；运行期 ButterKnife.bind 反射加载该类并返回 Unbinder。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/03-Butter-Knife/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/JakeWharton/butterknife",
+      "provider": "github",
+      "revision": "fcdebedf3276096db2f51bf6372b849b5a9c75ed"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "butterknife_processor",
+      "label": "ButterKnifeProcessor",
+      "kind": "class",
+      "sublabel": "注解处理器，生成绑定类",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "typeUtils",
+          "type": "Types",
+          "visibility": "private"
+        },
+        {
+          "name": "filer",
+          "type": "Filer",
+          "visibility": "private"
+        },
+        {
+          "name": "sdk",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "debuggable",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "rScanner",
+          "type": "RScanner",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "init",
+          "parameters": "env: ProcessingEnvironment",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getSupportedAnnotationTypes",
+          "parameters": "",
+          "returns": "Set<String>",
+          "visibility": "public"
+        },
+        {
+          "name": "process",
+          "parameters": "elements, env",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "findAndParseTargets",
+          "parameters": "env: RoundEnvironment",
+          "returns": "Map<TypeElement, BindingSet>",
+          "visibility": "private"
+        },
+        {
+          "name": "parseBindView",
+          "parameters": "element, builderMap, erasedTargetNames",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "parseListenerAnnotation",
+          "parameters": "annotationClass, element, builderMap, erasedTargetNames",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "butterknife-compiler/src/main/java/butterknife/compiler/ButterKnifeProcessor.java",
+          "line": 94,
+          "end_line": 132
+        },
+        {
+          "path": "butterknife-compiler/src/main/java/butterknife/compiler/ButterKnifeProcessor.java",
+          "line": 209,
+          "end_line": 225
+        },
+        {
+          "path": "butterknife-compiler/src/main/java/butterknife/compiler/ButterKnifeProcessor.java",
+          "line": 462,
+          "end_line": 487
+        }
+      ]
+    },
+    {
+      "id": "bind_view",
+      "label": "BindView",
+      "kind": "interface",
+      "sublabel": "@interface 字段绑定注解",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "value",
+          "type": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "butterknife-annotations/src/main/java/butterknife/BindView.java",
+          "line": 17,
+          "end_line": 21
+        }
+      ]
+    },
+    {
+      "id": "binding_set",
+      "label": "BindingSet",
+      "kind": "class",
+      "sublabel": "一个目标类的全部绑定",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "targetTypeName",
+          "type": "TypeName",
+          "visibility": "private"
+        },
+        {
+          "name": "bindingClassName",
+          "type": "ClassName",
+          "visibility": "private"
+        },
+        {
+          "name": "isView",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "viewBindings",
+          "type": "ImmutableList<ViewBinding>",
+          "visibility": "private"
+        },
+        {
+          "name": "resourceBindings",
+          "type": "ImmutableList<ResourceBinding>",
+          "visibility": "private"
+        },
+        {
+          "name": "parentBinding",
+          "type": "BindingInformationProvider",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "brewJava",
+          "parameters": "sdk: int, debuggable: boolean",
+          "returns": "JavaFile",
+          "visibility": "package"
+        },
+        {
+          "name": "createType",
+          "parameters": "sdk, debuggable",
+          "returns": "TypeSpec",
+          "visibility": "private"
+        },
+        {
+          "name": "createBindingConstructor",
+          "parameters": "sdk, debuggable",
+          "returns": "MethodSpec",
+          "visibility": "private"
+        },
+        {
+          "name": "createBindingUnbindMethod",
+          "parameters": "bindingClass: TypeSpec.Builder",
+          "returns": "MethodSpec",
+          "visibility": "private"
+        },
+        {
+          "name": "addViewBinding",
+          "parameters": "result, binding, debuggable",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "butterknife-compiler/src/main/java/butterknife/compiler/BindingSet.java",
+          "line": 42,
+          "end_line": 70
+        },
+        {
+          "path": "butterknife-compiler/src/main/java/butterknife/compiler/BindingSet.java",
+          "line": 97,
+          "end_line": 140
+        },
+        {
+          "path": "butterknife-compiler/src/main/java/butterknife/compiler/BindingSet.java",
+          "line": 195,
+          "end_line": 230
+        }
+      ]
+    },
+    {
+      "id": "listener_class",
+      "label": "ListenerClass",
+      "kind": "interface",
+      "sublabel": "@interface 监听器元数据",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "targetType",
+          "type": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "setter",
+          "type": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "remover",
+          "type": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "type",
+          "type": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "callbacks",
+          "type": "Class<? extends Enum<?>>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "butterknife-annotations/src/main/java/butterknife/internal/ListenerClass.java",
+          "line": 9,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "id": "view_binding",
+      "label": "ViewBinding",
+      "kind": "class",
+      "sublabel": "按 ID 归并的绑定单元",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "id",
+          "type": "Id",
+          "visibility": "private"
+        },
+        {
+          "name": "fieldBinding",
+          "type": "FieldViewBinding?",
+          "visibility": "private"
+        },
+        {
+          "name": "methodBindings",
+          "type": "Map<ListenerClass, Map<ListenerMethod, Set<MethodViewBinding>>>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getId",
+          "parameters": "",
+          "returns": "Id",
+          "visibility": "public"
+        },
+        {
+          "name": "getFieldBinding",
+          "parameters": "",
+          "returns": "FieldViewBinding?",
+          "visibility": "public"
+        },
+        {
+          "name": "getMethodBindings",
+          "parameters": "",
+          "returns": "Map<ListenerClass, Map<ListenerMethod, Set<MethodViewBinding>>>",
+          "visibility": "public"
+        },
+        {
+          "name": "getRequiredBindings",
+          "parameters": "",
+          "returns": "List<MemberViewBinding>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "butterknife-compiler/src/main/java/butterknife/compiler/ViewBinding.java",
+          "line": 13,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "id": "butterknife",
+      "label": "ButterKnife",
+      "kind": "class",
+      "sublabel": "运行期绑定入口",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "TAG",
+          "type": "String",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "debug",
+          "type": "boolean",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "BINDINGS",
+          "type": "Map<Class<?>, Constructor<? extends Unbinder>>",
+          "visibility": "package",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "bind",
+          "parameters": "target: Activity",
+          "returns": "Unbinder",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "bind",
+          "parameters": "target: Object, source: View",
+          "returns": "Unbinder",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "findBindingConstructorForClass",
+          "parameters": "cls: Class<?>",
+          "returns": "Constructor<? extends Unbinder>",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "butterknife/src/main/java/butterknife/ButterKnife.java",
+          "line": 74,
+          "end_line": 90
+        },
+        {
+          "path": "butterknife/src/main/java/butterknife/ButterKnife.java",
+          "line": 159,
+          "end_line": 186
+        },
+        {
+          "path": "butterknife/src/main/java/butterknife/ButterKnife.java",
+          "line": 188,
+          "end_line": 214
+        }
+      ]
+    },
+    {
+      "id": "debouncing_listener",
+      "label": "DebouncingOnClickListener",
+      "kind": "abstract",
+      "sublabel": "生成代码里的防抖点击基类",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "ENABLE_AGAIN",
+          "type": "Runnable",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "MAIN",
+          "type": "Handler",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "enabled",
+          "type": "boolean",
+          "visibility": "package",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "onClick",
+          "parameters": "v: View",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "doClick",
+          "parameters": "v: View",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "butterknife-runtime/src/main/java/butterknife/internal/DebouncingOnClickListener.java",
+          "line": 11,
+          "end_line": 31
+        }
+      ]
+    },
+    {
+      "id": "unbinder",
+      "label": "Unbinder",
+      "kind": "interface",
+      "sublabel": "解绑契约，生成类实现",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "EMPTY",
+          "type": "Unbinder",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "unbind",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "butterknife-runtime/src/main/java/butterknife/Unbinder.java",
+          "line": 6,
+          "end_line": 10
+        }
+      ]
+    },
+    {
+      "id": "field_view_binding",
+      "label": "FieldViewBinding",
+      "kind": "class",
+      "sublabel": "一个 @BindView 字段",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "name",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "type",
+          "type": "TypeName",
+          "visibility": "private"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getName",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "getRawType",
+          "parameters": "",
+          "returns": "ClassName",
+          "visibility": "public"
+        },
+        {
+          "name": "isRequired",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "getDescription",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "butterknife-compiler/src/main/java/butterknife/compiler/FieldViewBinding.java",
+          "line": 7,
+          "end_line": 36
+        }
+      ]
+    },
+    {
+      "id": "method_view_binding",
+      "label": "MethodViewBinding",
+      "kind": "class",
+      "sublabel": "一个 @OnClick 等方法绑定",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "name",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "parameters",
+          "type": "List<Parameter>",
+          "visibility": "private"
+        },
+        {
+          "name": "required",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "hasReturnValue",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getName",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "getParameters",
+          "parameters": "",
+          "returns": "List<Parameter>",
+          "visibility": "public"
+        },
+        {
+          "name": "isRequired",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "getDescription",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "butterknife-compiler/src/main/java/butterknife/compiler/MethodViewBinding.java",
+          "line": 7,
+          "end_line": 38
+        }
+      ]
+    },
+    {
+      "id": "member_view_binding",
+      "label": "MemberViewBinding",
+      "kind": "interface",
+      "sublabel": "字段/方法绑定的共同契约",
+      "row": 4,
+      "col": 0,
+      "methods": [
+        {
+          "name": "getDescription",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "butterknife-compiler/src/main/java/butterknife/compiler/MemberViewBinding.java",
+          "line": 3,
+          "end_line": 7
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "processor_reads_bindview",
+      "from": "butterknife_processor",
+      "to": "bind_view",
+      "kind": "dependency",
+      "label": "解析注解"
+    },
+    {
+      "id": "processor_builds_set",
+      "from": "butterknife_processor",
+      "to": "binding_set",
+      "kind": "composition",
+      "label": "构建"
+    },
+    {
+      "id": "processor_reads_listener",
+      "from": "butterknife_processor",
+      "to": "listener_class",
+      "kind": "dependency",
+      "label": "监听元数据"
+    },
+    {
+      "id": "set_holds_viewbindings",
+      "from": "binding_set",
+      "to": "view_binding",
+      "kind": "composition",
+      "label": "按 ID 聚合"
+    },
+    {
+      "id": "set_generates_unbinder",
+      "from": "binding_set",
+      "to": "unbinder",
+      "kind": "dependency",
+      "label": "生成实现"
+    },
+    {
+      "id": "bind_returns_unbinder",
+      "from": "butterknife",
+      "to": "unbinder",
+      "kind": "dependency",
+      "label": "返回"
+    },
+    {
+      "id": "listener_generator",
+      "from": "listener_class",
+      "to": "debouncing_listener",
+      "kind": "association",
+      "label": "type"
+    },
+    {
+      "id": "viewbinding_field",
+      "from": "view_binding",
+      "to": "field_view_binding",
+      "kind": "association",
+      "label": "fieldBinding"
+    },
+    {
+      "id": "viewbinding_method",
+      "from": "view_binding",
+      "to": "method_view_binding",
+      "kind": "association",
+      "label": "methodBindings"
+    },
+    {
+      "id": "field_implements_member",
+      "from": "field_view_binding",
+      "to": "member_view_binding",
+      "kind": "realization"
+    },
+    {
+      "id": "method_implements_member",
+      "from": "method_view_binding",
+      "to": "member_view_binding",
+      "kind": "realization"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "编译期分工",
+      "items": [
+        "ButterKnifeProcessor 在 process 里先 findAndParseTargets 收集，再对每个 BindingSet 调 brewJava 写盘",
+        "生成类名为「目标类全名 + _ViewBinding」，实现 Unbinder 并提供 (Target, View) 构造器"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "运行期只有一次反射",
+      "items": [
+        "ButterKnife.bind 用 ClassLoader 加载 Xxx_ViewBinding，取构造器后 newInstance，结果缓存在 BINDINGS",
+        "找不到绑定类时向父类递归查找，遇到 android./java./androidx. 前缀立即放弃并返回 Unbinder.EMPTY"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "监听器元数据",
+      "items": [
+        "ListenerClass 描述 setter/remover/targetType，ListenerMethod 描述回调方法签名，二者驱动代码生成",
+        "@OnClick 生成匿名 DebouncingOnClickListener，unbind 时按 remover 把监听器摘掉"
+      ]
+    }
+  ]
+}

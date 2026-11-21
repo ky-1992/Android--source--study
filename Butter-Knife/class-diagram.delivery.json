@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "6ba0359a-10e1-4c4c-bea7-b24fbfb63d7c",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/03-Butter-Knife/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/03-Butter-Knife/class-diagram.html",
+  "specification": {
+    "sha256": "231d70a03c52d5569bb1313146eaf6f59eae537115c837fd9f37ae1694c9da9a",
+    "bytes": 18483
+  },
+  "artifact": {
+    "sha256": "7d651c0016a7ec802cbc0ff91dae53bbccaa8b60e3c7ce62590531b0d1f7ba5e",
+    "bytes": 902123
+  }
+}

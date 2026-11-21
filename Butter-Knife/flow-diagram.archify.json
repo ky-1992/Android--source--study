@@ -1,0 +1,192 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Butter Knife 编译期生成与运行期绑定流程",
+    "subtitle": "javac 触发 ButterKnifeProcessor 扫描注解、按目标类归并 BindingSet，用 JavaPoet 写出 Xxx_ViewBinding；运行时 bind 反射加载该类完成 findViewById 与监听器挂载。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/03-Butter-Knife/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/JakeWharton/butterknife",
+      "provider": "github",
+      "revision": "fcdebedf3276096db2f51bf6372b849b5a9c75ed"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "应用代码" },
+    { "id": "processor", "label": "注解处理器" },
+    { "id": "model", "label": "绑定模型" },
+    { "id": "codegen", "label": "代码生成" },
+    { "id": "runtime", "label": "运行期" }
+  ],
+  "phases": [
+    { "id": "annotate", "label": "标注与触发", "fromCol": 0, "toCol": 1 },
+    { "id": "parse", "label": "解析归并", "fromCol": 2, "toCol": 3 },
+    { "id": "generate", "label": "生成与绑定", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "app_annotate",
+    "proc_process",
+    "proc_scan",
+    "model_builder",
+    "view_binding",
+    "gen_brew",
+    "gen_write",
+    "rt_bind",
+    "app_unbind"
+  ],
+  "nodes": [
+    {
+      "id": "app_annotate",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "标注成员",
+      "sublabel": "@BindView",
+      "width": 146,
+      "sources": [
+        { "path": "butterknife-annotations/src/main/java/butterknife/BindView.java", "line": 17, "end_line": 21 },
+        { "path": "butterknife-annotations/src/main/java/butterknife/OnClick.java", "line": 27, "end_line": 41 }
+      ]
+    },
+    {
+      "id": "proc_process",
+      "lane": "processor",
+      "col": 1,
+      "type": "backend",
+      "label": "处理器介入",
+      "sublabel": "process()",
+      "width": 150,
+      "sources": [
+        { "path": "butterknife-compiler/src/main/java/butterknife/compiler/ButterKnifeProcessor.java", "line": 209, "end_line": 225 }
+      ]
+    },
+    {
+      "id": "proc_scan",
+      "lane": "processor",
+      "col": 2,
+      "type": "backend",
+      "label": "扫描注解",
+      "sublabel": "findAndParse",
+      "width": 156,
+      "sources": [
+        { "path": "butterknife-compiler/src/main/java/butterknife/compiler/ButterKnifeProcessor.java", "line": 227, "end_line": 245 },
+        { "path": "butterknife-compiler/src/main/java/butterknife/compiler/ButterKnifeProcessor.java", "line": 462, "end_line": 500 }
+      ]
+    },
+    {
+      "id": "model_builder",
+      "lane": "model",
+      "col": 2,
+      "type": "database",
+      "label": "收集绑定",
+      "sublabel": "builderMap",
+      "width": 152,
+      "sources": [
+        { "path": "butterknife-compiler/src/main/java/butterknife/compiler/ButterKnifeProcessor.java", "line": 1286, "end_line": 1294 },
+        { "path": "butterknife-compiler/src/main/java/butterknife/compiler/BindingSet.java", "line": 721, "end_line": 756 }
+      ]
+    },
+    {
+      "id": "view_binding",
+      "lane": "model",
+      "col": 3,
+      "type": "database",
+      "label": "按 ID 归并",
+      "sublabel": "ViewBinding",
+      "width": 154,
+      "sources": [
+        { "path": "butterknife-compiler/src/main/java/butterknife/compiler/ViewBinding.java", "line": 13, "end_line": 36 },
+        { "path": "butterknife-compiler/src/main/java/butterknife/compiler/BindingSet.java", "line": 749, "end_line": 780 }
+      ]
+    },
+    {
+      "id": "gen_brew",
+      "lane": "codegen",
+      "col": 3,
+      "type": "backend",
+      "label": "生成源码",
+      "sublabel": "brewJava",
+      "width": 154,
+      "sources": [
+        { "path": "butterknife-compiler/src/main/java/butterknife/compiler/BindingSet.java", "line": 97, "end_line": 140 },
+        { "path": "butterknife-compiler/src/main/java/butterknife/compiler/BindingSet.java", "line": 195, "end_line": 240 }
+      ]
+    },
+    {
+      "id": "gen_write",
+      "lane": "codegen",
+      "col": 4,
+      "type": "cloud",
+      "label": "写盘编译",
+      "sublabel": "writeTo",
+      "width": 150,
+      "sources": [
+        { "path": "butterknife-compiler/src/main/java/butterknife/compiler/ButterKnifeProcessor.java", "line": 211, "end_line": 225 }
+      ]
+    },
+    {
+      "id": "rt_bind",
+      "lane": "runtime",
+      "col": 4,
+      "type": "backend",
+      "label": "反射绑定",
+      "sublabel": "bind()",
+      "width": 148,
+      "sources": [
+        { "path": "butterknife/src/main/java/butterknife/ButterKnife.java", "line": 159, "end_line": 186 },
+        { "path": "butterknife/src/main/java/butterknife/ButterKnife.java", "line": 188, "end_line": 214 }
+      ]
+    },
+    {
+      "id": "app_unbind",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "调用解绑",
+      "sublabel": "unbind()",
+      "width": 146,
+      "sources": [
+        { "path": "butterknife-runtime/src/main/java/butterknife/Unbinder.java", "line": 6, "end_line": 10 },
+        { "path": "butterknife-compiler/src/main/java/butterknife/compiler/BindingSet.java", "line": 272, "end_line": 309 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_annotate_process", "from": "app_annotate", "to": "proc_process", "label": "javac 触发" },
+    { "id": "e_process_scan", "from": "proc_process", "to": "proc_scan", "label": "round" },
+    { "id": "e_scan_builder", "from": "proc_scan", "to": "model_builder", "label": "按目标类" },
+    { "id": "e_builder_viewbinding", "from": "model_builder", "to": "view_binding", "label": "按 ID" },
+    { "id": "e_viewbinding_brew", "from": "view_binding", "to": "gen_brew", "label": "BindingSet" },
+    { "id": "e_brew_write", "from": "gen_brew", "to": "gen_write", "label": "JavaFile" },
+    { "id": "e_write_bind", "from": "gen_write", "to": "rt_bind", "label": "打包运行" },
+    { "id": "e_bind_unbind", "from": "rt_bind", "to": "app_unbind", "label": "返回 Unbinder" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "为什么快",
+      "items": [
+        "findView 与 setOnClickListener 的代码在编译期就摊平成普通语句，运行时没有注解扫描",
+        "唯一反射点是加载 Xxx_ViewBinding 构造器，且结果缓存在 ButterKnife.BINDINGS 里只查一次"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "生成物长什么样",
+      "items": [
+        "类名固定为「目标类全名 + _ViewBinding」，实现 Unbinder，构造器签名 (Target, View)",
+        "@BindView 生成 findViewById 赋值；@OnClick 生成匿名 DebouncingOnClickListener 并在 unbind 中摘除"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "继承与复用",
+      "items": [
+        "父类已有绑定类时生成类继承父绑定类，子类只处理自己的增量子集",
+        "构造器按 isView / isActivity / isDialog 生成委托版本，另留一个 (Target, View) 反射入口"
+      ]
+    }
+  ]
+}
