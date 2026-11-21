@@ -1,0 +1,300 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "MaterialDrawer 核心类型结构",
+    "subtitle": "DrawerBuilder 链式配置后 build() 产出 Drawer；菜单项经 IDrawerItem 继承链交给 FastAdapter 渲染。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/32-MaterialDrawer/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/mikepenz/MaterialDrawer",
+      "provider": "github",
+      "revision": "fdbe67378e5efb931776fddf22072b9fc45baf4a"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "account_header",
+      "label": "AccountHeader",
+      "kind": "class",
+      "sublabel": "头像区对外 API",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        { "name": "accountHeaderBuilder", "type": "AccountHeaderBuilder", "visibility": "public" },
+        { "name": "profiles", "type": "MutableList<IProfile<*>>?", "visibility": "public" },
+        { "name": "activeProfile", "type": "IProfile<*>?", "visibility": "public" },
+        { "name": "isSelectionListShown", "type": "Boolean", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "setDrawer", "parameters": "drawer: Drawer", "returns": "void", "visibility": "public" },
+        { "name": "setActiveProfile", "parameters": "profile: IProfile<*>, fireOnProfileChanged: Boolean", "returns": "void", "visibility": "public" },
+        { "name": "toggleSelectionList", "parameters": "ctx: Context", "returns": "void", "visibility": "public" },
+        { "name": "saveInstanceState", "parameters": "savedInstanceState: Bundle", "returns": "Bundle", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/AccountHeader.kt", "line": 16, "end_line": 21 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/AccountHeader.kt", "line": 80, "end_line": 88 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/AccountHeader.kt", "line": 168, "end_line": 185 }
+      ]
+    },
+    {
+      "id": "drawer_builder",
+      "label": "DrawerBuilder",
+      "kind": "class",
+      "sublabel": "链式配置与构建入口",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "mUsed", "type": "boolean", "visibility": "package" },
+        { "name": "mActivity", "type": "Activity?", "visibility": "package" },
+        { "name": "mAccountHeader", "type": "AccountHeader?", "visibility": "package" },
+        { "name": "mDrawerLayout", "type": "DrawerLayout", "visibility": "package" },
+        { "name": "mRecyclerView", "type": "RecyclerView", "visibility": "package" },
+        { "name": "mSelectedItemIdentifier", "type": "Long", "visibility": "package" }
+      ],
+      "methods": [
+        { "name": "withActivity", "parameters": "activity: Activity", "returns": "DrawerBuilder", "visibility": "public" },
+        { "name": "withDrawerItems", "parameters": "drawerItems: List<IDrawerItem<*>>", "returns": "DrawerBuilder", "visibility": "public" },
+        { "name": "withAccountHeader", "parameters": "accountHeader: AccountHeader, accountHeaderSticky: Boolean", "returns": "DrawerBuilder", "visibility": "public" },
+        { "name": "build", "parameters": "", "returns": "Drawer", "visibility": "public" },
+        { "name": "buildView", "parameters": "", "returns": "Drawer", "visibility": "public" },
+        { "name": "append", "parameters": "result: Drawer", "returns": "Drawer", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 60, "end_line": 72 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 991, "end_line": 1004 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 1300, "end_line": 1345 }
+      ]
+    },
+    {
+      "id": "drawer_utils",
+      "label": "DrawerUtils",
+      "kind": "class",
+      "sublabel": "internal object 装配工具",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        { "name": "TAG", "type": "String", "visibility": "private", "static": true }
+      ],
+      "methods": [
+        { "name": "onFooterDrawerItemClick", "parameters": "drawer: DrawerBuilder, drawerItem: IDrawerItem<*>, v: View, fireOnClick: Boolean?", "returns": "void", "visibility": "package" },
+        { "name": "getPositionByIdentifier", "parameters": "drawer: DrawerBuilder, identifier: Long", "returns": "Int", "visibility": "package" },
+        { "name": "handleHeaderView", "parameters": "drawer: DrawerBuilder", "returns": "void", "visibility": "package" },
+        { "name": "handleFooterView", "parameters": "drawer: DrawerBuilder, onClickListener: View.OnClickListener", "returns": "void", "visibility": "package" },
+        { "name": "processDrawerLayoutParams", "parameters": "drawer: DrawerBuilder, params: DrawerLayout.LayoutParams?", "returns": "DrawerLayout.LayoutParams?", "visibility": "package" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerUtils.kt", "line": 24, "end_line": 32 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerUtils.kt", "line": 191, "end_line": 200 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerUtils.kt", "line": 287, "end_line": 296 }
+      ]
+    },
+    {
+      "id": "account_header_builder",
+      "label": "AccountHeaderBuilder",
+      "kind": "class",
+      "sublabel": "账户头像区配置与构建",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        { "name": "profiles", "type": "MutableList<IProfile<*>>?", "visibility": "package" },
+        { "name": "currentProfile", "type": "IProfile<*>?", "visibility": "package" },
+        { "name": "accountHeader", "type": "View", "visibility": "package" },
+        { "name": "selectionListShown", "type": "boolean", "visibility": "package" },
+        { "name": "profileImagesVisible", "type": "boolean", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "withProfiles", "parameters": "profiles: MutableList<IProfile<*>>", "returns": "AccountHeaderBuilder", "visibility": "public" },
+        { "name": "addProfiles", "parameters": "vararg profiles: IProfile<*>", "returns": "AccountHeaderBuilder", "visibility": "public" },
+        { "name": "build", "parameters": "", "returns": "AccountHeader", "visibility": "public" },
+        { "name": "switchProfiles", "parameters": "newSelection: IProfile<*>?", "returns": "Boolean", "visibility": "package" },
+        { "name": "buildProfiles", "parameters": "", "returns": "void", "visibility": "package" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/AccountHeaderBuilder.kt", "line": 34, "end_line": 48 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/AccountHeaderBuilder.kt", "line": 741, "end_line": 753 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/AccountHeaderBuilder.kt", "line": 866, "end_line": 880 }
+      ]
+    },
+    {
+      "id": "drawer",
+      "label": "Drawer",
+      "kind": "class",
+      "sublabel": "构建产物与运行时门面",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "drawerBuilder", "type": "DrawerBuilder", "visibility": "package" },
+        { "name": "adapter", "type": "FastAdapter<IDrawerItem<*>>", "visibility": "public" },
+        { "name": "selectExtension", "type": "SelectExtension<IDrawerItem<*>>", "visibility": "public" },
+        { "name": "headerAdapter", "type": "ModelAdapter<IDrawerItem<*>, IDrawerItem<*>>", "visibility": "public" },
+        { "name": "itemAdapter", "type": "ModelAdapter<IDrawerItem<*>, IDrawerItem<*>>", "visibility": "public" },
+        { "name": "drawerLayout", "type": "DrawerLayout", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "setSelection", "parameters": "identifier: Long, fireOnClick: Boolean", "returns": "void", "visibility": "public" },
+        { "name": "setSelectionAtPosition", "parameters": "position: Int, fireOnClick: Boolean", "returns": "Boolean", "visibility": "public" },
+        { "name": "addItem", "parameters": "drawerItem: IDrawerItem<*>", "returns": "void", "visibility": "public" },
+        { "name": "getDrawerItem", "parameters": "identifier: Long", "returns": "IDrawerItem<*>?", "visibility": "public" },
+        { "name": "onBackPressed", "parameters": "", "returns": "Boolean", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/Drawer.kt", "line": 34, "end_line": 41 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/Drawer.kt", "line": 426, "end_line": 436 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/Drawer.kt", "line": 488, "end_line": 502 }
+      ]
+    },
+    {
+      "id": "mini_drawer",
+      "label": "MiniDrawer",
+      "kind": "class",
+      "sublabel": "抽屉迷你态接管",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        { "name": "drawer", "type": "Drawer?", "visibility": "public" },
+        { "name": "accountHeader", "type": "AccountHeader?", "visibility": "public" },
+        { "name": "crossFader", "type": "ICrossFader?", "visibility": "public" },
+        { "name": "onMiniDrawerItemOnClickListener", "type": "Function4", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "withDrawer", "parameters": "drawer: Drawer", "returns": "MiniDrawer", "visibility": "public" },
+        { "name": "withAccountHeader", "parameters": "accountHeader: AccountHeader?", "returns": "MiniDrawer", "visibility": "public" },
+        { "name": "generateMiniDrawerItem", "parameters": "drawerItem: IDrawerItem<*>", "returns": "IDrawerItem<*>?", "visibility": "public" },
+        { "name": "build", "parameters": "ctx: Context", "returns": "View", "visibility": "public" },
+        { "name": "onProfileClick", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/MiniDrawer.kt", "line": 24, "end_line": 32 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/MiniDrawer.kt", "line": 113, "end_line": 135 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/MiniDrawer.kt", "line": 266, "end_line": 276 }
+      ]
+    },
+    {
+      "id": "idrawer_item",
+      "label": "IDrawerItem",
+      "kind": "interface",
+      "sublabel": "菜单项统一协议",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "identifier", "type": "Long", "visibility": "public" },
+        { "name": "tag", "type": "Any?", "visibility": "public" },
+        { "name": "isSelected", "type": "Boolean", "visibility": "public" },
+        { "name": "isSelectable", "type": "Boolean", "visibility": "public" },
+        { "name": "isExpanded", "type": "Boolean", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "generateView", "parameters": "ctx: Context", "returns": "View", "visibility": "public", "abstract": true },
+        { "name": "getViewHolder", "parameters": "parent: ViewGroup", "returns": "VH", "visibility": "public", "abstract": true },
+        { "name": "bindView", "parameters": "holder: VH, payloads: MutableList<Any>", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "equals", "parameters": "id: Long", "returns": "Boolean", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/model/interfaces/IDrawerItem.kt", "line": 13, "end_line": 44 }
+      ]
+    },
+    {
+      "id": "abstract_drawer_item",
+      "label": "AbstractDrawerItem",
+      "kind": "abstract",
+      "sublabel": "选中态与子项骨架",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        { "name": "identifier", "type": "Long", "visibility": "public" },
+        { "name": "isEnabled", "type": "Boolean", "visibility": "public" },
+        { "name": "isSelectedBackgroundAnimated", "type": "Boolean", "visibility": "public" },
+        { "name": "selectedColor", "type": "ColorHolder?", "visibility": "public" },
+        { "name": "onDrawerItemClickListener", "type": "Drawer.OnDrawerItemClickListener?", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "withOnDrawerItemClickListener", "parameters": "listener: Drawer.OnDrawerItemClickListener", "returns": "T", "visibility": "public" },
+        { "name": "generateView", "parameters": "ctx: Context, parent: ViewGroup", "returns": "View", "visibility": "public" },
+        { "name": "bindView", "parameters": "holder: VH, payloads: MutableList<Any>", "returns": "void", "visibility": "public" },
+        { "name": "getViewHolder", "parameters": "parent: ViewGroup", "returns": "VH", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/model/AbstractDrawerItem.kt", "line": 31, "end_line": 48 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/model/AbstractDrawerItem.kt", "line": 273, "end_line": 282 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/model/AbstractDrawerItem.kt", "line": 324, "end_line": 334 }
+      ]
+    },
+    {
+      "id": "base_drawer_item",
+      "label": "BaseDrawerItem",
+      "kind": "abstract",
+      "sublabel": "图标与文案的通用实现",
+      "row": 4,
+      "col": 1,
+      "attributes": [
+        { "name": "icon", "type": "ImageHolder?", "visibility": "public" },
+        { "name": "selectedIcon", "type": "ImageHolder?", "visibility": "public" },
+        { "name": "name", "type": "StringHolder?", "visibility": "public" },
+        { "name": "isIconTinted", "type": "Boolean", "visibility": "public" },
+        { "name": "level", "type": "Int", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "withIcon", "parameters": "icon: ImageHolder?", "returns": "T", "visibility": "public" },
+        { "name": "withName", "parameters": "name: StringHolder?", "returns": "T", "visibility": "public" },
+        { "name": "withSelectedIcon", "parameters": "selectedIcon: Drawable", "returns": "T", "visibility": "public" },
+        { "name": "withLevel", "parameters": "level: Int", "returns": "T", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/model/BaseDrawerItem.kt", "line": 24, "end_line": 32 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/model/BaseDrawerItem.kt", "line": 36, "end_line": 54 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/model/BaseDrawerItem.kt", "line": 152, "end_line": 160 }
+      ]
+    },
+    {
+      "id": "primary_drawer_item",
+      "label": "PrimaryDrawerItem",
+      "kind": "class",
+      "sublabel": "一级菜单项默认实现",
+      "row": 5,
+      "col": 1,
+      "methods": [
+        { "name": "withName", "parameters": "name: StringHolder?", "returns": "PrimaryDrawerItem", "visibility": "public" },
+        { "name": "withIcon", "parameters": "icon: ImageHolder?", "returns": "PrimaryDrawerItem", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/model/PrimaryDrawerItem.kt", "line": 1, "end_line": 6 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "builder_builds_drawer", "from": "drawer_builder", "to": "drawer", "kind": "dependency", "label": "build()" },
+    { "id": "builder_takes_header", "from": "drawer_builder", "to": "account_header", "kind": "association", "label": "withAccountHeader" },
+    { "id": "builder_calls_utils", "from": "drawer_builder", "to": "drawer_utils", "kind": "dependency", "label": "装配视图" },
+    { "id": "header_holds_builder", "from": "account_header", "to": "account_header_builder", "kind": "composition", "label": "持有" },
+    { "id": "drawer_binds_header", "from": "drawer", "to": "account_header", "kind": "association" },
+    { "id": "drawer_uses_mini", "from": "drawer", "to": "mini_drawer", "kind": "association", "label": "镜像" },
+    { "id": "drawer_holds_items", "from": "drawer", "to": "idrawer_item", "kind": "aggregation", "label": "adapter 列表" },
+    { "id": "abstract_realizes", "from": "abstract_drawer_item", "to": "idrawer_item", "kind": "realization" },
+    { "id": "base_extends_abstract", "from": "base_drawer_item", "to": "abstract_drawer_item", "kind": "inheritance" },
+    { "id": "primary_extends_base", "from": "primary_drawer_item", "to": "base_drawer_item", "kind": "inheritance" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Builder 一次性",
+      "items": [
+        "build() 与 buildView() 首行检查 mUsed，重复使用直接抛 RuntimeException",
+        "构建结束把 mActivity 置空，Drawer 只保留已装配的 View 与适配器引用"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "菜单项协议",
+      "items": [
+        "IDrawerItem 继承 FastAdapter 的 IItem/IExpandable，菜单项就是 RecyclerView 条目",
+        "选中态交给 SelectExtension；点击先问条目监听，再问 Drawer 监听，未消费才关闭抽屉"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "MaterialDrawer 构建与点击主流程",
+    "subtitle": "DrawerBuilder 链式配置后 build()：先包装窗口，再充气 slider、装配头部与列表，最后接管点击与关闭。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/32-MaterialDrawer/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/mikepenz/MaterialDrawer",
+      "provider": "github",
+      "revision": "fdbe67378e5efb931776fddf22072b9fc45baf4a"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "builder", "label": "DrawerBuilder" },
+    { "id": "view", "label": "抽屉视图" }
+  ],
+  "phases": [
+    { "id": "cfg", "label": "配置", "fromCol": 0, "toCol": 0 },
+    { "id": "build", "label": "构建", "fromCol": 1, "toCol": 1 },
+    { "id": "viewbuild", "label": "视图装配", "fromCol": 2, "toCol": 2 },
+    { "id": "content", "label": "内容与头部", "fromCol": 3, "toCol": 3 },
+    { "id": "bind", "label": "绑定与交互", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": ["cfg", "build", "materialize", "inflate", "content", "header", "adapter"],
+  "nodes": [
+    {
+      "id": "cfg",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "链式配置",
+      "sublabel": "with 系列",
+      "width": 142,
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 302, "end_line": 310 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 991, "end_line": 1004 }
+      ]
+    },
+    {
+      "id": "build",
+      "lane": "builder",
+      "col": 1,
+      "type": "backend",
+      "label": "构建入口",
+      "sublabel": "build()",
+      "width": 140,
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 1300, "end_line": 1345 }
+      ]
+    },
+    {
+      "id": "materialize",
+      "lane": "builder",
+      "col": 2,
+      "type": "backend",
+      "label": "窗口包装",
+      "sublabel": "Materialize",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 1315, "end_line": 1330 }
+      ]
+    },
+    {
+      "id": "inflate",
+      "lane": "view",
+      "col": 2,
+      "type": "frontend",
+      "label": "充气布局",
+      "sublabel": "buildView",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 1495, "end_line": 1521 }
+      ]
+    },
+    {
+      "id": "content",
+      "lane": "builder",
+      "col": 3,
+      "type": "backend",
+      "label": "装配内容",
+      "sublabel": "createContent",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 1601, "end_line": 1630 }
+      ]
+    },
+    {
+      "id": "header",
+      "lane": "view",
+      "col": 3,
+      "type": "frontend",
+      "label": "账户头部",
+      "sublabel": "AccountHeader",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 1684, "end_line": 1685 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerUtils.kt", "line": 191, "end_line": 200 }
+      ]
+    },
+    {
+      "id": "adapter",
+      "lane": "view",
+      "col": 4,
+      "type": "frontend",
+      "label": "适配器绑定",
+      "sublabel": "FastAdapter",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 1700, "end_line": 1714 }
+      ]
+    },
+    {
+      "id": "click",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "点击回调",
+      "sublabel": "onItemClick",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 1718, "end_line": 1748 }
+      ]
+    },
+    {
+      "id": "close",
+      "lane": "builder",
+      "col": 4,
+      "type": "backend",
+      "label": "延迟关闭",
+      "sublabel": "closeDrawer",
+      "width": 146,
+      "sources": [
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 1750, "end_line": 1756 },
+        { "path": "library/src/main/java/com/mikepenz/materialdrawer/DrawerBuilder.kt", "line": 1792, "end_line": 1812 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_cfg_build", "from": "cfg", "to": "build", "label": "配置完成" },
+    { "id": "e_build_mat", "from": "build", "to": "materialize", "label": "包装窗口" },
+    { "id": "e_mat_inflate", "from": "materialize", "to": "inflate", "label": "buildView" },
+    { "id": "e_inflate_content", "from": "inflate", "to": "content", "label": "createContent" },
+    { "id": "e_content_header", "from": "content", "to": "header", "label": "handleHeader" },
+    { "id": "e_header_adapter", "from": "header", "to": "adapter", "label": "setAdapter" },
+    { "id": "e_adapter_click", "from": "adapter", "to": "click", "label": "点击 item", "variant": "dashed", "role": "branch" },
+    { "id": "e_click_close", "from": "click", "to": "close", "label": "未消费", "variant": "dashed", "role": "branch" },
+    { "id": "e_click_content", "from": "click", "to": "content", "label": "刷新选中", "variant": "dashed", "role": "return" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "构建只允许一次",
+      "items": [
+        "build()/buildView() 先查 mUsed，第二次调用直接抛异常；append() 可给已有抽屉追加第二份内容",
+        "buildView() 末尾把 mActivity 置空，之后的 Drawer 只操作已建好的 View 和适配器"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "点击后的分支",
+      "items": [
+        "点击先触发条目自身的 onDrawerItemClickListener，再触发 Drawer 级监听，MiniDrawer 只在未消费时接管",
+        "展开型条目（subItems 非空）会吞掉事件不关闭抽屉；其余条目走 closeDrawerDelayed"
+      ]
+    }
+  ]
+}

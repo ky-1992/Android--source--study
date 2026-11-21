@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "29cb6eea-d05a-4456-b0a5-c41513e4cc8a",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/32-MaterialDrawer/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/32-MaterialDrawer/class-diagram.html",
+  "specification": {
+    "sha256": "a519dd6b17d5a71371c64381a718ab24d35db102c308f76685423aeb047faf55",
+    "bytes": 17407
+  },
+  "artifact": {
+    "sha256": "28c75a268efcbb47de7f966704e02a3aaec50e39f984813972e5533aaba3be36",
+    "bytes": 923070
+  }
+}
