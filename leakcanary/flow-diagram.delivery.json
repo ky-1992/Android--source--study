@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "317e0125-bc1a-4872-92cb-27e646632815",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/06-leakcanary/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/06-leakcanary/flow-diagram.html",
+  "specification": {
+    "sha256": "c954488eed36f90ad156f13ab42541d6ee9db3b45c16c7b893c8f5266f1b3d6b",
+    "bytes": 7367
+  },
+  "artifact": {
+    "sha256": "f3af0ed753311490c2bf7178debd44b1dfa12320bcf75fceab8bbf3f39cd612c",
+    "bytes": 851003
+  }
+}

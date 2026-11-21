@@ -1,0 +1,329 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "LeakCanary 核心类型结构",
+    "subtitle": "AppWatcher 持有 ObjectWatcher；真正的检测落在 ReferenceQueueRetainedObjectTracker + KeyedWeakReference 的引用队列上；InternalLeakCanary 在保留数达标后让 HeapDumpTrigger 转储，再交给 Shark 的 HeapAnalyzer 分析。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/06-leakcanary/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/square/leakcanary",
+      "provider": "github",
+      "revision": "eb60b0be53732aa016c79b7774b497770ad1e4f3"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "app_watcher",
+      "label": "AppWatcher",
+      "kind": "class",
+      "sublabel": "默认安装的检测入口",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        { "name": "retainedDelayMillis", "type": "volatile Long", "visibility": "private" },
+        { "name": "installCause", "type": "Exception?", "visibility": "private" },
+        { "name": "objectWatcher", "type": "ObjectWatcher", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "manualInstall", "parameters": "application: Application, retainedDelayMillis: Long, watchersToInstall", "returns": "void", "visibility": "public" },
+        { "name": "appDefaultWatchers", "parameters": "application: Application, deletableObjectReporter", "returns": "List<InstallableWatcher>", "visibility": "public" },
+        { "name": "isInstalled", "parameters": "", "returns": "Boolean", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "object-watcher/object-watcher-android-core/src/main/java/leakcanary/AppWatcher.kt", "line": 19, "end_line": 46 },
+        { "path": "object-watcher/object-watcher-android-core/src/main/java/leakcanary/AppWatcher.kt", "line": 92, "end_line": 118 },
+        { "path": "object-watcher/object-watcher-android-core/src/main/java/leakcanary/AppWatcher.kt", "line": 129, "end_line": 143 }
+      ]
+    },
+    {
+      "id": "object_watcher",
+      "label": "ObjectWatcher",
+      "kind": "class",
+      "sublabel": "watch 入口（已废弃）",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        { "name": "checkRetainedExecutor", "type": "Executor", "visibility": "private" },
+        { "name": "clock", "type": "Clock", "visibility": "private" },
+        { "name": "isEnabled", "type": "() -> Boolean", "visibility": "private" },
+        { "name": "onObjectRetainedListeners", "type": "MutableSet<OnObjectRetainedListener>", "visibility": "private" },
+        { "name": "retainedObjectTracker", "type": "ReferenceQueueRetainedObjectTracker", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "watch", "parameters": "watchedObject: Any", "returns": "void", "visibility": "public" },
+        { "name": "watch", "parameters": "watchedObject: Any, description: String", "returns": "void", "visibility": "public" },
+        { "name": "expectWeaklyReachable", "parameters": "watchedObject: Any, description: String", "returns": "void", "visibility": "public" },
+        { "name": "addOnObjectRetainedListener", "parameters": "listener: OnObjectRetainedListener", "returns": "void", "visibility": "public" },
+        { "name": "clearObjectsWatchedBefore", "parameters": "heapDumpUptimeMillis: Long", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/ObjectWatcher.kt", "line": 21, "end_line": 30 },
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/ObjectWatcher.kt", "line": 69, "end_line": 93 },
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/ObjectWatcher.kt", "line": 99, "end_line": 108 }
+      ]
+    },
+    {
+      "id": "rq_tracker",
+      "label": "ReferenceQueueRetainedObjectTracker",
+      "kind": "class",
+      "sublabel": "引用队列式保留检测",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        { "name": "watchedObjects", "type": "MutableMap<String, KeyedWeakReference>", "visibility": "private" },
+        { "name": "queue", "type": "ReferenceQueue<Any>", "visibility": "private" },
+        { "name": "clock", "type": "UptimeClock", "visibility": "private" },
+        { "name": "onObjectRetainedListener", "type": "OnObjectRetainedListener", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "expectDeletionOnTriggerFor", "parameters": "target: Any, reason: String", "returns": "RetainTrigger", "visibility": "public" },
+        { "name": "retainedObjectCount", "parameters": "", "returns": "Int", "visibility": "public" },
+        { "name": "moveToRetained", "parameters": "key: String", "returns": "void", "visibility": "private" },
+        { "name": "removeWeaklyReachableObjects", "parameters": "", "returns": "void", "visibility": "private" },
+        { "name": "clearObjectsTrackedBefore", "parameters": "uptime: Duration", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/ReferenceQueueRetainedObjectTracker.kt", "line": 18, "end_line": 43 },
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/ReferenceQueueRetainedObjectTracker.kt", "line": 83, "end_line": 120 },
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/ReferenceQueueRetainedObjectTracker.kt", "line": 137, "end_line": 156 }
+      ]
+    },
+    {
+      "id": "retained_tracker",
+      "label": "RetainedObjectTracker",
+      "kind": "interface",
+      "sublabel": "保留对象的统一读接口",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        { "name": "hasRetainedObjects", "type": "Boolean" },
+        { "name": "retainedObjectCount", "type": "Int" },
+        { "name": "hasTrackedObjects", "type": "Boolean" },
+        { "name": "trackedObjectCount", "type": "Int" }
+      ],
+      "methods": [
+        { "name": "clearObjectsTrackedBefore", "parameters": "uptime: Duration", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "clearAllObjectsTracked", "parameters": "", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/RetainedObjectTracker.kt", "line": 16, "end_line": 50 }
+      ]
+    },
+    {
+      "id": "internal_leak_canary",
+      "label": "InternalLeakCanary",
+      "kind": "class",
+      "sublabel": "安装、监听与调度",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "heapDumpTrigger", "type": "lateinit HeapDumpTrigger", "visibility": "private" },
+        { "name": "_application", "type": "Application?", "visibility": "private" },
+        { "name": "applicationVisible", "type": "volatile Boolean", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "invoke", "parameters": "application: Application", "returns": "Unit", "visibility": "public" },
+        { "name": "onObjectRetained", "parameters": "", "returns": "Unit", "visibility": "public" },
+        { "name": "scheduleRetainedObjectCheck", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "onDumpHeapReceived", "parameters": "forceDump: Boolean", "returns": "void", "visibility": "public" },
+        { "name": "sendEvent", "parameters": "event: Event", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/InternalLeakCanary.kt", "line": 36, "end_line": 65 },
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/InternalLeakCanary.kt", "line": 117, "end_line": 160 },
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/InternalLeakCanary.kt", "line": 199, "end_line": 211 }
+      ]
+    },
+    {
+      "id": "heap_dump_trigger",
+      "label": "HeapDumpTrigger",
+      "kind": "class",
+      "sublabel": "阈值判定与转储",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "application", "type": "Application", "visibility": "private" },
+        { "name": "backgroundHandler", "type": "Handler", "visibility": "private" },
+        { "name": "retainedObjectTracker", "type": "RetainedObjectTracker", "visibility": "private" },
+        { "name": "gcTrigger", "type": "GcTrigger", "visibility": "private" },
+        { "name": "configProvider", "type": "() -> Config", "visibility": "private" },
+        { "name": "lastHeapDumpUptimeMillis", "type": "Long", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "checkRetainedObjects", "parameters": "", "returns": "void", "visibility": "private" },
+        { "name": "checkRetainedCount", "parameters": "retainedKeysCount, retainedVisibleThreshold, nopeReason", "returns": "Boolean", "visibility": "private" },
+        { "name": "dumpHeap", "parameters": "retainedReferenceCount: Int, retry: Boolean, reason: String", "returns": "void", "visibility": "private" },
+        { "name": "scheduleRetainedObjectCheck", "parameters": "delayMillis: Long", "returns": "void", "visibility": "public" },
+        { "name": "onDumpHeapReceived", "parameters": "forceDump: Boolean", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/HeapDumpTrigger.kt", "line": 35, "end_line": 55 },
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/HeapDumpTrigger.kt", "line": 97, "end_line": 165 },
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/HeapDumpTrigger.kt", "line": 167, "end_line": 214 }
+      ]
+    },
+    {
+      "id": "heap_dumper",
+      "label": "HeapDumper",
+      "kind": "interface",
+      "sublabel": "可替换的堆转储实现",
+      "row": 2,
+      "col": 1,
+      "methods": [
+        { "name": "dumpHeap", "parameters": "heapDumpFile: File", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "leakcanary/leakcanary-core/src/main/java/leakcanary/HeapDumper.kt", "line": 5, "end_line": 20 },
+        { "path": "leakcanary/leakcanary-core/src/main/java/leakcanary/HeapDumper.kt", "line": 22, "end_line": 28 }
+      ]
+    },
+    {
+      "id": "keyed_weak_reference",
+      "label": "KeyedWeakReference",
+      "kind": "class",
+      "sublabel": "带 key 的弱引用",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        { "name": "key", "type": "String", "visibility": "public" },
+        { "name": "description", "type": "String", "visibility": "public" },
+        { "name": "watchUptimeMillis", "type": "Long", "visibility": "public" },
+        { "name": "retainedUptimeMillis", "type": "volatile Long", "visibility": "public" },
+        { "name": "heapDumpUptimeMillis", "type": "volatile Long", "visibility": "public", "static": true }
+      ],
+      "methods": [
+        { "name": "retained", "parameters": "", "returns": "Boolean", "visibility": "public" },
+        { "name": "getAndLeakReferent", "parameters": "", "returns": "Any?", "visibility": "public" },
+        { "name": "clear", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/KeyedWeakReference.kt", "line": 30, "end_line": 56 },
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/KeyedWeakReference.kt", "line": 65, "end_line": 72 }
+      ]
+    },
+    {
+      "id": "leak_canary",
+      "label": "LeakCanary",
+      "kind": "class",
+      "sublabel": "配置与事件总线",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        { "name": "config", "type": "volatile Config", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "config", "parameters": "", "returns": "Config", "visibility": "public", "static": true },
+        { "name": "dumpHeap", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "setConfig", "parameters": "newConfig: Config", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/LeakCanary.kt", "line": 30, "end_line": 45 },
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/LeakCanary.kt", "line": 165, "end_line": 196 },
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/LeakCanary.kt", "line": 341, "end_line": 347 }
+      ]
+    },
+    {
+      "id": "background_heap_analyzer",
+      "label": "BackgroundThreadHeapAnalyzer",
+      "kind": "class",
+      "sublabel": "HeapDump 事件转入分析",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        { "name": "heapAnalyzerThreadHandler", "type": "Handler", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onEvent", "parameters": "event: Event", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/BackgroundThreadHeapAnalyzer.kt", "line": 13, "end_line": 30 }
+      ]
+    },
+    {
+      "id": "heap_analyzer",
+      "label": "HeapAnalyzer",
+      "kind": "class",
+      "sublabel": "Shark 的堆分析器",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        { "name": "listener", "type": "OnAnalysisProgressListener", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "analyze", "parameters": "heapDumpFile: File, graph: HeapGraph, leakingObjectFinder, referenceMatchers, ...", "returns": "HeapAnalysis", "visibility": "public" },
+        { "name": "rethrowIfCanceled", "parameters": "throwable: Throwable", "returns": "void", "visibility": "private" },
+        { "name": "since", "parameters": "analysisStartNanoTime: Long", "returns": "Long", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "shark/shark/src/main/java/shark/HeapAnalyzer.kt", "line": 40, "end_line": 44 },
+        { "path": "shark/shark/src/main/java/shark/HeapAnalyzer.kt", "line": 121, "end_line": 207 }
+      ]
+    },
+    {
+      "id": "heap_analysis_success",
+      "label": "HeapAnalysisSuccess",
+      "kind": "record",
+      "sublabel": "分析结果数据类",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        { "name": "heapDumpFile", "type": "File", "visibility": "public" },
+        { "name": "metadata", "type": "Map<String, String>", "visibility": "public" },
+        { "name": "applicationLeaks", "type": "List<ApplicationLeak>", "visibility": "public" },
+        { "name": "libraryLeaks", "type": "List<LibraryLeak>", "visibility": "public" },
+        { "name": "unreachableObjects", "type": "List<LeakTraceObject>", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "allLeaks", "parameters": "", "returns": "Sequence<Leak>", "visibility": "public" },
+        { "name": "toString", "parameters": "", "returns": "String", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "shark/shark/src/main/java/shark/HeapAnalysis.kt", "line": 82, "end_line": 104 },
+        { "path": "shark/shark/src/main/java/shark/HeapAnalysis.kt", "line": 105, "end_line": 130 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "app_watcher_holds_watcher", "from": "app_watcher", "to": "object_watcher", "kind": "composition", "label": "持有" },
+    { "id": "watcher_delegates_tracker", "from": "object_watcher", "to": "rq_tracker", "kind": "composition", "label": "委托" },
+    { "id": "rq_tracker_implements", "from": "rq_tracker", "to": "retained_tracker", "kind": "realization", "label": "实现" },
+    { "id": "rq_tracker_creates_ref", "from": "rq_tracker", "to": "keyed_weak_reference", "kind": "dependency", "label": "创建" },
+    { "id": "internal_listens_watcher", "from": "internal_leak_canary", "to": "app_watcher", "kind": "dependency", "label": "监听 retained" },
+    { "id": "internal_holds_trigger", "from": "internal_leak_canary", "to": "heap_dump_trigger", "kind": "composition", "label": "持有" },
+    { "id": "trigger_uses_dumper", "from": "heap_dump_trigger", "to": "heap_dumper", "kind": "dependency", "label": "dumpHeap" },
+    { "id": "leak_canary_holds_analyzer", "from": "leak_canary", "to": "background_heap_analyzer", "kind": "association", "label": "eventListeners" },
+    { "id": "analyzer_uses_heap_analyzer", "from": "background_heap_analyzer", "to": "heap_analyzer", "kind": "dependency", "label": "runAnalysis" },
+    { "id": "heap_analyzer_returns_success", "from": "heap_analyzer", "to": "heap_analysis_success", "kind": "dependency", "label": "产出" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "引用队列检测",
+      "items": [
+        "expectDeletionOnTriggerFor 为每个对象建 KeyedWeakReference 并放进 ConcurrentHashMap，key 用 UUID",
+        "对象变弱可达时 JVM 自动把引用入 ReferenceQueue；removeWeaklyReachableObjects 轮询队列并删除已入队条目"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "何时转储",
+      "items": [
+        "checkRetainedObjects 先 GC 再读 retainedObjectCount，前台需达到 retainedVisibleThreshold，后台只需 >0",
+        "两次转储间有 WAIT_BETWEEN_HEAP_DUMPS_MILLIS 间隔，转储前把 KeyedWeakReference.heapDumpUptimeMillis 写为当前 uptime"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "Shark 分析",
+      "items": [
+        "HeapAnalyzer.analyze 用 PrioritizingShortestPathFinder 找「泄漏对象 → GC Root」最短强引用链",
+        "按 referenceMatchers 过滤已知库泄漏，结果封装成 HeapAnalysisSuccess（applicationLeaks / libraryLeaks）"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,191 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "LeakCanary 检测流程：watch → 延迟检查 → 转储 → Shark 分析",
+    "subtitle": "页面销毁等时机把对象交给 ObjectWatcher，ReferenceQueueRetainedObjectTracker 用 KeyedWeakReference 判断是否被保留；保留数达标后 HeapDumpTrigger 转储，BackgroundThreadHeapAnalyzer 交给 Shark 找出引用链并落库展示。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/06-leakcanary/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/square/leakcanary",
+      "provider": "github",
+      "revision": "eb60b0be53732aa016c79b7774b497770ad1e4f3"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "被测应用" },
+    { "id": "watcher", "label": "保留检测" },
+    { "id": "trigger", "label": "转储调度" },
+    { "id": "shark", "label": "Shark 分析" }
+  ],
+  "phases": [
+    { "id": "detect", "label": "检测", "fromCol": 0, "toCol": 2 },
+    { "id": "judge", "label": "保留判定", "fromCol": 3, "toCol": 3 },
+    { "id": "analyze", "label": "转储与分析", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "watch",
+    "track",
+    "check",
+    "count",
+    "trigger",
+    "dump",
+    "analyze",
+    "report"
+  ],
+  "nodes": [
+    {
+      "id": "watch",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "watch 对象",
+      "sublabel": "页面销毁时",
+      "width": 142,
+      "sources": [
+        { "path": "object-watcher/object-watcher-android-core/src/main/java/leakcanary/ActivityWatcher.kt", "line": 22, "end_line": 29 },
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/ObjectWatcher.kt", "line": 69, "end_line": 78 }
+      ]
+    },
+    {
+      "id": "track",
+      "lane": "watcher",
+      "col": 1,
+      "type": "frontend",
+      "label": "建弱引用",
+      "sublabel": "key + queue",
+      "width": 148,
+      "sources": [
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/ReferenceQueueRetainedObjectTracker.kt", "line": 83, "end_line": 120 }
+      ]
+    },
+    {
+      "id": "check",
+      "lane": "watcher",
+      "col": 2,
+      "type": "frontend",
+      "label": "延迟检查",
+      "sublabel": "默认5秒",
+      "width": 144,
+      "sources": [
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/ObjectWatcher.kt", "line": 90, "end_line": 92 },
+        { "path": "object-watcher/object-watcher-android-core/src/main/java/leakcanary/AppWatcher.kt", "line": 33, "end_line": 42 }
+      ]
+    },
+    {
+      "id": "count",
+      "lane": "watcher",
+      "col": 3,
+      "type": "frontend",
+      "label": "统计保留数",
+      "sublabel": "GC 后读取",
+      "width": 150,
+      "sources": [
+        { "path": "object-watcher/object-watcher/src/main/java/leakcanary/ReferenceQueueRetainedObjectTracker.kt", "line": 137, "end_line": 156 },
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/HeapDumpTrigger.kt", "line": 135, "end_line": 142 }
+      ]
+    },
+    {
+      "id": "trigger",
+      "lane": "trigger",
+      "col": 3,
+      "type": "backend",
+      "label": "阈值判定",
+      "sublabel": "前台/后台",
+      "width": 150,
+      "sources": [
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/HeapDumpTrigger.kt", "line": 97, "end_line": 165 },
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/HeapDumpTrigger.kt", "line": 276, "end_line": 346 }
+      ]
+    },
+    {
+      "id": "wait",
+      "lane": "watcher",
+      "col": 4,
+      "type": "frontend",
+      "label": "继续等待",
+      "sublabel": "未达阈值",
+      "width": 140,
+      "sources": [
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/HeapDumpTrigger.kt", "line": 348, "end_line": 360 }
+      ]
+    },
+    {
+      "id": "dump",
+      "lane": "trigger",
+      "col": 4,
+      "type": "messagebus",
+      "label": "dumpHeap",
+      "sublabel": "Debug.dumpHprof",
+      "width": 152,
+      "sources": [
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/HeapDumpTrigger.kt", "line": 167, "end_line": 198 },
+        { "path": "leakcanary/leakcanary-android-utils/src/main/java/leakcanary/AndroidDebugHeapDumper.kt", "line": 12, "end_line": 16 }
+      ]
+    },
+    {
+      "id": "analyze",
+      "lane": "shark",
+      "col": 4,
+      "type": "backend",
+      "label": "HeapAnalyzer",
+      "sublabel": "最短引用链",
+      "width": 152,
+      "sources": [
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/BackgroundThreadHeapAnalyzer.kt", "line": 21, "end_line": 30 },
+        { "path": "shark/shark/src/main/java/shark/HeapAnalyzer.kt", "line": 121, "end_line": 207 }
+      ]
+    },
+    {
+      "id": "report",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "泄漏报告",
+      "sublabel": "LeakActivity",
+      "width": 140,
+      "sources": [
+        { "path": "leakcanary/leakcanary-android-core/src/main/java/leakcanary/internal/AndroidDebugHeapAnalyzer.kt", "line": 74, "end_line": 88 },
+        { "path": "shark/shark/src/main/java/shark/HeapAnalysis.kt", "line": 82, "end_line": 104 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_watch_track", "from": "watch", "to": "track", "label": "expectDeletion" },
+    { "id": "e_track_check", "from": "track", "to": "check", "label": "延迟入队" },
+    { "id": "e_check_count", "from": "check", "to": "count", "label": "markRetained" },
+    { "id": "e_count_trigger", "from": "count", "to": "trigger", "label": "保留数" },
+    { "id": "e_trigger_dump", "from": "trigger", "to": "dump", "label": "达阈值" },
+    { "id": "e_dump_analyze", "from": "dump", "to": "analyze", "label": "HeapDump 事件" },
+    { "id": "e_analyze_report", "from": "analyze", "to": "report", "label": "落库并展示" },
+    { "id": "e_trigger_wait", "from": "trigger", "to": "wait", "label": "未达阈值", "variant": "dashed", "role": "branch" },
+    { "id": "e_wait_check", "from": "wait", "to": "check", "label": "再次调度", "variant": "dashed", "role": "return" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "为什么用引用队列",
+      "items": [
+        "WeakReference 在被引用对象变弱可达时会立刻入 ReferenceQueue，比 finalize/GC 完成更早",
+        "watchedObjects 里还在 map 中的引用即视为「仍被强引用」；轮询队列删除已入队条目即可不用 get() 取对象"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "阈值与节奏",
+      "items": [
+        "前台看 retainedVisibleThreshold（默认 5），应用不可见时只要 >0 就在 retainedDelayMillis 后转储",
+        "两次转储之间至少间隔 WAIT_BETWEEN_HEAP_DUMPS_MILLIS；失败会按 WAIT_AFTER_DUMP_FAILED_MILLIS 重试"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "分析落库",
+      "items": [
+        "BackgroundThreadHeapAnalyzer 收到 HeapDump 事件后在 HandlerThread 跑 AndroidDebugHeapAnalyzer.runAnalysisBlocking",
+        "结果用 HeapAnalysisTable.insert 写入 SQLite，再发出 HeapAnalysisDone 事件给通知与 LeakActivity 展示"
+      ]
+    }
+  ]
+}
