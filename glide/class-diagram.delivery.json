@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "c8fde710-3f0e-4ecc-8edb-73976d02479a",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/05-glide/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/05-glide/class-diagram.html",
+  "specification": {
+    "sha256": "27df169ae5ca054045fedce0755613e0cc16662b4e7e426163328829fd4073ae",
+    "bytes": 21713
+  },
+  "artifact": {
+    "sha256": "ddf0cd7a56df2653cf2702b50e9cf2845cdf176459f1312eb9f870a4381d63b6",
+    "bytes": 946189
+  }
+}

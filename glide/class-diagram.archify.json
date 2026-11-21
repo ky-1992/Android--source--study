@@ -1,0 +1,356 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Glide 核心类型结构",
+    "subtitle": "Glide 单例持有 Engine 与内存缓存；RequestManager 按生命周期产出 RequestBuilder；RequestBuilder 组装 SingleRequest，最终由 Engine 与 DecodeJob 完成取数与解码。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/05-glide/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/bumptech/glide",
+      "provider": "github",
+      "revision": "bdfcadf91da5fadd1be5b5c186de9dea46415019"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "glide",
+      "label": "Glide",
+      "kind": "class",
+      "sublabel": "单例入口与缓存总装",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        { "name": "glide", "type": "volatile Glide", "visibility": "private", "static": true },
+        { "name": "engine", "type": "Engine", "visibility": "private" },
+        { "name": "memoryCache", "type": "MemoryCache", "visibility": "private" },
+        { "name": "bitmapPool", "type": "BitmapPool", "visibility": "private" },
+        { "name": "glideContext", "type": "GlideContext", "visibility": "private" },
+        { "name": "managers", "type": "List<RequestManager>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "get", "parameters": "context: Context", "returns": "Glide", "visibility": "public", "static": true },
+        { "name": "with", "parameters": "context: Context", "returns": "RequestManager", "visibility": "public", "static": true },
+        { "name": "with", "parameters": "view: View", "returns": "RequestManager", "visibility": "public", "static": true },
+        { "name": "clearMemory", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "trimMemory", "parameters": "level: int", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/Glide.java", "line": 57, "end_line": 94 },
+        { "path": "library/src/main/java/com/bumptech/glide/Glide.java", "line": 141, "end_line": 153 },
+        { "path": "library/src/main/java/com/bumptech/glide/Glide.java", "line": 463, "end_line": 490 }
+      ]
+    },
+    {
+      "id": "memory_cache",
+      "label": "MemoryCache",
+      "kind": "interface",
+      "sublabel": "资源级内存缓存",
+      "row": 0,
+      "col": 1,
+      "methods": [
+        { "name": "getCurrentSize", "parameters": "", "returns": "long", "visibility": "public", "abstract": true },
+        { "name": "put", "parameters": "key: Key, resource: Resource<?>", "returns": "Resource<?>", "visibility": "public", "abstract": true },
+        { "name": "remove", "parameters": "key: Key", "returns": "Resource<?>", "visibility": "public", "abstract": true },
+        { "name": "setResourceRemovedListener", "parameters": "listener: ResourceRemovedListener", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "clearMemory", "parameters": "", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "trimMemory", "parameters": "level: int", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/cache/MemoryCache.java", "line": 9, "end_line": 19 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/cache/MemoryCache.java", "line": 37, "end_line": 58 }
+      ]
+    },
+    {
+      "id": "engine_key",
+      "label": "EngineKey",
+      "kind": "class",
+      "sublabel": "内存复用的复合键",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        { "name": "model", "type": "Object", "visibility": "private" },
+        { "name": "signature", "type": "Key", "visibility": "private" },
+        { "name": "width", "type": "int", "visibility": "private" },
+        { "name": "height", "type": "int", "visibility": "private" },
+        { "name": "resourceClass", "type": "Class<?>", "visibility": "private" },
+        { "name": "transcodeClass", "type": "Class<?>", "visibility": "private" },
+        { "name": "transformations", "type": "Map<Class<?>, Transformation<?>>", "visibility": "private" },
+        { "name": "options", "type": "Options", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "equals", "parameters": "o: Object", "returns": "boolean", "visibility": "public" },
+        { "name": "hashCode", "parameters": "", "returns": "int", "visibility": "public" },
+        { "name": "updateDiskCacheKey", "parameters": "messageDigest: MessageDigest", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/EngineKey.java", "line": 12, "end_line": 42 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/EngineKey.java", "line": 44, "end_line": 58 }
+      ]
+    },
+    {
+      "id": "request_manager",
+      "label": "RequestManager",
+      "kind": "class",
+      "sublabel": "生命周期与请求跟踪",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        { "name": "glide", "type": "Glide", "visibility": "protected" },
+        { "name": "lifecycle", "type": "Lifecycle", "visibility": "package" },
+        { "name": "requestTracker", "type": "RequestTracker", "visibility": "private" },
+        { "name": "targetTracker", "type": "TargetTracker", "visibility": "private" },
+        { "name": "connectivityMonitor", "type": "ConnectivityMonitor", "visibility": "private" },
+        { "name": "defaultRequestListeners", "type": "CopyOnWriteArrayList<RequestListener<Object>>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "load", "parameters": "model: Object", "returns": "RequestBuilder<Drawable>", "visibility": "public" },
+        { "name": "track", "parameters": "target: Target<?>, request: Request", "returns": "void", "visibility": "package" },
+        { "name": "onStart", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "onStop", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "onDestroy", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "pauseRequests", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/RequestManager.java", "line": 58, "end_line": 99 },
+        { "path": "library/src/main/java/com/bumptech/glide/RequestManager.java", "line": 368, "end_line": 401 },
+        { "path": "library/src/main/java/com/bumptech/glide/RequestManager.java", "line": 690, "end_line": 693 }
+      ]
+    },
+    {
+      "id": "engine",
+      "label": "Engine",
+      "kind": "class",
+      "sublabel": "活动资源与任务调度",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "jobs", "type": "Jobs", "visibility": "private" },
+        { "name": "keyFactory", "type": "EngineKeyFactory", "visibility": "private" },
+        { "name": "cache", "type": "MemoryCache", "visibility": "private" },
+        { "name": "activeResources", "type": "ActiveResources", "visibility": "private" },
+        { "name": "diskCacheProvider", "type": "LazyDiskCacheProvider", "visibility": "private" },
+        { "name": "decodeJobFactory", "type": "DecodeJobFactory", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "load", "parameters": "glideContext, model, signature, width, height, ...", "returns": "LoadStatus", "visibility": "public" },
+        { "name": "loadFromMemory", "parameters": "key: EngineKey, isMemoryCacheable: boolean, ...", "returns": "EngineResource<?>", "visibility": "private" },
+        { "name": "waitForExistingOrStartNewJob", "parameters": "...", "returns": "LoadStatus", "visibility": "private" },
+        { "name": "onResourceReleased", "parameters": "key: Key, resource: EngineResource<?>", "returns": "void", "visibility": "public" },
+        { "name": "clearMemory", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/Engine.java", "line": 32, "end_line": 58 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/Engine.java", "line": 170, "end_line": 242 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/Engine.java", "line": 315, "end_line": 344 }
+      ]
+    },
+    {
+      "id": "engine_job",
+      "label": "EngineJob",
+      "kind": "class",
+      "sublabel": "一次加载的回调集合",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        { "name": "cbs", "type": "ResourceCallbacksAndExecutors", "visibility": "package" },
+        { "name": "diskCacheExecutor", "type": "GlideExecutor", "visibility": "private" },
+        { "name": "sourceExecutor", "type": "GlideExecutor", "visibility": "private" },
+        { "name": "pendingCallbacks", "type": "AtomicInteger", "visibility": "private" },
+        { "name": "key", "type": "EngineKey", "visibility": "private" },
+        { "name": "resource", "type": "Resource<?>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "start", "parameters": "decodeJob: DecodeJob<R>", "returns": "void", "visibility": "public" },
+        { "name": "addCallback", "parameters": "cb: ResourceCallback, callbackExecutor: Executor", "returns": "void", "visibility": "package" },
+        { "name": "notifyCallbacksOfResult", "parameters": "", "returns": "void", "visibility": "package" },
+        { "name": "onResourceReady", "parameters": "resource, dataSource, isLoadedFromAlternateCacheKey", "returns": "void", "visibility": "public" },
+        { "name": "onLoadFailed", "parameters": "e: GlideException", "returns": "void", "visibility": "public" },
+        { "name": "reschedule", "parameters": "job: DecodeJob<?>", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/EngineJob.java", "line": 26, "end_line": 49 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/EngineJob.java", "line": 127, "end_line": 148 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/EngineJob.java", "line": 315, "end_line": 339 }
+      ]
+    },
+    {
+      "id": "request_builder",
+      "label": "RequestBuilder",
+      "kind": "class",
+      "sublabel": "链式选项与请求构建",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        { "name": "context", "type": "Context", "visibility": "private" },
+        { "name": "requestManager", "type": "RequestManager", "visibility": "private" },
+        { "name": "transcodeClass", "type": "Class<TranscodeType>", "visibility": "private" },
+        { "name": "glideContext", "type": "GlideContext", "visibility": "private" },
+        { "name": "model", "type": "Object", "visibility": "private" },
+        { "name": "thumbnailBuilder", "type": "RequestBuilder<TranscodeType>", "visibility": "private" },
+        { "name": "errorBuilder", "type": "RequestBuilder<TranscodeType>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "load", "parameters": "model: Object", "returns": "RequestBuilder<TranscodeType>", "visibility": "public" },
+        { "name": "into", "parameters": "target: Y", "returns": "Y", "visibility": "public" },
+        { "name": "into", "parameters": "view: ImageView", "returns": "ViewTarget<ImageView, TranscodeType>", "visibility": "public" },
+        { "name": "thumbnail", "parameters": "thumbnailRequest: RequestBuilder<TranscodeType>", "returns": "RequestBuilder<TranscodeType>", "visibility": "public" },
+        { "name": "buildRequest", "parameters": "target, targetListener, requestOptions, callbackExecutor", "returns": "Request", "visibility": "private" },
+        { "name": "obtainRequest", "parameters": "...", "returns": "SingleRequest<TranscodeType>", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/RequestBuilder.java", "line": 57, "end_line": 103 },
+        { "path": "library/src/main/java/com/bumptech/glide/RequestBuilder.java", "line": 847, "end_line": 887 },
+        { "path": "library/src/main/java/com/bumptech/glide/RequestBuilder.java", "line": 1176, "end_line": 1192 }
+      ]
+    },
+    {
+      "id": "single_request",
+      "label": "SingleRequest",
+      "kind": "class",
+      "sublabel": "一次加载的状态机",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "model", "type": "Object", "visibility": "private" },
+        { "name": "transcodeClass", "type": "Class<R>", "visibility": "private" },
+        { "name": "requestOptions", "type": "BaseRequestOptions<?>", "visibility": "private" },
+        { "name": "target", "type": "Target<R>", "visibility": "private" },
+        { "name": "engine", "type": "volatile Engine", "visibility": "private" },
+        { "name": "status", "type": "Status", "visibility": "private" },
+        { "name": "resource", "type": "Resource<R>", "visibility": "private" },
+        { "name": "loadStatus", "type": "Engine.LoadStatus", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "obtain", "parameters": "context, glideContext, requestLock, model, ...", "returns": "SingleRequest<R>", "visibility": "public", "static": true },
+        { "name": "begin", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "clear", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "pause", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "onSizeReady", "parameters": "width: int, height: int", "returns": "void", "visibility": "public" },
+        { "name": "onResourceReady", "parameters": "resource, dataSource, isLoadedFromAlternateCacheKey", "returns": "void", "visibility": "public" },
+        { "name": "onLoadFailed", "parameters": "e: GlideException, maxLogLevel: int", "returns": "void", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/request/SingleRequest.java", "line": 36, "end_line": 59 },
+        { "path": "library/src/main/java/com/bumptech/glide/request/SingleRequest.java", "line": 217, "end_line": 270 },
+        { "path": "library/src/main/java/com/bumptech/glide/request/SingleRequest.java", "line": 451, "end_line": 501 }
+      ]
+    },
+    {
+      "id": "decode_job",
+      "label": "DecodeJob",
+      "kind": "class",
+      "sublabel": "缓存降级与解码执行",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        { "name": "decodeHelper", "type": "DecodeHelper<R>", "visibility": "private" },
+        { "name": "diskCacheProvider", "type": "DiskCacheProvider", "visibility": "private" },
+        { "name": "engineKey", "type": "EngineKey", "visibility": "private" },
+        { "name": "stage", "type": "Stage", "visibility": "private" },
+        { "name": "runReason", "type": "RunReason", "visibility": "private" },
+        { "name": "currentGenerator", "type": "DataFetcherGenerator", "visibility": "private" },
+        { "name": "deferredEncodeManager", "type": "DeferredEncodeManager<?>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "run", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "runWrapped", "parameters": "", "returns": "void", "visibility": "private" },
+        { "name": "getNextStage", "parameters": "current: Stage", "returns": "Stage", "visibility": "private" },
+        { "name": "getNextGenerator", "parameters": "", "returns": "DataFetcherGenerator", "visibility": "private" },
+        { "name": "decodeFromRetrievedData", "parameters": "", "returns": "void", "visibility": "private" },
+        { "name": "notifyEncodeAndRelease", "parameters": "resource, dataSource, isLoadedFromAlternateCacheKey", "returns": "void", "visibility": "private" },
+        { "name": "cancel", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/DecodeJob.java", "line": 47, "end_line": 110 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/DecodeJob.java", "line": 255, "end_line": 321 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/DecodeJob.java", "line": 413, "end_line": 432 }
+      ]
+    },
+    {
+      "id": "target",
+      "label": "Target",
+      "kind": "interface",
+      "sublabel": "加载结果的生命周期接口",
+      "row": 3,
+      "col": 1,
+      "methods": [
+        { "name": "onLoadStarted", "parameters": "placeholder: Drawable", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "onLoadFailed", "parameters": "errorDrawable: Drawable", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "onResourceReady", "parameters": "resource: R, transition: Transition<? super R>", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "onLoadCleared", "parameters": "placeholder: Drawable", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "getSize", "parameters": "cb: SizeReadyCallback", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "setRequest", "parameters": "request: Request", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/request/target/Target.java", "line": 31, "end_line": 47 },
+        { "path": "library/src/main/java/com/bumptech/glide/request/target/Target.java", "line": 83, "end_line": 95 },
+        { "path": "library/src/main/java/com/bumptech/glide/request/target/Target.java", "line": 102, "end_line": 116 }
+      ]
+    },
+    {
+      "id": "disk_cache",
+      "label": "DiskCache",
+      "kind": "interface",
+      "sublabel": "原始数据/资源落盘",
+      "row": 3,
+      "col": 2,
+      "methods": [
+        { "name": "get", "parameters": "key: Key", "returns": "File", "visibility": "public", "abstract": true },
+        { "name": "put", "parameters": "key: Key, writer: Writer", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "delete", "parameters": "key: Key", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "clear", "parameters": "", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/cache/DiskCache.java", "line": 9, "end_line": 21 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/cache/DiskCache.java", "line": 43, "end_line": 66 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "glide_holds_engine", "from": "glide", "to": "engine", "kind": "composition", "label": "持有" },
+    { "id": "glide_holds_memory", "from": "glide", "to": "memory_cache", "kind": "composition", "label": "持有" },
+    { "id": "manager_builds_builder", "from": "request_manager", "to": "request_builder", "kind": "dependency", "label": "load()" },
+    { "id": "builder_builds_request", "from": "request_builder", "to": "single_request", "kind": "composition", "label": "buildRequest" },
+    { "id": "builder_into_target", "from": "request_builder", "to": "target", "kind": "dependency", "label": "into()" },
+    { "id": "request_holds_target", "from": "single_request", "to": "target", "kind": "association", "label": "持有" },
+    { "id": "request_calls_engine", "from": "single_request", "to": "engine", "kind": "dependency", "label": "engine.load()" },
+    { "id": "engine_uses_memory", "from": "engine", "to": "memory_cache", "kind": "association", "label": "cache" },
+    { "id": "engine_builds_key", "from": "engine", "to": "engine_key", "kind": "composition", "label": "buildKey" },
+    { "id": "engine_holds_jobs", "from": "engine", "to": "engine_job", "kind": "association", "label": "jobs" },
+    { "id": "engine_builds_decode", "from": "engine", "to": "decode_job", "kind": "dependency", "label": "decodeJobFactory" },
+    { "id": "engine_uses_disk", "from": "engine", "to": "disk_cache", "kind": "dependency", "label": "diskCacheProvider" },
+    { "id": "job_runs_decode", "from": "engine_job", "to": "decode_job", "kind": "dependency", "label": "execute" },
+    { "id": "decode_reads_disk", "from": "decode_job", "to": "disk_cache", "kind": "dependency", "label": "缓存阶段" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "请求链",
+      "items": [
+        "Glide.with() 交给 RequestManagerRetriever，按 Activity/Fragment/View 取生命周期绑定好的 RequestManager",
+        "RequestBuilder.into() 先 buildRequest，再 requestManager.clear(target) + track(target, request) 接管旧请求"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "复用链",
+      "items": [
+        "Engine.load 先用 EngineKey 查 ActiveResources，再查 MemoryCache，都未命中才新建 EngineJob 并交给 DecodeJob",
+        "DecodeJob 按 RESOURCE_CACHE → DATA_CACHE → SOURCE 依次降级，成功后写回磁盘与内存"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "生命周期",
+      "items": [
+        "RequestManager.onStop 默认 pauseRequests，onDestroy 时 clearRequests 并从 lifecycle 反注册",
+        "Target 的 onLoadCleared 让 ViewTarget 在宿主销毁时释放 Bitmap，避免持有已死的 View"
+      ]
+    }
+  ]
+}

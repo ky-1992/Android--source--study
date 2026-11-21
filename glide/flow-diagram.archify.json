@@ -1,0 +1,199 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Glide 加载主流程：从 into 到 DecodeJob 取数",
+    "subtitle": "with() 取到生命周期绑定的 RequestManager，into() 组装 SingleRequest 交给 Engine；Engine 先查活动资源与内存缓存，未命中再让 DecodeJob 按 RESOURCE/DATA/SOURCE 顺序取数。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/05-glide/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/bumptech/glide",
+      "provider": "github",
+      "revision": "bdfcadf91da5fadd1be5b5c186de9dea46415019"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "request", "label": "请求层" },
+    { "id": "engine", "label": "引擎" },
+    { "id": "cache", "label": "缓存" },
+    { "id": "source", "label": "数据源" }
+  ],
+  "phases": [
+    { "id": "init", "label": "接入", "fromCol": 0, "toCol": 1 },
+    { "id": "submit", "label": "提交与查找", "fromCol": 2, "toCol": 2 },
+    { "id": "fetch", "label": "取数解码", "fromCol": 3, "toCol": 3 },
+    { "id": "deliver", "label": "回调", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "with",
+    "load",
+    "into",
+    "engine_load",
+    "decode_job",
+    "source_fetch",
+    "ready",
+    "show"
+  ],
+  "nodes": [
+    {
+      "id": "with",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "with()",
+      "sublabel": "取管理器",
+      "width": 140,
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/Glide.java", "line": 567, "end_line": 569 },
+        { "path": "library/src/main/java/com/bumptech/glide/manager/RequestManagerRetriever.java", "line": 107, "end_line": 123 }
+      ]
+    },
+    {
+      "id": "load",
+      "lane": "request",
+      "col": 1,
+      "type": "frontend",
+      "label": "load()",
+      "sublabel": "建 Builder",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/RequestManager.java", "line": 556, "end_line": 558 },
+        { "path": "library/src/main/java/com/bumptech/glide/RequestBuilder.java", "line": 530, "end_line": 545 }
+      ]
+    },
+    {
+      "id": "into",
+      "lane": "request",
+      "col": 2,
+      "type": "frontend",
+      "label": "into()",
+      "sublabel": "buildRequest",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/RequestBuilder.java", "line": 847, "end_line": 887 }
+      ]
+    },
+    {
+      "id": "engine_load",
+      "lane": "engine",
+      "col": 2,
+      "type": "backend",
+      "label": "Engine.load",
+      "sublabel": "查活动资源",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/Engine.java", "line": 170, "end_line": 242 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/Engine.java", "line": 315, "end_line": 344 }
+      ]
+    },
+    {
+      "id": "mem_hit",
+      "lane": "cache",
+      "col": 2,
+      "type": "database",
+      "label": "内存命中",
+      "sublabel": "直接回调",
+      "width": 146,
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/Engine.java", "line": 206, "end_line": 241 }
+      ]
+    },
+    {
+      "id": "decode_job",
+      "lane": "engine",
+      "col": 3,
+      "type": "backend",
+      "label": "DecodeJob",
+      "sublabel": "三级降级",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/DecodeJob.java", "line": 255, "end_line": 321 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/DecodeJob.java", "line": 413, "end_line": 432 }
+      ]
+    },
+    {
+      "id": "disk_cache",
+      "lane": "cache",
+      "col": 3,
+      "type": "database",
+      "label": "磁盘资源缓存",
+      "sublabel": "RESOURCE/DATA",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/DecodeJob.java", "line": 323, "end_line": 336 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/cache/DiskCache.java", "line": 43, "end_line": 53 }
+      ]
+    },
+    {
+      "id": "source_fetch",
+      "lane": "source",
+      "col": 3,
+      "type": "cloud",
+      "label": "下载/读盘",
+      "sublabel": "SourceGenerator",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/DecodeJob.java", "line": 338, "end_line": 360 }
+      ]
+    },
+    {
+      "id": "ready",
+      "lane": "engine",
+      "col": 4,
+      "type": "backend",
+      "label": "onResourceReady",
+      "sublabel": "切主线程",
+      "width": 156,
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/request/SingleRequest.java", "line": 544, "end_line": 618 },
+        { "path": "library/src/main/java/com/bumptech/glide/load/engine/EngineJob.java", "line": 315, "end_line": 323 }
+      ]
+    },
+    {
+      "id": "show",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "显示图片",
+      "sublabel": "ViewTarget",
+      "width": 140,
+      "sources": [
+        { "path": "library/src/main/java/com/bumptech/glide/request/target/Target.java", "line": 83, "end_line": 95 },
+        { "path": "library/src/main/java/com/bumptech/glide/RequestBuilder.java", "line": 910, "end_line": 948 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_with_load", "from": "with", "to": "load", "label": "load" },
+    { "id": "e_load_into", "from": "load", "to": "into", "label": "链式选项" },
+    { "id": "e_into_engine", "from": "into", "to": "engine_load", "label": "request.begin" },
+    { "id": "e_engine_mem", "from": "engine_load", "to": "mem_hit", "label": "命中", "variant": "dashed", "role": "branch" },
+    { "id": "e_mem_ready", "from": "mem_hit", "to": "ready", "label": "MEMORY_CACHE", "variant": "dashed", "role": "return" },
+    { "id": "e_engine_decode", "from": "engine_load", "to": "decode_job", "label": "未命中" },
+    { "id": "e_decode_disk", "from": "decode_job", "to": "disk_cache", "label": "先查缓存", "variant": "dashed", "role": "branch" },
+    { "id": "e_disk_ready", "from": "disk_cache", "to": "ready", "label": "命中即回", "variant": "dashed", "role": "return" },
+    { "id": "e_decode_source", "from": "decode_job", "to": "source_fetch", "label": "SOURCE" },
+    { "id": "e_source_ready", "from": "source_fetch", "to": "ready", "label": "解码完成" },
+    { "id": "e_ready_show", "from": "ready", "to": "show", "label": "Target 回调" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "生命周期绑定",
+      "items": [
+        "Glide.with(activity) 由 RequestManagerRetriever 取 fragmentGet 创建的 RequestManager，Activity 销毁时 onDestroy 自动 clearRequests",
+        "onStop 默认 pauseRequests，恢复时 resumeRequests 把 pendingRequests 重新 begin"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "四级复用",
+      "items": [
+        "Engine.load 依次查 ActiveResources、MemoryCache，再进入 EngineJob/DecodeJob；相同 EngineKey 的并发加载共享同一个 EngineJob",
+        "DecodeJob 的 Stage 由 DiskCacheStrategy 决定：decodeCachedResource→RESOURCE_CACHE，decodeCachedData→DATA_CACHE，最后 SOURCE"
+      ]
+    }
+  ]
+}
