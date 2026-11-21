@@ -1,0 +1,607 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "AndroidAutoLayout 核心类型结构",
+    "subtitle": "AutoLayoutActivity 把系统布局替换成 Auto 容器，容器用 AutoLayoutHelper 解析 LayoutParams 里的 AutoLayoutInfo，再由 AutoAttr 子类把设计稿 px 缩放写回。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/49-AndroidAutoLayout/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/hongyangAndroid/AndroidAutoLayout",
+      "provider": "github",
+      "revision": "d0045f33d2a944bebbc07ab3d54a1c19b9d2963b"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "auto_activity",
+      "label": "AutoLayoutActivity",
+      "kind": "class",
+      "sublabel": "拦截系统 View 的 inflater",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "LAYOUT_LINEARLAYOUT",
+          "type": "String",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "LAYOUT_FRAMELAYOUT",
+          "type": "String",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "LAYOUT_RELATIVELAYOUT",
+          "type": "String",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "onCreateView",
+          "parameters": "name: String, context: Context, attrs: AttributeSet",
+          "returns": "View",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoLayoutActivity.java",
+          "line": 13,
+          "end_line": 42
+        }
+      ]
+    },
+    {
+      "id": "auto_helper",
+      "label": "AutoLayoutHelper",
+      "kind": "class",
+      "sublabel": "统一缩放子 View 的属性",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mHost",
+          "type": "ViewGroup",
+          "visibility": "private"
+        },
+        {
+          "name": "mAutoLayoutConifg",
+          "type": "AutoLayoutConifg",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "adjustChildren",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getAutoLayoutInfo",
+          "parameters": "context: Context, attrs: AttributeSet",
+          "returns": "AutoLayoutInfo",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "initAutoLayoutConfig",
+          "parameters": "host: ViewGroup",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/utils/AutoLayoutHelper.java",
+          "line": 46,
+          "end_line": 65
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/utils/AutoLayoutHelper.java",
+          "line": 97,
+          "end_line": 135
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/utils/AutoLayoutHelper.java",
+          "line": 137,
+          "end_line": 159
+        }
+      ]
+    },
+    {
+      "id": "auto_config",
+      "label": "AutoLayoutConifg",
+      "kind": "class",
+      "sublabel": "设计稿与屏幕尺寸单例",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "sIntance",
+          "type": "AutoLayoutConifg",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "mScreenWidth",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mDesignWidth",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "useDeviceSize",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getInstance",
+          "parameters": "",
+          "returns": "AutoLayoutConifg",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "init",
+          "parameters": "context: Context",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "checkParams",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "useDeviceSize",
+          "parameters": "",
+          "returns": "AutoLayoutConifg",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/config/AutoLayoutConifg.java",
+          "line": 13,
+          "end_line": 54
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/config/AutoLayoutConifg.java",
+          "line": 78,
+          "end_line": 108
+        }
+      ]
+    },
+    {
+      "id": "auto_frame",
+      "label": "AutoFrameLayout",
+      "kind": "class",
+      "sublabel": "FrameLayout 的自动版",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mHelper",
+          "type": "AutoLayoutHelper",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "generateLayoutParams",
+          "parameters": "attrs: AttributeSet",
+          "returns": "LayoutParams",
+          "visibility": "public"
+        },
+        {
+          "name": "onMeasure",
+          "parameters": "widthMeasureSpec: int, heightMeasureSpec: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onLayout",
+          "parameters": "changed: boolean, l: int, t: int, r: int, b: int",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoFrameLayout.java",
+          "line": 27,
+          "end_line": 65
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoFrameLayout.java",
+          "line": 73,
+          "end_line": 84
+        }
+      ]
+    },
+    {
+      "id": "auto_linear",
+      "label": "AutoLinearLayout",
+      "kind": "class",
+      "sublabel": "LinearLayout 的自动版",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mHelper",
+          "type": "AutoLayoutHelper",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onMeasure",
+          "parameters": "widthMeasureSpec: int, heightMeasureSpec: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "generateLayoutParams",
+          "parameters": "attrs: AttributeSet",
+          "returns": "LayoutParams",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoLinearLayout.java",
+          "line": 15,
+          "end_line": 58
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoLinearLayout.java",
+          "line": 61,
+          "end_line": 76
+        }
+      ]
+    },
+    {
+      "id": "auto_info",
+      "label": "AutoLayoutInfo",
+      "kind": "class",
+      "sublabel": "一个 View 的属性集合",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "autoAttrs",
+          "type": "List<AutoAttr>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "addAttr",
+          "parameters": "autoAttr: AutoAttr",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "fillAttrs",
+          "parameters": "view: View",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getAttrFromView",
+          "parameters": "view: View, attrs: int, base: int",
+          "returns": "AutoLayoutInfo",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoLayoutInfo.java",
+          "line": 28,
+          "end_line": 44
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoLayoutInfo.java",
+          "line": 47,
+          "end_line": 145
+        }
+      ]
+    },
+    {
+      "id": "auto_utils",
+      "label": "AutoUtils",
+      "kind": "class",
+      "sublabel": "百分比换算与手动 auto()",
+      "row": 3,
+      "col": 0,
+      "methods": [
+        {
+          "name": "auto",
+          "parameters": "view: View",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "autoSize",
+          "parameters": "view: View, base: int",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "getPercentWidthSizeBigger",
+          "parameters": "val: int",
+          "returns": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "getPercentHeightSizeBigger",
+          "parameters": "val: int",
+          "returns": "int",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/utils/AutoUtils.java",
+          "line": 14,
+          "end_line": 40
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/utils/AutoUtils.java",
+          "line": 90,
+          "end_line": 142
+        }
+      ]
+    },
+    {
+      "id": "auto_attr",
+      "label": "AutoAttr",
+      "kind": "abstract",
+      "sublabel": "单个 px 属性的缩放器",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "BASE_WIDTH",
+          "type": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "BASE_HEIGHT",
+          "type": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "BASE_DEFAULT",
+          "type": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "pxVal",
+          "type": "int",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "apply",
+          "parameters": "view: View",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getPercentWidthSize",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "protected"
+        },
+        {
+          "name": "attrVal",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "protected",
+          "abstract": true
+        },
+        {
+          "name": "execute",
+          "parameters": "view: View, val: int",
+          "returns": "void",
+          "visibility": "protected",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/attr/AutoAttr.java",
+          "line": 12,
+          "end_line": 44
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/attr/AutoAttr.java",
+          "line": 46,
+          "end_line": 114
+        }
+      ]
+    },
+    {
+      "id": "width_attr",
+      "label": "WidthAttr",
+      "kind": "class",
+      "sublabel": "写回 LayoutParams.width",
+      "row": 4,
+      "col": 0,
+      "methods": [
+        {
+          "name": "execute",
+          "parameters": "view: View, val: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "generate",
+          "parameters": "val: int, baseFlag: int",
+          "returns": "WidthAttr",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/attr/WidthAttr.java",
+          "line": 9,
+          "end_line": 51
+        }
+      ]
+    },
+    {
+      "id": "text_attr",
+      "label": "TextSizeAttr",
+      "kind": "class",
+      "sublabel": "写回 TextView 字号",
+      "row": 4,
+      "col": 2,
+      "methods": [
+        {
+          "name": "execute",
+          "parameters": "view: View, val: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "generate",
+          "parameters": "val: int, baseFlag: int",
+          "returns": "TextSizeAttr",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/attr/TextSizeAttr.java",
+          "line": 10,
+          "end_line": 55
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "activity_replaces_frame",
+      "from": "auto_activity",
+      "to": "auto_frame",
+      "kind": "dependency",
+      "label": "new"
+    },
+    {
+      "id": "activity_replaces_linear",
+      "from": "auto_activity",
+      "to": "auto_linear",
+      "kind": "dependency",
+      "label": "new"
+    },
+    {
+      "id": "frame_owns_helper",
+      "from": "auto_frame",
+      "to": "auto_helper",
+      "kind": "composition",
+      "label": "mHelper"
+    },
+    {
+      "id": "linear_owns_helper",
+      "from": "auto_linear",
+      "to": "auto_helper",
+      "kind": "composition",
+      "label": "mHelper"
+    },
+    {
+      "id": "helper_inits_config",
+      "from": "auto_helper",
+      "to": "auto_config",
+      "kind": "dependency",
+      "label": "init"
+    },
+    {
+      "id": "helper_builds_info",
+      "from": "auto_helper",
+      "to": "auto_info",
+      "kind": "dependency",
+      "label": "解析生成"
+    },
+    {
+      "id": "helper_creates_attr",
+      "from": "auto_helper",
+      "to": "auto_attr",
+      "kind": "dependency",
+      "label": "new Attr"
+    },
+    {
+      "id": "info_holds_attr",
+      "from": "auto_info",
+      "to": "auto_attr",
+      "kind": "aggregation",
+      "label": "autoAttrs"
+    },
+    {
+      "id": "attr_uses_utils",
+      "from": "auto_attr",
+      "to": "auto_utils",
+      "kind": "dependency",
+      "label": "百分比换算"
+    },
+    {
+      "id": "width_extends_attr",
+      "from": "width_attr",
+      "to": "auto_attr",
+      "kind": "inheritance"
+    },
+    {
+      "id": "text_extends_attr",
+      "from": "text_attr",
+      "to": "auto_attr",
+      "kind": "inheritance"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "三类宿主容器",
+      "items": [
+        "AutoLayoutActivity 只识别 LinearLayout / FrameLayout / RelativeLayout 三个名字，其余交给 super.onCreateView",
+        "AutoFrameLayout、AutoLinearLayout 在 onMeasure 里先 mHelper.adjustChildren() 再走系统测量"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "缩放口径",
+      "items": [
+        "AutoLayoutConifg 从 manifest 的 design_width/design_height 读设计稿尺寸，再按屏幕宽高算出比例",
+        "AutoAttr.apply 按 baseWidth/baseHeight 选宽或高比例，取 Math.max(val, 1) 防止细分割线变成 0"
+      ]
+    }
+  ]
+}

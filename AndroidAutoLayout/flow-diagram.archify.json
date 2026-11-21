@@ -1,0 +1,315 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "AndroidAutoLayout 自动缩放流程",
+    "subtitle": "LayoutInflater 解析布局时换成 Auto 容器并缓存每个子 View 的 AutoAttr；onMeasure 之前统一按设计稿比例换算并写回尺寸，再交给系统测量。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/49-AndroidAutoLayout/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/hongyangAndroid/AndroidAutoLayout",
+      "provider": "github",
+      "revision": "d0045f33d2a944bebbc07ab3d54a1c19b9d2963b"
+    }
+  },
+  "lanes": [
+    {
+      "id": "app",
+      "label": "解析布局"
+    },
+    {
+      "id": "page",
+      "label": "页面容器"
+    },
+    {
+      "id": "attr",
+      "label": "属性体系"
+    },
+    {
+      "id": "view",
+      "label": "系统测量"
+    }
+  ],
+  "phases": [
+    {
+      "id": "p1",
+      "label": "解析替换",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "p2",
+      "label": "读取设计稿",
+      "fromCol": 2,
+      "toCol": 2
+    },
+    {
+      "id": "p3",
+      "label": "测量调整",
+      "fromCol": 3,
+      "toCol": 3
+    },
+    {
+      "id": "p4",
+      "label": "换算写回",
+      "fromCol": 4,
+      "toCol": 4
+    }
+  ],
+  "mainPath": [
+    "n1",
+    "n2",
+    "n3",
+    "n4",
+    "n5",
+    "n6",
+    "n7",
+    "n8",
+    "n9"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "解析布局",
+      "sublabel": "LayoutInflater",
+      "width": 148,
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoFrameLayout.java",
+          "line": 51,
+          "end_line": 55
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoFrameLayout.java",
+          "line": 78,
+          "end_line": 83
+        }
+      ]
+    },
+    {
+      "id": "n2",
+      "lane": "page",
+      "col": 1,
+      "type": "frontend",
+      "label": "替换容器",
+      "sublabel": "onCreateView",
+      "width": 148,
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoLayoutActivity.java",
+          "line": 20,
+          "end_line": 42
+        }
+      ]
+    },
+    {
+      "id": "n3",
+      "lane": "attr",
+      "col": 2,
+      "type": "backend",
+      "label": "读取设计稿",
+      "sublabel": "design_width",
+      "width": 150,
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/config/AutoLayoutConifg.java",
+          "line": 78,
+          "end_line": 108
+        }
+      ]
+    },
+    {
+      "id": "n4",
+      "lane": "attr",
+      "col": 3,
+      "type": "backend",
+      "label": "缓存属性",
+      "sublabel": "AutoLayoutInfo",
+      "width": 152,
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/utils/AutoLayoutHelper.java",
+          "line": 137,
+          "end_line": 159
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoLayoutInfo.java",
+          "line": 32,
+          "end_line": 44
+        }
+      ]
+    },
+    {
+      "id": "n5",
+      "lane": "page",
+      "col": 3,
+      "type": "frontend",
+      "label": "测量前调整",
+      "sublabel": "adjustChildren",
+      "width": 156,
+      "yOffset": 96,
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoFrameLayout.java",
+          "line": 57,
+          "end_line": 65
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/utils/AutoLayoutHelper.java",
+          "line": 115,
+          "end_line": 135
+        }
+      ]
+    },
+    {
+      "id": "n6",
+      "lane": "attr",
+      "col": 4,
+      "type": "backend",
+      "label": "逐个应用",
+      "sublabel": "AutoAttr.apply",
+      "width": 150,
+      "yOffset": -96,
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoLayoutInfo.java",
+          "line": 38,
+          "end_line": 44
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/attr/AutoAttr.java",
+          "line": 46,
+          "end_line": 82
+        }
+      ]
+    },
+    {
+      "id": "n7",
+      "lane": "attr",
+      "col": 4,
+      "type": "backend",
+      "label": "百分比换算",
+      "sublabel": "AutoUtils",
+      "width": 145,
+      "yOffset": 0,
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/utils/AutoUtils.java",
+          "line": 113,
+          "end_line": 142
+        }
+      ]
+    },
+    {
+      "id": "n8",
+      "lane": "attr",
+      "col": 4,
+      "type": "backend",
+      "label": "写回尺寸",
+      "sublabel": "execute",
+      "width": 140,
+      "yOffset": 96,
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/attr/WidthAttr.java",
+          "line": 28,
+          "end_line": 33
+        },
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/attr/TextSizeAttr.java",
+          "line": 31,
+          "end_line": 37
+        }
+      ]
+    },
+    {
+      "id": "n9",
+      "lane": "view",
+      "col": 4,
+      "type": "backend",
+      "label": "继续测量",
+      "sublabel": "super.onMeasure",
+      "width": 148,
+      "yOffset": 192,
+      "sources": [
+        {
+          "path": "autolayout/src/main/java/com/zhy/autolayout/AutoLinearLayout.java",
+          "line": 45,
+          "end_line": 50
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "n1",
+      "to": "n2",
+      "label": "inflate 子 View"
+    },
+    {
+      "id": "e2",
+      "from": "n2",
+      "to": "n3",
+      "label": "首次初始化"
+    },
+    {
+      "id": "e3",
+      "from": "n3",
+      "to": "n4",
+      "label": "尺寸就绪"
+    },
+    {
+      "id": "e4",
+      "from": "n4",
+      "to": "n5",
+      "label": "进入 onMeasure"
+    },
+    {
+      "id": "e5",
+      "from": "n5",
+      "to": "n6",
+      "label": "逐个子 View"
+    },
+    {
+      "id": "e6",
+      "from": "n6",
+      "to": "n7",
+      "label": "按基准取比例"
+    },
+    {
+      "id": "e7",
+      "from": "n7",
+      "to": "n8",
+      "label": "取整后回调"
+    },
+    {
+      "id": "e8",
+      "from": "n8",
+      "to": "n9",
+      "label": "属性已更新"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两套换算口径",
+      "items": [
+        "getPercentWidthSizeBigger 先用 val*screenWidth/designWidth 做整数除法，余数不为 0 时 +1，避免细线和小间距被截断成 0",
+        "AutoAttr.apply 还会把结果再 Math.max(val, 1)，并为每个属性选择宽或高基准（layout_auto_basewidth / baseheight）"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "三个 Auto 容器",
+      "items": [
+        "AutoLayoutActivity 只在 onCreateView 里替换 LinearLayout、FrameLayout、RelativeLayout，其余 View 交给系统",
+        "每个容器的 LayoutParams 实现 AutoLayoutParams 接口，构造时调用 AutoLayoutHelper.getAutoLayoutInfo 解析全部 px 属性"
+      ]
+    }
+  ]
+}
