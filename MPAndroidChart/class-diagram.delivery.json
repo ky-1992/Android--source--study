@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "34b79e6a-a54d-49e4-884b-fb3245f9a013",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/04-MPAndroidChart/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/04-MPAndroidChart/class-diagram.html",
+  "specification": {
+    "sha256": "9e9c705141f8f691253ab9a6d4217e65b31878e1d65dcdc74cb989858bf4e030",
+    "bytes": 18754
+  },
+  "artifact": {
+    "sha256": "14e75d1331544bfa54eaf1e1a4f137f880689b095b70b80c20d0f9075c6d16b5",
+    "bytes": 901319
+  }
+}

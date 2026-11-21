@@ -1,0 +1,181 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "MPAndroidChart 数据到绘制的渲染主流程",
+    "subtitle": "setData 触发数据集极值与轴范围重算，calculateOffsets 定内容区，onDraw 交给 BarChartRenderer 用 Transformer 逐柱绘制。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/04-MPAndroidChart/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/PhilJay/MPAndroidChart",
+      "provider": "github",
+      "revision": "fae4ad798564ea9ad494eaf037dca0e745400723"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "data", "label": "数据层" },
+    { "id": "chart", "label": "图表视图" },
+    { "id": "render", "label": "渲染层" }
+  ],
+  "phases": [
+    { "id": "prep", "label": "准备", "fromCol": 0, "toCol": 1 },
+    { "id": "calc", "label": "计算", "fromCol": 2, "toCol": 2 },
+    { "id": "entry", "label": "布局与入口", "fromCol": 3, "toCol": 3 },
+    { "id": "draw", "label": "绘制", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "app_build",
+    "chart_set",
+    "data_minmax",
+    "chart_offset",
+    "chart_invalidate",
+    "render_ondraw",
+    "render_data"
+  ],
+  "nodes": [
+    {
+      "id": "chart_init",
+      "lane": "chart",
+      "col": 0,
+      "type": "backend",
+      "label": "初始化渲染器",
+      "sublabel": "init",
+      "width": 148,
+      "sources": [
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarChart.kt", "line": 40, "end_line": 49 },
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarLineChartBase.kt", "line": 142, "end_line": 160 }
+      ]
+    },
+    {
+      "id": "app_build",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "构造数据",
+      "sublabel": "BarData",
+      "width": 144,
+      "sources": [
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/data/BarData.kt", "line": 6, "end_line": 18 },
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/data/ChartData.kt", "line": 202, "end_line": 213 }
+      ]
+    },
+    {
+      "id": "chart_set",
+      "lane": "chart",
+      "col": 1,
+      "type": "backend",
+      "label": "设置数据",
+      "sublabel": "data setter",
+      "width": 152,
+      "sources": [
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/Chart.kt", "line": 79, "end_line": 106 }
+      ]
+    },
+    {
+      "id": "data_minmax",
+      "lane": "data",
+      "col": 2,
+      "type": "database",
+      "label": "重算极值",
+      "sublabel": "calcMinMax",
+      "width": 148,
+      "sources": [
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/data/ChartData.kt", "line": 69, "end_line": 96 }
+      ]
+    },
+    {
+      "id": "chart_offset",
+      "lane": "chart",
+      "col": 2,
+      "type": "backend",
+      "label": "计算边距",
+      "sublabel": "calculateOffsets",
+      "width": 156,
+      "sources": [
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarLineChartBase.kt", "line": 279, "end_line": 301 },
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarLineChartBase.kt", "line": 390, "end_line": 410 }
+      ]
+    },
+    {
+      "id": "chart_invalidate",
+      "lane": "chart",
+      "col": 3,
+      "type": "backend",
+      "label": "请求重绘",
+      "sublabel": "invalidate",
+      "width": 148,
+      "sources": [
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarLineChartBase.kt", "line": 296, "end_line": 301 }
+      ]
+    },
+    {
+      "id": "render_ondraw",
+      "lane": "render",
+      "col": 3,
+      "type": "frontend",
+      "label": "绘制入口",
+      "sublabel": "onDraw",
+      "width": 144,
+      "sources": [
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarLineChartBase.kt", "line": 175, "end_line": 208 },
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/Chart.kt", "line": 380, "end_line": 391 }
+      ]
+    },
+    {
+      "id": "render_data",
+      "lane": "render",
+      "col": 4,
+      "type": "frontend",
+      "label": "绘制柱形",
+      "sublabel": "drawData",
+      "width": 152,
+      "sources": [
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/renderer/BarChartRenderer.kt", "line": 147, "end_line": 170 },
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/renderer/BarChartRenderer.kt", "line": 171, "end_line": 200 }
+      ]
+    },
+    {
+      "id": "app_touch",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "触摸高亮",
+      "sublabel": "getHighlight",
+      "width": 144,
+      "sources": [
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/Chart.kt", "line": 520, "end_line": 529 },
+        { "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/utils/Transformer.kt", "line": 170, "end_line": 193 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_init_set", "from": "chart_init", "to": "chart_set", "label": "renderer 就绪" },
+    { "id": "e_build_set", "from": "app_build", "to": "chart_set", "label": "setData" },
+    { "id": "e_set_minmax", "from": "chart_set", "to": "data_minmax", "label": "通知变更" },
+    { "id": "e_minmax_offset", "from": "data_minmax", "to": "chart_offset", "label": "轴范围" },
+    { "id": "e_offset_invalidate", "from": "chart_offset", "to": "chart_invalidate", "label": "边距就绪" },
+    { "id": "e_invalidate_ondraw", "from": "chart_invalidate", "to": "render_ondraw", "label": "下一帧" },
+    { "id": "e_ondraw_data", "from": "render_ondraw", "to": "render_data", "label": "canvas" },
+    { "id": "e_touch_invalidate", "from": "app_touch", "to": "chart_invalidate", "label": "高亮刷新", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "数据变更入口",
+      "items": [
+        "Chart.data setter 会给缺省 formatter 的数据集补上默认 ValueFormatter，然后调用 notifyDataSetChanged",
+        "直接改 Entry 不会自动重算极值，必须再调用 DataSet.notifyDataSetChanged 或 Chart.notifyDataSetChanged"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "绘制分工",
+      "items": [
+        "BarLineChartBase.onDraw 负责轴、网格、图例与裁剪，数据本身只由 renderer.drawData 画",
+        "BarChartRenderer 在 drawDataSet 里用 getTransformer(axisDependency) 把柱体矩形映射到像素，再画值和高亮"
+      ]
+    }
+  ]
+}

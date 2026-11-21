@@ -1,0 +1,720 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "MPAndroidChart 核心类型结构",
+    "subtitle": "Chart 持有数据、视口与渲染器；BarLineChartBase 负责轴与边距，BarChartRenderer 通过 Transformer 把值域坐标画成像素。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/04-MPAndroidChart/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/PhilJay/MPAndroidChart",
+      "provider": "github",
+      "revision": "fae4ad798564ea9ad494eaf037dca0e745400723"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "chart",
+      "label": "Chart",
+      "kind": "abstract",
+      "sublabel": "所有图表的基类",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "data",
+          "type": "T?",
+          "visibility": "public"
+        },
+        {
+          "name": "renderer",
+          "type": "DataRenderer",
+          "visibility": "public"
+        },
+        {
+          "name": "viewPortHandler",
+          "type": "ViewPortHandler",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "notifyDataSetChanged",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onDraw",
+          "parameters": "canvas: Canvas",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getHighlightByTouchPoint",
+          "parameters": "x: Float, y: Float",
+          "returns": "Highlight?",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/Chart.kt",
+          "line": 59,
+          "end_line": 70
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/Chart.kt",
+          "line": 79,
+          "end_line": 106
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/Chart.kt",
+          "line": 520,
+          "end_line": 529
+        }
+      ]
+    },
+    {
+      "id": "chartdata",
+      "label": "ChartData",
+      "kind": "abstract",
+      "sublabel": "DataSet 容器与极值缓存",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "dataSets",
+          "type": "MutableList<T>",
+          "visibility": "public"
+        },
+        {
+          "name": "leftAxisMax",
+          "type": "Float",
+          "visibility": "protected"
+        },
+        {
+          "name": "rightAxisMax",
+          "type": "Float",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "notifyDataChanged",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "calcMinMax",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "addDataSet",
+          "parameters": "d: T?",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/data/ChartData.kt",
+          "line": 18,
+          "end_line": 30
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/data/ChartData.kt",
+          "line": 69,
+          "end_line": 96
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/data/ChartData.kt",
+          "line": 202,
+          "end_line": 213
+        }
+      ]
+    },
+    {
+      "id": "datarenderer",
+      "label": "DataRenderer",
+      "kind": "abstract",
+      "sublabel": "数据绘制流程抽象",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "animator",
+          "type": "ChartAnimator",
+          "visibility": "protected"
+        },
+        {
+          "name": "renderPaint",
+          "type": "Paint",
+          "visibility": "protected"
+        },
+        {
+          "name": "valuePaint",
+          "type": "Paint",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "drawData",
+          "parameters": "c: Canvas",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "drawValues",
+          "parameters": "c: Canvas",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "drawHighlighted",
+          "parameters": "c: Canvas, indices: List<Highlight>",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/renderer/DataRenderer.kt",
+          "line": 23,
+          "end_line": 40
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/renderer/DataRenderer.kt",
+          "line": 102,
+          "end_line": 139
+        }
+      ]
+    },
+    {
+      "id": "barlinechartbase",
+      "label": "BarLineChartBase",
+      "kind": "abstract",
+      "sublabel": "坐标轴、边距与手势基类",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "axisLeft",
+          "type": "YAxis",
+          "visibility": "public"
+        },
+        {
+          "name": "axisRight",
+          "type": "YAxis",
+          "visibility": "public"
+        },
+        {
+          "name": "leftAxisTransformer",
+          "type": "Transformer",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "notifyDataSetChanged",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "calculateOffsets",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "calcMinMax",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "computeAxes",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "package"
+        }
+      ],
+      "sources": [
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarLineChartBase.kt",
+          "line": 43,
+          "end_line": 52
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarLineChartBase.kt",
+          "line": 279,
+          "end_line": 301
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarLineChartBase.kt",
+          "line": 390,
+          "end_line": 410
+        }
+      ]
+    },
+    {
+      "id": "basedataset",
+      "label": "BaseDataSet",
+      "kind": "abstract",
+      "sublabel": "单条数据集的通用实现",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "label",
+          "type": "String",
+          "visibility": "package"
+        },
+        {
+          "name": "colors",
+          "type": "MutableList<Int>",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "notifyDataSetChanged",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getIndexInEntries",
+          "parameters": "xIndex: Int",
+          "returns": "Int",
+          "visibility": "public"
+        },
+        {
+          "name": "removeEntry",
+          "parameters": "index: Int",
+          "returns": "Boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/data/BaseDataSet.kt",
+          "line": 22,
+          "end_line": 40
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/data/BaseDataSet.kt",
+          "line": 79,
+          "end_line": 83
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/data/BaseDataSet.kt",
+          "line": 158,
+          "end_line": 170
+        }
+      ]
+    },
+    {
+      "id": "barchartrenderer",
+      "label": "BarChartRenderer",
+      "kind": "class",
+      "sublabel": "柱形、数值与高亮绘制",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "barRect",
+          "type": "RectF",
+          "visibility": "protected"
+        },
+        {
+          "name": "barShapePath",
+          "type": "Path",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "drawData",
+          "parameters": "c: Canvas",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "drawDataSet",
+          "parameters": "c: Canvas, dataSet: IBarDataSet<*>, index: Int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "drawValues",
+          "parameters": "c: Canvas",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/renderer/BarChartRenderer.kt",
+          "line": 29,
+          "end_line": 42
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/renderer/BarChartRenderer.kt",
+          "line": 147,
+          "end_line": 170
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/renderer/BarChartRenderer.kt",
+          "line": 171,
+          "end_line": 180
+        }
+      ]
+    },
+    {
+      "id": "barchart",
+      "label": "BarChart",
+      "kind": "class",
+      "sublabel": "柱状图实现",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "isFitBarsEnabled",
+          "type": "Boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "isDrawValueAboveBarEnabled",
+          "type": "Boolean",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "init",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "calcMinMax",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "getHighlightByTouchPoint",
+          "parameters": "x: Float, y: Float",
+          "returns": "Highlight?",
+          "visibility": "public"
+        },
+        {
+          "name": "groupBars",
+          "parameters": "fromX: Float, groupSpace: Float, barSpace: Float",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarChart.kt",
+          "line": 19,
+          "end_line": 24
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarChart.kt",
+          "line": 40,
+          "end_line": 49
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/charts/BarChart.kt",
+          "line": 51,
+          "end_line": 62
+        }
+      ]
+    },
+    {
+      "id": "idataset",
+      "label": "IDataSet",
+      "kind": "interface",
+      "sublabel": "渲染器只读契约",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "yMin",
+          "type": "Float",
+          "visibility": "public"
+        },
+        {
+          "name": "yMax",
+          "type": "Float",
+          "visibility": "public"
+        },
+        {
+          "name": "entryCount",
+          "type": "Int",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "calcMinMax",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getEntryForIndex",
+          "parameters": "index: Int",
+          "returns": "T",
+          "visibility": "public"
+        },
+        {
+          "name": "addEntry",
+          "parameters": "e: T",
+          "returns": "Boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/interfaces/datasets/IDataSet.kt",
+          "line": 22,
+          "end_line": 40
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/interfaces/datasets/IDataSet.kt",
+          "line": 47,
+          "end_line": 60
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/interfaces/datasets/IDataSet.kt",
+          "line": 73,
+          "end_line": 99
+        }
+      ]
+    },
+    {
+      "id": "transformer",
+      "label": "Transformer",
+      "kind": "class",
+      "sublabel": "值域与像素互转",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "viewPortHandler",
+          "type": "ViewPortHandler",
+          "visibility": "protected"
+        },
+        {
+          "name": "matrixValueToPx",
+          "type": "Matrix",
+          "visibility": "protected"
+        },
+        {
+          "name": "matrixOffset",
+          "type": "Matrix",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "prepareMatrixValuePx",
+          "parameters": "xChartMin, deltaX, deltaY, yChartMin",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "prepareMatrixOffset",
+          "parameters": "inverted: Boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getValuesByTouchPoint",
+          "parameters": "x: Float, y: Float",
+          "returns": "MPPointD",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/utils/Transformer.kt",
+          "line": 17,
+          "end_line": 32
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/utils/Transformer.kt",
+          "line": 33,
+          "end_line": 49
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/utils/Transformer.kt",
+          "line": 170,
+          "end_line": 193
+        }
+      ]
+    },
+    {
+      "id": "viewporthandler",
+      "label": "ViewPortHandler",
+      "kind": "class",
+      "sublabel": "内容区、矩阵与缩放钳制",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "matrixTouch",
+          "type": "Matrix",
+          "visibility": "public"
+        },
+        {
+          "name": "contentRect",
+          "type": "RectF",
+          "visibility": "public"
+        },
+        {
+          "name": "chartWidth",
+          "type": "Float",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setChartDimens",
+          "parameters": "width: Float, height: Float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "refresh",
+          "parameters": "newMatrix: Matrix, chart: View, invalidate: Boolean",
+          "returns": "Matrix",
+          "visibility": "public"
+        },
+        {
+          "name": "limitTransAndScale",
+          "parameters": "matrix: Matrix, content: RectF?",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/utils/ViewPortHandler.kt",
+          "line": 18,
+          "end_line": 27
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/utils/ViewPortHandler.kt",
+          "line": 75,
+          "end_line": 95
+        },
+        {
+          "path": "MPChartLib/src/main/kotlin/com/github/mikephil/charting/utils/ViewPortHandler.kt",
+          "line": 344,
+          "end_line": 370
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r_blbase_chart",
+      "from": "barlinechartbase",
+      "to": "chart",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "r_barchart_blbase",
+      "from": "barchart",
+      "to": "barlinechartbase",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "r_chartdata_idataset",
+      "from": "chartdata",
+      "to": "idataset",
+      "kind": "association",
+      "label": "持有 dataSets"
+    },
+    {
+      "id": "r_basedataset_idataset",
+      "from": "basedataset",
+      "to": "idataset",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "r_chart_chartdata",
+      "from": "chart",
+      "to": "chartdata",
+      "kind": "composition",
+      "label": "data"
+    },
+    {
+      "id": "r_chart_renderer",
+      "from": "chart",
+      "to": "datarenderer",
+      "kind": "aggregation",
+      "label": "renderer"
+    },
+    {
+      "id": "r_blbase_transformer",
+      "from": "barlinechartbase",
+      "to": "transformer",
+      "kind": "composition",
+      "label": "left/rightAxisTransformer"
+    },
+    {
+      "id": "r_transformer_viewport",
+      "from": "transformer",
+      "to": "viewporthandler",
+      "kind": "association",
+      "label": "构造注入"
+    },
+    {
+      "id": "r_barchartrenderer_datarenderer",
+      "from": "barchartrenderer",
+      "to": "datarenderer",
+      "kind": "inheritance",
+      "label": "继承"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "数据与视图分离",
+      "items": [
+        "Chart 只持有 ChartData、ViewPortHandler 与 DataRenderer；具体图表在 init 里装配自己的 Renderer 和 Highlighter",
+        "数据改动后必须走 Chart.data setter 或 notifyDataSetChanged，才会重算极值、轴范围与边距"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "坐标与绘制链",
+      "items": [
+        "BarLineChartBase.onDraw 先算轴与网格，再依次调用 renderer.drawData / drawHighlighted / drawValues",
+        "Transformer 用 matrixValueToPx 与 matrixOffset 两级矩阵把 Entry 的值域坐标映射到内容区像素"
+      ]
+    }
+  ]
+}
