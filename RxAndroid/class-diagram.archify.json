@@ -1,0 +1,520 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "RxAndroid 主线程调度类型结构",
+    "subtitle": "AndroidSchedulers 用 HandlerScheduler 把任务投到主线程 Looper；MainThreadDisposable 保证释放回调回到主线程，RxAndroidPlugins 提供可替换钩子。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/13-RxAndroid/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/ReactiveX/RxAndroid",
+      "provider": "github",
+      "revision": "311e44531ae7e795fcba14af64f6ad2280cf2205"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "disposable",
+      "label": "Disposable",
+      "kind": "interface",
+      "sublabel": "RxJava 取消契约",
+      "row": 0,
+      "col": 2,
+      "methods": [
+        {
+          "name": "dispose",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "isDisposed",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public",
+          "abstract": true
+        }
+      ]
+    },
+    {
+      "id": "scheduler",
+      "label": "Scheduler",
+      "kind": "abstract",
+      "sublabel": "RxJava 调度基类",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        {
+          "name": "scheduleDirect",
+          "parameters": "run: Runnable, delay: long, unit: TimeUnit",
+          "returns": "Disposable",
+          "visibility": "public"
+        },
+        {
+          "name": "createWorker",
+          "parameters": "",
+          "returns": "Worker",
+          "visibility": "public",
+          "abstract": true
+        }
+      ]
+    },
+    {
+      "id": "worker",
+      "label": "Worker",
+      "kind": "abstract",
+      "sublabel": "顺序执行单元",
+      "row": 0,
+      "col": 1,
+      "methods": [
+        {
+          "name": "schedule",
+          "parameters": "run: Runnable, delay: long, unit: TimeUnit",
+          "returns": "Disposable",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "dispose",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ]
+    },
+    {
+      "id": "main_thread_disposable",
+      "label": "MainThreadDisposable",
+      "kind": "abstract",
+      "sublabel": "释放动作切回主线程",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "unsubscribed",
+          "type": "AtomicBoolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "verifyMainThread",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "isDisposed",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "dispose",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onDispose",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/MainThreadDisposable.java",
+          "line": 46,
+          "end_line": 60
+        },
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/MainThreadDisposable.java",
+          "line": 62,
+          "end_line": 80
+        }
+      ]
+    },
+    {
+      "id": "handler_scheduler",
+      "label": "HandlerScheduler",
+      "kind": "class",
+      "sublabel": "基于 Handler 的调度器",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "handler",
+          "type": "Handler",
+          "visibility": "private"
+        },
+        {
+          "name": "async",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "scheduleDirect",
+          "parameters": "run: Runnable, delay: long, unit: TimeUnit",
+          "returns": "Disposable",
+          "visibility": "public"
+        },
+        {
+          "name": "createWorker",
+          "parameters": "",
+          "returns": "Worker",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/HandlerScheduler.java",
+          "line": 24,
+          "end_line": 47
+        },
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/HandlerScheduler.java",
+          "line": 49,
+          "end_line": 52
+        }
+      ]
+    },
+    {
+      "id": "rx_android_plugins",
+      "label": "RxAndroidPlugins",
+      "kind": "class",
+      "sublabel": "全局钩子与替换点",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "onInitMainThreadHandler",
+          "type": "Function<Callable<Scheduler>, Scheduler>",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "onMainThreadHandler",
+          "type": "Function<Scheduler, Scheduler>",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "initMainThreadScheduler",
+          "parameters": "scheduler: Callable<Scheduler>",
+          "returns": "Scheduler",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "onMainThreadScheduler",
+          "parameters": "scheduler: Scheduler",
+          "returns": "Scheduler",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "setMainThreadSchedulerHandler",
+          "parameters": "handler: Function<Scheduler, Scheduler>",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "reset",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/plugins/RxAndroidPlugins.java",
+          "line": 24,
+          "end_line": 31
+        },
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/plugins/RxAndroidPlugins.java",
+          "line": 33,
+          "end_line": 57
+        },
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/plugins/RxAndroidPlugins.java",
+          "line": 78,
+          "end_line": 81
+        }
+      ]
+    },
+    {
+      "id": "scheduled_runnable",
+      "label": "ScheduledRunnable",
+      "kind": "class",
+      "sublabel": "消息体与取消句柄",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "handler",
+          "type": "Handler",
+          "visibility": "private"
+        },
+        {
+          "name": "delegate",
+          "type": "Runnable",
+          "visibility": "private"
+        },
+        {
+          "name": "disposed",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "run",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "dispose",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "isDisposed",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/HandlerScheduler.java",
+          "line": 109,
+          "end_line": 139
+        }
+      ]
+    },
+    {
+      "id": "handler_worker",
+      "label": "HandlerWorker",
+      "kind": "class",
+      "sublabel": "可整体取消的 Worker",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "handler",
+          "type": "Handler",
+          "visibility": "private"
+        },
+        {
+          "name": "disposed",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "schedule",
+          "parameters": "run: Runnable, delay: long, unit: TimeUnit",
+          "returns": "Disposable",
+          "visibility": "public"
+        },
+        {
+          "name": "dispose",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "isDisposed",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/HandlerScheduler.java",
+          "line": 54,
+          "end_line": 63
+        },
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/HandlerScheduler.java",
+          "line": 65,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "android_schedulers",
+      "label": "AndroidSchedulers",
+      "kind": "class",
+      "sublabel": "主线程调度器工厂",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "MAIN_THREAD",
+          "type": "Scheduler",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "mainThread",
+          "parameters": "",
+          "returns": "Scheduler",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "from",
+          "parameters": "looper: Looper, async: boolean",
+          "returns": "Scheduler",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "internalFrom",
+          "parameters": "looper: Looper, async: boolean",
+          "returns": "Scheduler",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/AndroidSchedulers.java",
+          "line": 25,
+          "end_line": 43
+        },
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/AndroidSchedulers.java",
+          "line": 63,
+          "end_line": 86
+        }
+      ]
+    },
+    {
+      "id": "main_holder",
+      "label": "MainHolder",
+      "kind": "class",
+      "sublabel": "懒加载默认调度器",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "DEFAULT",
+          "type": "Scheduler",
+          "visibility": "package",
+          "static": true
+        }
+      ],
+      "methods": [],
+      "sources": [
+        {
+          "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/AndroidSchedulers.java",
+          "line": 27,
+          "end_line": 29
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "hs_extends",
+      "from": "handler_scheduler",
+      "to": "scheduler",
+      "kind": "inheritance"
+    },
+    {
+      "id": "hw_extends",
+      "from": "handler_worker",
+      "to": "worker",
+      "kind": "inheritance"
+    },
+    {
+      "id": "sr_realizes",
+      "from": "scheduled_runnable",
+      "to": "disposable",
+      "kind": "realization"
+    },
+    {
+      "id": "mtd_realizes",
+      "from": "main_thread_disposable",
+      "to": "disposable",
+      "kind": "realization"
+    },
+    {
+      "id": "as_creates_hs",
+      "from": "android_schedulers",
+      "to": "handler_scheduler",
+      "kind": "dependency",
+      "label": "internalFrom"
+    },
+    {
+      "id": "as_holds_holder",
+      "from": "android_schedulers",
+      "to": "main_holder",
+      "kind": "composition",
+      "label": "MAIN_THREAD"
+    },
+    {
+      "id": "as_uses_plugins",
+      "from": "android_schedulers",
+      "to": "rx_android_plugins",
+      "kind": "dependency",
+      "label": "init/onMain"
+    },
+    {
+      "id": "hs_creates_worker",
+      "from": "handler_scheduler",
+      "to": "handler_worker",
+      "kind": "composition",
+      "label": "createWorker"
+    },
+    {
+      "id": "mtd_schedules",
+      "from": "main_thread_disposable",
+      "to": "android_schedulers",
+      "kind": "dependency",
+      "label": "scheduleDirect"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "最小绑定层",
+      "items": [
+        "RxAndroid 只补主线程调度器：AndroidSchedulers.mainThread() 返回 HandlerScheduler，其余能力都来自 RxJava 3",
+        "Scheduler / Worker / Disposable 三个外部契约不在此仓库内，图中仅标出继承与实现关系"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "取消与释放",
+      "items": [
+        "HandlerWorker.dispose 用 worker 自身作为 token 调 removeCallbacksAndMessages，一次性取消整批任务",
+        "MainThreadDisposable 用 CAS 保证 onDispose 只执行一次，非主线程调用时经 mainThread().scheduleDirect 切回主线程"
+      ]
+    }
+  ]
+}

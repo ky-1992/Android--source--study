@@ -1,0 +1,162 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "RxAndroid 主线程调度流程",
+    "subtitle": "observeOn 取到 HandlerScheduler 后，任务被包装成 Message 投进主线程队列，Looper 取出执行；dispose 可整批取消。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/13-RxAndroid/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/ReactiveX/RxAndroid",
+      "provider": "github",
+      "revision": "311e44531ae7e795fcba14af64f6ad2280cf2205"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "订阅方" },
+    { "id": "sched", "label": "调度器" },
+    { "id": "handler", "label": "Handler 队列" },
+    { "id": "task", "label": "任务" }
+  ],
+  "phases": [
+    { "id": "pick", "label": "取调度器", "fromCol": 0, "toCol": 1 },
+    { "id": "post", "label": "包装投递", "fromCol": 2, "toCol": 3 },
+    { "id": "run", "label": "主线程执行", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": ["app_observe", "as_main", "sched_worker", "sched_send", "handler_queue", "handler_loop", "task_run", "app_next"],
+  "nodes": [
+    {
+      "id": "app_observe",
+      "lane": "app",
+      "col": 0,
+      "type": "frontend",
+      "label": "切主线程",
+      "sublabel": "observeOn",
+      "width": 140,
+      "sources": [
+        { "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/AndroidSchedulers.java", "line": 41, "end_line": 43 }
+      ]
+    },
+    {
+      "id": "as_main",
+      "lane": "sched",
+      "col": 1,
+      "type": "backend",
+      "label": "取主线程调度器",
+      "sublabel": "mainThread()",
+      "width": 150,
+      "sources": [
+        { "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/AndroidSchedulers.java", "line": 41, "end_line": 43 },
+        { "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/plugins/RxAndroidPlugins.java", "line": 48, "end_line": 57 }
+      ]
+    },
+    {
+      "id": "sched_worker",
+      "lane": "sched",
+      "col": 2,
+      "type": "backend",
+      "label": "创建 Worker",
+      "sublabel": "createWorker",
+      "width": 150,
+      "sources": [
+        { "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/HandlerScheduler.java", "line": 49, "end_line": 52 }
+      ]
+    },
+    {
+      "id": "sched_send",
+      "lane": "sched",
+      "col": 3,
+      "type": "backend",
+      "label": "投递消息",
+      "sublabel": "Message.obtain",
+      "width": 150,
+      "sources": [
+        { "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/HandlerScheduler.java", "line": 65, "end_line": 95 }
+      ]
+    },
+    {
+      "id": "handler_queue",
+      "lane": "handler",
+      "col": 3,
+      "type": "messagebus",
+      "label": "消息入队",
+      "sublabel": "sendMessageDelayed",
+      "width": 150,
+      "sources": [
+        { "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/HandlerScheduler.java", "line": 79, "end_line": 86 }
+      ]
+    },
+    {
+      "id": "handler_loop",
+      "lane": "handler",
+      "col": 4,
+      "type": "backend",
+      "label": "分发消息",
+      "sublabel": "Looper",
+      "width": 140
+    },
+    {
+      "id": "task_run",
+      "lane": "task",
+      "col": 4,
+      "type": "backend",
+      "label": "执行任务",
+      "sublabel": "run()",
+      "width": 140,
+      "sources": [
+        { "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/schedulers/HandlerScheduler.java", "line": 120, "end_line": 127 }
+      ]
+    },
+    {
+      "id": "app_next",
+      "lane": "app",
+      "col": 4,
+      "type": "frontend",
+      "label": "回调订阅者",
+      "sublabel": "onNext",
+      "width": 140
+    },
+    {
+      "id": "app_release",
+      "lane": "app",
+      "col": 3,
+      "type": "frontend",
+      "label": "主线程释放",
+      "sublabel": "onDispose",
+      "width": 142,
+      "sources": [
+        { "path": "rxandroid/src/main/java/io/reactivex/rxjava3/android/MainThreadDisposable.java", "line": 69, "end_line": 78 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_observe_main", "from": "app_observe", "to": "as_main", "label": "observeOn" },
+    { "id": "e_main_worker", "from": "as_main", "to": "sched_worker", "label": "createWorker" },
+    { "id": "e_worker_send", "from": "sched_worker", "to": "sched_send", "label": "schedule" },
+    { "id": "e_send_queue", "from": "sched_send", "to": "handler_queue", "label": "入队" },
+    { "id": "e_queue_loop", "from": "handler_queue", "to": "handler_loop", "label": "到期" },
+    { "id": "e_loop_run", "from": "handler_loop", "to": "task_run", "label": "执行" },
+    { "id": "e_run_next", "from": "task_run", "to": "app_next", "label": "下发" },
+    { "id": "e_release_loop", "from": "app_release", "to": "handler_loop", "label": "dispose 投递", "variant": "dashed", "role": "branch" },
+    { "id": "e_next_release", "from": "app_next", "to": "app_release", "label": "取消订阅", "variant": "dashed", "role": "return" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "投递细节",
+      "items": [
+        "HandlerWorker.schedule 把 Runnable 包成 ScheduledRunnable，再包装成 Message 交给 Handler",
+        "message.obj 记录 worker，dispose 时 removeCallbacksAndMessages(this) 可一次性清掉该 worker 的所有消息"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "释放语义",
+      "items": [
+        "MainThreadDisposable.dispose 用 CAS 防重入；已在主线程就直接 onDispose，否则 scheduleDirect 切回主线程",
+        "ScheduledRunnable.dispose 只 removeCallbacks，真正取消由 handler 消息队列完成"
+      ]
+    }
+  ]
+}
