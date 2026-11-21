@@ -1,0 +1,172 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "android-async-http 请求执行主流程",
+    "subtitle": "调用方发起 get/post，参数转成 Entity 后提交线程池；AsyncHttpRequest 执行并按 RetryHandler 重试，响应经 Looper 切回主线程回调。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/17-Android-async-http/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/loopj/android-async-http",
+      "provider": "github",
+      "revision": "018a0b8d96a0dd569de9f8128cfe5d030e0423ef"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "client", "label": "AsyncHttpClient" },
+    { "id": "worker", "label": "请求线程" },
+    { "id": "net", "label": "异常与重试" },
+    { "id": "handler", "label": "回调线程" }
+  ],
+  "phases": [
+    { "id": "entry", "label": "入口", "fromCol": 0, "toCol": 1 },
+    { "id": "submit", "label": "提交", "fromCol": 2, "toCol": 2 },
+    { "id": "execute", "label": "执行", "fromCol": 3, "toCol": 3 },
+    { "id": "callback", "label": "回调", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": ["call", "params", "submit", "run", "resp", "cb"],
+  "nodes": [
+    {
+      "id": "call",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "发起请求",
+      "sublabel": "get / post",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/loopj/android/http/AsyncHttpClient.java", "line": 1127, "end_line": 1130 }
+      ]
+    },
+    {
+      "id": "params",
+      "lane": "client",
+      "col": 1,
+      "type": "backend",
+      "label": "组装参数",
+      "sublabel": "RequestParams",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/loopj/android/http/RequestParams.java", "line": 517, "end_line": 533 }
+      ]
+    },
+    {
+      "id": "submit",
+      "lane": "client",
+      "col": 2,
+      "type": "backend",
+      "label": "提交线程池",
+      "sublabel": "threadPool",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/loopj/android/http/AsyncHttpClient.java", "line": 1534, "end_line": 1570 }
+      ]
+    },
+    {
+      "id": "handle",
+      "lane": "app",
+      "col": 2,
+      "type": "external",
+      "label": "拿到句柄",
+      "sublabel": "RequestHandle",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/loopj/android/http/RequestHandle.java", "line": 28, "end_line": 35 }
+      ]
+    },
+    {
+      "id": "run",
+      "lane": "worker",
+      "col": 3,
+      "type": "backend",
+      "label": "执行请求",
+      "sublabel": "makeRequest",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/loopj/android/http/AsyncHttpRequest.java", "line": 84, "end_line": 129 }
+      ]
+    },
+    {
+      "id": "retry",
+      "lane": "net",
+      "col": 3,
+      "type": "messagebus",
+      "label": "重试判定",
+      "sublabel": "RetryHandler",
+      "width": 146,
+      "sources": [
+        { "path": "library/src/main/java/com/loopj/android/http/RetryHandler.java", "line": 77, "end_line": 112 },
+        { "path": "library/src/main/java/com/loopj/android/http/AsyncHttpRequest.java", "line": 170, "end_line": 210 }
+      ]
+    },
+    {
+      "id": "cancel",
+      "lane": "app",
+      "col": 3,
+      "type": "external",
+      "label": "取消请求",
+      "sublabel": "abort",
+      "width": 146,
+      "sources": [
+        { "path": "library/src/main/java/com/loopj/android/http/RequestHandle.java", "line": 51, "end_line": 75 },
+        { "path": "library/src/main/java/com/loopj/android/http/AsyncHttpRequest.java", "line": 232, "end_line": 236 }
+      ]
+    },
+    {
+      "id": "resp",
+      "lane": "handler",
+      "col": 4,
+      "type": "backend",
+      "label": "分发响应",
+      "sublabel": "sendResponse",
+      "width": 156,
+      "sources": [
+        { "path": "library/src/main/java/com/loopj/android/http/AsyncHttpResponseHandler.java", "line": 440, "end_line": 462 }
+      ]
+    },
+    {
+      "id": "cb",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "回调结果",
+      "sublabel": "onSuccess",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/loopj/android/http/AsyncHttpResponseHandler.java", "line": 280, "end_line": 290 },
+        { "path": "library/src/main/java/com/loopj/android/http/AsyncHttpResponseHandler.java", "line": 346, "end_line": 360 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_call_params", "from": "call", "to": "params", "label": "携带参数" },
+    { "id": "e_params_submit", "from": "params", "to": "submit", "label": "HttpEntity" },
+    { "id": "e_submit_run", "from": "submit", "to": "run", "label": "提交 Runnable" },
+    { "id": "e_run_resp", "from": "run", "to": "resp", "label": "HttpResponse" },
+    { "id": "e_resp_cb", "from": "resp", "to": "cb", "label": "Message" },
+    { "id": "e_run_retry", "from": "run", "to": "retry", "label": "IOException", "variant": "dashed", "role": "error" },
+    { "id": "e_retry_run", "from": "retry", "to": "run", "label": "重试", "variant": "dashed", "role": "return" },
+    { "id": "e_submit_handle", "from": "submit", "to": "handle", "label": "返回", "variant": "dashed", "role": "return" },
+    { "id": "e_handle_cancel", "from": "handle", "to": "cancel", "label": "取消", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "线程池与回调",
+      "items": [
+        "AsyncHttpClient 默认用 Executors.newCachedThreadPool，sendRequest 把 AsyncHttpRequest 直接 submit 进去",
+        "ResponseHandler 用创建时线程的 Looper 建 ResponderHandler，sendSuccessMessage 只是发 Message，真正回调发生在 Looper 线程"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "重试与取消",
+      "items": [
+        "RetryHandler 白名单含 NoHttpResponseException / UnknownHostException / SocketException，黑名单是 InterruptedIOException 与 SSLException",
+        "取消只置 AtomicBoolean 并 abort 底层请求；AsyncHttpRequest.run 在多个检查点提前 return，已入队的回调不再发送"
+      ]
+    }
+  ]
+}

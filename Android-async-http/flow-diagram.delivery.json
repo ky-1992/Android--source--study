@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "95fae4ca-82af-43a6-9347-93fee68d0b8f",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/17-Android-async-http/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/17-Android-async-http/flow-diagram.html",
+  "specification": {
+    "sha256": "c7055878bed87837476454dd6e2f38a810212098d8a9fa72a5af917db6033ca0",
+    "bytes": 6297
+  },
+  "artifact": {
+    "sha256": "2b43ef27fc3814850272774698a070f83e64eb59b2971515099c8a910b5445e2",
+    "bytes": 847920
+  }
+}

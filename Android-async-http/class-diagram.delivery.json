@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "e7abfd11-9631-4d56-8e28-0ad0a284be8b",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/17-Android-async-http/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/17-Android-async-http/class-diagram.html",
+  "specification": {
+    "sha256": "c716e81a8258ac0731643dddda6a3f0633d6e28e4ed54d42a3918fa3a9016d56",
+    "bytes": 16610
+  },
+  "artifact": {
+    "sha256": "4a67df9dc66ab3875da9f8bab6a262c4cc939d9ac2b76a33be8bfdaa303825b6",
+    "bytes": 895965
+  }
+}

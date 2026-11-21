@@ -1,0 +1,621 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "android-async-http 核心类型结构",
+    "subtitle": "AsyncHttpClient 装配连接池、线程池与 RetryHandler；每次请求是一个 AsyncHttpRequest Runnable，结果经 ResponseHandlerInterface 回到 Looper。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/17-Android-async-http/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/loopj/android-async-http",
+      "provider": "github",
+      "revision": "018a0b8d96a0dd569de9f8128cfe5d030e0423ef"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "retry_handler",
+      "label": "RetryHandler",
+      "kind": "class",
+      "sublabel": "异常白名单驱动的重试",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "maxRetries",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "retrySleepTimeMS",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "retryRequest",
+          "parameters": "e: IOException, count: int, ctx: HttpContext",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "isInList",
+          "parameters": "list: HashSet<Class<?>>, e: Throwable",
+          "returns": "boolean",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/loopj/android/http/RetryHandler.java",
+          "line": 42,
+          "end_line": 58
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/RetryHandler.java",
+          "line": 77,
+          "end_line": 112
+        }
+      ]
+    },
+    {
+      "id": "async_client",
+      "label": "AsyncHttpClient",
+      "kind": "class",
+      "sublabel": "门面：方法族 + 线程池",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "threadPool",
+          "type": "ExecutorService",
+          "visibility": "private"
+        },
+        {
+          "name": "requestMap",
+          "type": "Map<Context, List<RequestHandle>>",
+          "visibility": "private"
+        },
+        {
+          "name": "httpClient",
+          "type": "DefaultHttpClient",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "get",
+          "parameters": "context, url, params, handler",
+          "returns": "RequestHandle",
+          "visibility": "public"
+        },
+        {
+          "name": "post",
+          "parameters": "context, url, params, handler",
+          "returns": "RequestHandle",
+          "visibility": "public"
+        },
+        {
+          "name": "sendRequest",
+          "parameters": "client, ctx, req, type, handler, context",
+          "returns": "RequestHandle",
+          "visibility": "protected"
+        },
+        {
+          "name": "cancelRequests",
+          "parameters": "context: Context, mayInterrupt: boolean",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/loopj/android/http/AsyncHttpClient.java",
+          "line": 115,
+          "end_line": 131
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/AsyncHttpClient.java",
+          "line": 184,
+          "end_line": 203
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/AsyncHttpClient.java",
+          "line": 1534,
+          "end_line": 1566
+        }
+      ]
+    },
+    {
+      "id": "response_handler_interface",
+      "label": "ResponseHandlerInterface",
+      "kind": "interface",
+      "sublabel": "请求生命周期回调协议",
+      "row": 0,
+      "col": 2,
+      "methods": [
+        {
+          "name": "sendResponseMessage",
+          "parameters": "response: HttpResponse",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "sendSuccessMessage",
+          "parameters": "code, headers, body",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "sendFailureMessage",
+          "parameters": "code, headers, body, error",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "sendProgressMessage",
+          "parameters": "written: long, total: long",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/loopj/android/http/ResponseHandlerInterface.java",
+          "line": 30,
+          "end_line": 38
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/ResponseHandlerInterface.java",
+          "line": 56,
+          "end_line": 80
+        }
+      ]
+    },
+    {
+      "id": "sync_client",
+      "label": "SyncHttpClient",
+      "kind": "class",
+      "sublabel": "直接在调用线程执行",
+      "row": 1,
+      "col": 0,
+      "methods": [
+        {
+          "name": "sendRequest",
+          "parameters": "client, ctx, req, type, handler, context",
+          "returns": "RequestHandle",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/loopj/android/http/SyncHttpClient.java",
+          "line": 33,
+          "end_line": 41
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/SyncHttpClient.java",
+          "line": 82,
+          "end_line": 100
+        }
+      ]
+    },
+    {
+      "id": "request_params",
+      "label": "RequestParams",
+      "kind": "class",
+      "sublabel": "参数集合转 HttpEntity",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "urlParams",
+          "type": "ConcurrentSkipListMap<String, String>",
+          "visibility": "protected"
+        },
+        {
+          "name": "streamParams",
+          "type": "ConcurrentSkipListMap<String, StreamWrapper>",
+          "visibility": "protected"
+        },
+        {
+          "name": "fileParams",
+          "type": "ConcurrentSkipListMap<String, FileWrapper>",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "put",
+          "parameters": "key: String, value: String",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getEntity",
+          "parameters": "progressHandler: ResponseHandlerInterface",
+          "returns": "HttpEntity",
+          "visibility": "public"
+        },
+        {
+          "name": "createMultipartEntity",
+          "parameters": "progressHandler",
+          "returns": "HttpEntity",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/loopj/android/http/RequestParams.java",
+          "line": 94,
+          "end_line": 113
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/RequestParams.java",
+          "line": 517,
+          "end_line": 533
+        }
+      ]
+    },
+    {
+      "id": "response_handler",
+      "label": "AsyncHttpResponseHandler",
+      "kind": "abstract",
+      "sublabel": "把结果编成 Message 投给 Looper",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "handler",
+          "type": "Handler",
+          "visibility": "private"
+        },
+        {
+          "name": "useSynchronousMode",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "usePoolThread",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onSuccess",
+          "parameters": "code, headers, body",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onFailure",
+          "parameters": "code, headers, body, error",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "handleMessage",
+          "parameters": "msg: Message",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "sendResponseMessage",
+          "parameters": "response: HttpResponse",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/loopj/android/http/AsyncHttpResponseHandler.java",
+          "line": 83,
+          "end_line": 107
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/AsyncHttpResponseHandler.java",
+          "line": 346,
+          "end_line": 400
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/AsyncHttpResponseHandler.java",
+          "line": 440,
+          "end_line": 462
+        }
+      ]
+    },
+    {
+      "id": "request_handle",
+      "label": "RequestHandle",
+      "kind": "class",
+      "sublabel": "取消用的弱引用句柄",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "request",
+          "type": "WeakReference<AsyncHttpRequest>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "cancel",
+          "parameters": "mayInterruptIfRunning: boolean",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "isCancelled",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "setTag",
+          "parameters": "tag: Object",
+          "returns": "RequestHandle",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/loopj/android/http/RequestHandle.java",
+          "line": 28,
+          "end_line": 35
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/RequestHandle.java",
+          "line": 51,
+          "end_line": 75
+        }
+      ]
+    },
+    {
+      "id": "async_request",
+      "label": "AsyncHttpRequest",
+      "kind": "class",
+      "sublabel": "一次请求的 Runnable 执行体",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "responseHandler",
+          "type": "ResponseHandlerInterface",
+          "visibility": "private"
+        },
+        {
+          "name": "isCancelled",
+          "type": "AtomicBoolean",
+          "visibility": "private"
+        },
+        {
+          "name": "isFinished",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "run",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "makeRequest",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "makeRequestWithRetries",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "cancel",
+          "parameters": "mayInterruptIfRunning: boolean",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/loopj/android/http/AsyncHttpRequest.java",
+          "line": 35,
+          "end_line": 50
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/AsyncHttpRequest.java",
+          "line": 84,
+          "end_line": 129
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/AsyncHttpRequest.java",
+          "line": 170,
+          "end_line": 210
+        }
+      ]
+    },
+    {
+      "id": "text_handler",
+      "label": "TextHttpResponseHandler",
+      "kind": "abstract",
+      "sublabel": "把字节按字符集转字符串",
+      "row": 2,
+      "col": 2,
+      "methods": [
+        {
+          "name": "onSuccess",
+          "parameters": "code, headers, response: String",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onFailure",
+          "parameters": "code, headers, response, throwable",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/loopj/android/http/TextHttpResponseHandler.java",
+          "line": 56,
+          "end_line": 60
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/TextHttpResponseHandler.java",
+          "line": 117,
+          "end_line": 125
+        }
+      ]
+    },
+    {
+      "id": "json_handler",
+      "label": "JsonHttpResponseHandler",
+      "kind": "class",
+      "sublabel": "按 JSONObject / JSONArray 回调",
+      "row": 3,
+      "col": 2,
+      "methods": [
+        {
+          "name": "onSuccess",
+          "parameters": "code, headers, response: JSONObject",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onFailure",
+          "parameters": "code, headers, throwable, error: JSONObject",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/loopj/android/http/JsonHttpResponseHandler.java",
+          "line": 37,
+          "end_line": 40
+        },
+        {
+          "path": "library/src/main/java/com/loopj/android/http/JsonHttpResponseHandler.java",
+          "line": 88,
+          "end_line": 99
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "sync_extends",
+      "from": "sync_client",
+      "to": "async_client",
+      "kind": "inheritance",
+      "label": "extends"
+    },
+    {
+      "id": "client_creates_request",
+      "from": "async_client",
+      "to": "async_request",
+      "kind": "dependency",
+      "label": "newAsyncHttpRequest"
+    },
+    {
+      "id": "client_uses_params",
+      "from": "async_client",
+      "to": "request_params",
+      "kind": "dependency",
+      "label": "paramsToEntity"
+    },
+    {
+      "id": "client_sets_retry",
+      "from": "async_client",
+      "to": "retry_handler",
+      "kind": "association",
+      "label": "装配重试"
+    },
+    {
+      "id": "client_takes_handler",
+      "from": "async_client",
+      "to": "response_handler_interface",
+      "kind": "dependency",
+      "label": "回调入口"
+    },
+    {
+      "id": "request_holds_handler",
+      "from": "async_request",
+      "to": "response_handler_interface",
+      "kind": "association",
+      "label": "持有"
+    },
+    {
+      "id": "request_asks_retry",
+      "from": "async_request",
+      "to": "retry_handler",
+      "kind": "dependency",
+      "label": "取策略"
+    },
+    {
+      "id": "handler_implements",
+      "from": "response_handler",
+      "to": "response_handler_interface",
+      "kind": "realization"
+    },
+    {
+      "id": "text_extends",
+      "from": "text_handler",
+      "to": "response_handler",
+      "kind": "inheritance",
+      "label": "extends"
+    },
+    {
+      "id": "json_extends",
+      "from": "json_handler",
+      "to": "text_handler",
+      "kind": "inheritance",
+      "label": "extends"
+    },
+    {
+      "id": "handle_weakref",
+      "from": "request_handle",
+      "to": "async_request",
+      "kind": "association",
+      "label": "弱引用"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "一次请求的生命周期",
+      "items": [
+        "get/post 等便捷方法统一落到 sendRequest：校验 handler、补 Content-Type、newAsyncHttpRequest 后 threadPool.submit",
+        "RequestHandle 用 WeakReference 持有 Runnable，cancel 只置标志并 abort 请求，避免调用方泄漏"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "两级线程模型",
+      "items": [
+        "请求线程来自 Executors.newCachedThreadPool，阻塞点全在 AsyncHttpRequest.run 内",
+        "ResponseHandler 默认绑定创建时的 Looper，用 ResponderHandler 把 onSuccess/onFailure 切回线程"
+      ]
+    }
+  ]
+}
