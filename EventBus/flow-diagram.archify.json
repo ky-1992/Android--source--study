@@ -1,0 +1,195 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "EventBus 注册与事件投递主流程",
+    "subtitle": "getDefault 构建总线，register 解析并登记订阅，post 之后按 ThreadMode 选择直调或 Poster 排队。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/08-EventBus/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/greenrobot/EventBus",
+      "provider": "github",
+      "revision": "0194926b3bcf70cc0d7bfd3c5da16708dd5ab876"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "core", "label": "总线核心" },
+    { "id": "dispatch", "label": "线程分发" }
+  ],
+  "phases": [
+    { "id": "init", "label": "初始化", "fromCol": 0, "toCol": 1 },
+    { "id": "register", "label": "注册", "fromCol": 2, "toCol": 3 },
+    { "id": "post", "label": "投递", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "app_init",
+    "bus_build",
+    "find_methods",
+    "subscribe",
+    "post_call",
+    "post_single",
+    "dispatch",
+    "poster",
+    "invoke"
+  ],
+  "nodes": [
+    {
+      "id": "app_init",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "获取单例",
+      "sublabel": "getDefault",
+      "width": 148,
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBus.java", "line": 82, "end_line": 93 }
+      ]
+    },
+    {
+      "id": "bus_build",
+      "lane": "core",
+      "col": 1,
+      "type": "backend",
+      "label": "构建总线",
+      "sublabel": "builder 装配",
+      "width": 148,
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBusBuilder.java", "line": 188, "end_line": 191 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBus.java", "line": 113, "end_line": 132 }
+      ]
+    },
+    {
+      "id": "find_methods",
+      "lane": "core",
+      "col": 2,
+      "type": "backend",
+      "label": "扫描方法",
+      "sublabel": "反射 + 缓存",
+      "width": 156,
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/SubscriberMethodFinder.java", "line": 55, "end_line": 73 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/SubscriberMethodFinder.java", "line": 150, "end_line": 195 }
+      ]
+    },
+    {
+      "id": "subscribe",
+      "lane": "core",
+      "col": 3,
+      "type": "backend",
+      "label": "写入订阅表",
+      "sublabel": "按优先级排序",
+      "width": 156,
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBus.java", "line": 159, "end_line": 207 }
+      ]
+    },
+    {
+      "id": "post_call",
+      "lane": "app",
+      "col": 3,
+      "type": "external",
+      "label": "发布事件",
+      "sublabel": "post(event)",
+      "width": 148,
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBus.java", "line": 262, "end_line": 282 }
+      ]
+    },
+    {
+      "id": "post_single",
+      "lane": "core",
+      "col": 4,
+      "type": "backend",
+      "label": "匹配订阅",
+      "sublabel": "postSingleEvent",
+      "width": 156,
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBus.java", "line": 386, "end_line": 435 }
+      ]
+    },
+    {
+      "id": "dispatch",
+      "lane": "dispatch",
+      "col": 4,
+      "type": "messagebus",
+      "label": "按线程分发",
+      "sublabel": "ThreadMode",
+      "width": 152,
+      "yOffset": -96,
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBus.java", "line": 437, "end_line": 470 }
+      ]
+    },
+    {
+      "id": "poster",
+      "lane": "dispatch",
+      "col": 4,
+      "type": "messagebus",
+      "label": "Poster 入队",
+      "sublabel": "队列 + 线程",
+      "width": 152,
+      "yOffset": 0,
+      "sources": [
+        { "path": "eventbus-android/src/main/java/org/greenrobot/eventbus/HandlerPoster.java", "line": 37, "end_line": 48 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/BackgroundPoster.java", "line": 37, "end_line": 46 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/AsyncPoster.java", "line": 34, "end_line": 38 }
+      ]
+    },
+    {
+      "id": "invoke",
+      "lane": "dispatch",
+      "col": 4,
+      "type": "backend",
+      "label": "反射调用",
+      "sublabel": "invokeSubscriber",
+      "width": 156,
+      "yOffset": 96,
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBus.java", "line": 506, "end_line": 523 }
+      ]
+    },
+    {
+      "id": "unregister",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "注销订阅",
+      "sublabel": "active=false",
+      "width": 148,
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBus.java", "line": 248, "end_line": 259 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_init_build", "from": "app_init", "to": "bus_build", "label": "初始化" },
+    { "id": "e_build_find", "from": "bus_build", "to": "find_methods", "label": "register" },
+    { "id": "e_find_subscribe", "from": "find_methods", "to": "subscribe", "label": "方法列表" },
+    { "id": "e_subscribe_post", "from": "subscribe", "to": "post_call", "label": "注册完成" },
+    { "id": "e_post_single", "from": "post_call", "to": "post_single", "label": "post" },
+    { "id": "e_single_dispatch", "from": "post_single", "to": "dispatch", "label": "逐订阅" },
+    { "id": "e_dispatch_poster", "from": "dispatch", "to": "poster", "label": "MAIN / BACKGROUND" },
+    { "id": "e_poster_invoke", "from": "poster", "to": "invoke", "label": "出队" },
+    { "id": "e_post_unregister", "from": "post_call", "to": "unregister", "label": "生命周期结束", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "ThreadMode 规则",
+      "items": [
+        "POSTING 在发布线程直接 invokeSubscriber，零线程切换",
+        "MAIN / MAIN_ORDERED 交给 HandlerPoster 回主线程；BACKGROUND / ASYNC 交给线程池 Poster"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "注册与注销",
+      "items": [
+        "findSubscriberMethods 的结果按订阅者类缓存在 METHOD_CACHE",
+        "unregister 把 Subscription.active 置 false，已入队事件在 invokeSubscriber 被跳过"
+      ]
+    }
+  ]
+}

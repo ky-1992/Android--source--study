@@ -1,0 +1,267 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "EventBus 核心类型结构",
+    "subtitle": "EventBus 持有订阅表与三种 Poster；注册路径由 SubscriberMethodFinder 解析注解方法。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/08-EventBus/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/greenrobot/EventBus",
+      "provider": "github",
+      "revision": "0194926b3bcf70cc0d7bfd3c5da16708dd5ab876"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "eventbus",
+      "label": "EventBus",
+      "kind": "class",
+      "sublabel": "总线程与订阅表的门面",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "TAG", "type": "String", "visibility": "public", "static": true },
+        { "name": "defaultInstance", "type": "EventBus", "visibility": "package", "static": true },
+        { "name": "subscriptionsByEventType", "type": "Map<Class<?>, CopyOnWriteArrayList<Subscription>>", "visibility": "private" },
+        { "name": "typesBySubscriber", "type": "Map<Object, List<Class<?>>>", "visibility": "private" },
+        { "name": "stickyEvents", "type": "Map<Class<?>, Object>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "getDefault", "parameters": "", "returns": "EventBus", "visibility": "public", "static": true },
+        { "name": "builder", "parameters": "", "returns": "EventBusBuilder", "visibility": "public", "static": true },
+        { "name": "register", "parameters": "subscriber: Object", "returns": "void", "visibility": "public" },
+        { "name": "unregister", "parameters": "subscriber: Object", "returns": "void", "visibility": "public" },
+        { "name": "post", "parameters": "event: Object", "returns": "void", "visibility": "public" },
+        { "name": "postToSubscription", "parameters": "subscription, event, isMainThread", "returns": "void", "visibility": "private" },
+        { "name": "invokeSubscriber", "parameters": "pendingPost: PendingPost", "returns": "void", "visibility": "package" }
+      ],
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBus.java", "line": 41, "end_line": 60 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBus.java", "line": 142, "end_line": 156 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBus.java", "line": 437, "end_line": 470 }
+      ]
+    },
+    {
+      "id": "eventbus_builder",
+      "label": "EventBusBuilder",
+      "kind": "class",
+      "sublabel": "构造配置与默认实例",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "logSubscriberExceptions", "type": "boolean", "visibility": "package" },
+        { "name": "eventInheritance", "type": "boolean", "visibility": "package" },
+        { "name": "executorService", "type": "ExecutorService", "visibility": "package" },
+        { "name": "subscriberInfoIndexes", "type": "List<SubscriberInfoIndex>", "visibility": "package" }
+      ],
+      "methods": [
+        { "name": "build", "parameters": "", "returns": "EventBus", "visibility": "public" },
+        { "name": "installDefaultEventBus", "parameters": "", "returns": "EventBus", "visibility": "public" },
+        { "name": "addIndex", "parameters": "index: SubscriberInfoIndex", "returns": "EventBusBuilder", "visibility": "public" },
+        { "name": "getMainThreadSupport", "parameters": "", "returns": "MainThreadSupport", "visibility": "package" }
+      ],
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBusBuilder.java", "line": 30, "end_line": 48 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/EventBusBuilder.java", "line": 161, "end_line": 191 }
+      ]
+    },
+    {
+      "id": "subscriber_method_finder",
+      "label": "SubscriberMethodFinder",
+      "kind": "class",
+      "sublabel": "反射解析 @Subscribe 方法",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        { "name": "METHOD_CACHE", "type": "Map<Class<?>, List<SubscriberMethod>>", "visibility": "private", "static": true },
+        { "name": "subscriberInfoIndexes", "type": "List<SubscriberInfoIndex>", "visibility": "private" },
+        { "name": "ignoreGeneratedIndex", "type": "boolean", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "findSubscriberMethods", "parameters": "subscriberClass: Class<?>", "returns": "List<SubscriberMethod>", "visibility": "package" },
+        { "name": "findUsingInfo", "parameters": "subscriberClass: Class<?>", "returns": "List<SubscriberMethod>", "visibility": "private" },
+        { "name": "findUsingReflection", "parameters": "subscriberClass: Class<?>", "returns": "List<SubscriberMethod>", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/SubscriberMethodFinder.java", "line": 29, "end_line": 46 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/SubscriberMethodFinder.java", "line": 55, "end_line": 73 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/SubscriberMethodFinder.java", "line": 150, "end_line": 195 }
+      ]
+    },
+    {
+      "id": "subscriber_method",
+      "label": "SubscriberMethod",
+      "kind": "class",
+      "sublabel": "一个注解方法的元数据",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        { "name": "method", "type": "Method", "visibility": "package" },
+        { "name": "threadMode", "type": "ThreadMode", "visibility": "package" },
+        { "name": "eventType", "type": "Class<?>", "visibility": "package" },
+        { "name": "priority", "type": "int", "visibility": "package" },
+        { "name": "sticky", "type": "boolean", "visibility": "package" }
+      ],
+      "methods": [
+        { "name": "equals", "parameters": "other: Object", "returns": "boolean", "visibility": "public" },
+        { "name": "checkMethodString", "parameters": "", "returns": "void", "visibility": "private" },
+        { "name": "hashCode", "parameters": "", "returns": "int", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/SubscriberMethod.java", "line": 21, "end_line": 36 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/SubscriberMethod.java", "line": 38, "end_line": 62 }
+      ]
+    },
+    {
+      "id": "subscription",
+      "label": "Subscription",
+      "kind": "class",
+      "sublabel": "订阅者与方法的绑定",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "subscriber", "type": "Object", "visibility": "package" },
+        { "name": "subscriberMethod", "type": "SubscriberMethod", "visibility": "package" },
+        { "name": "active", "type": "volatile boolean", "visibility": "package" }
+      ],
+      "methods": [
+        { "name": "equals", "parameters": "other: Object", "returns": "boolean", "visibility": "public" },
+        { "name": "hashCode", "parameters": "", "returns": "int", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/Subscription.java", "line": 18, "end_line": 47 }
+      ]
+    },
+    {
+      "id": "thread_mode",
+      "label": "ThreadMode",
+      "kind": "enum",
+      "sublabel": "订阅方法的目标线程",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        { "name": "POSTING" },
+        { "name": "MAIN" },
+        { "name": "MAIN_ORDERED" },
+        { "name": "BACKGROUND" },
+        { "name": "ASYNC" }
+      ],
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/ThreadMode.java", "line": 24, "end_line": 67 }
+      ]
+    },
+    {
+      "id": "poster",
+      "label": "Poster",
+      "kind": "interface",
+      "sublabel": "按订阅投递事件的抽象",
+      "row": 2,
+      "col": 2,
+      "methods": [
+        { "name": "enqueue", "parameters": "subscription: Subscription, event: Object", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/Poster.java", "line": 23, "end_line": 31 }
+      ]
+    },
+    {
+      "id": "handler_poster",
+      "label": "HandlerPoster",
+      "kind": "class",
+      "sublabel": "主线程 Handler 投递",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        { "name": "queue", "type": "PendingPostQueue", "visibility": "private" },
+        { "name": "maxMillisInsideHandleMessage", "type": "int", "visibility": "private" },
+        { "name": "handlerActive", "type": "boolean", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "enqueue", "parameters": "subscription, event", "returns": "void", "visibility": "public" },
+        { "name": "handleMessage", "parameters": "msg: Message", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "eventbus-android/src/main/java/org/greenrobot/eventbus/HandlerPoster.java", "line": 23, "end_line": 48 },
+        { "path": "eventbus-android/src/main/java/org/greenrobot/eventbus/HandlerPoster.java", "line": 50, "end_line": 80 }
+      ]
+    },
+    {
+      "id": "background_poster",
+      "label": "BackgroundPoster",
+      "kind": "class",
+      "sublabel": "单线程串行后台投递",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        { "name": "queue", "type": "PendingPostQueue", "visibility": "private" },
+        { "name": "executorRunning", "type": "volatile boolean", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "enqueue", "parameters": "subscription, event", "returns": "void", "visibility": "public" },
+        { "name": "run", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/BackgroundPoster.java", "line": 25, "end_line": 46 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/BackgroundPoster.java", "line": 48, "end_line": 72 }
+      ]
+    },
+    {
+      "id": "pending_post",
+      "label": "PendingPost",
+      "kind": "class",
+      "sublabel": "池化的投递节点与链表",
+      "row": 4,
+      "col": 1,
+      "attributes": [
+        { "name": "pendingPostPool", "type": "List<PendingPost>", "visibility": "private", "static": true },
+        { "name": "event", "type": "Object", "visibility": "package" },
+        { "name": "subscription", "type": "Subscription", "visibility": "package" },
+        { "name": "next", "type": "PendingPost", "visibility": "package" }
+      ],
+      "methods": [
+        { "name": "obtainPendingPost", "parameters": "subscription, event", "returns": "PendingPost", "visibility": "package", "static": true },
+        { "name": "releasePendingPost", "parameters": "pendingPost: PendingPost", "returns": "void", "visibility": "package", "static": true }
+      ],
+      "sources": [
+        { "path": "EventBus/src/org/greenrobot/eventbus/PendingPost.java", "line": 21, "end_line": 45 },
+        { "path": "EventBus/src/org/greenrobot/eventbus/PendingPost.java", "line": 47, "end_line": 57 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "builds_bus", "from": "eventbus_builder", "to": "eventbus", "kind": "dependency", "label": "build()" },
+    { "id": "owns_finder", "from": "eventbus", "to": "subscriber_method_finder", "kind": "composition", "label": "持有" },
+    { "id": "owns_subscriptions", "from": "eventbus", "to": "subscription", "kind": "aggregation", "label": "订阅表" },
+    { "id": "uses_poster", "from": "eventbus", "to": "poster", "kind": "aggregation", "label": "持有" },
+    { "id": "finder_creates_method", "from": "subscriber_method_finder", "to": "subscriber_method", "kind": "composition", "label": "解析生成" },
+    { "id": "subscription_holds_method", "from": "subscription", "to": "subscriber_method", "kind": "association", "label": "持有" },
+    { "id": "method_has_mode", "from": "subscriber_method", "to": "thread_mode", "kind": "association", "label": "threadMode" },
+    { "id": "handler_implements", "from": "handler_poster", "to": "poster", "kind": "realization" },
+    { "id": "background_implements", "from": "background_poster", "to": "poster", "kind": "realization" },
+    { "id": "handler_obtains_post", "from": "handler_poster", "to": "pending_post", "kind": "dependency", "label": "obtain" },
+    { "id": "background_obtains_post", "from": "background_poster", "to": "pending_post", "kind": "dependency", "label": "obtain" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "注册路径",
+      "items": [
+        "register 先向 SubscriberMethodFinder 取方法列表，再在 synchronized 块内逐个 subscribe",
+        "subscribe 按 priority 插入 CopyOnWriteArrayList，并让 sticky 订阅补收最近事件"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "投递路径",
+      "items": [
+        "post 之后的 postToSubscription 按 ThreadMode 选择直调或 Poster 入队",
+        "Subscription.active 为 volatile，unregister 置 false 后已入队的事件会被跳过"
+      ]
+    }
+  ]
+}

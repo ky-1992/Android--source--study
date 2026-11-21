@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "fecab6b8-943d-4122-8e85-a8ea91e3ca0f",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/08-EventBus/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/08-EventBus/flow-diagram.html",
+  "specification": {
+    "sha256": "cdcf5bf4fa7b13cc6865725761f3047dd879a9d8b2ea88a4d95cf832051bc2fc",
+    "bytes": 6370
+  },
+  "artifact": {
+    "sha256": "759e35f74693afe93ee6cb9d00bea1440052c9fe6bf7b57082ccd801715788fc",
+    "bytes": 848725
+  }
+}
