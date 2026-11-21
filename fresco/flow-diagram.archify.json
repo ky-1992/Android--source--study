@@ -1,0 +1,180 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Fresco 解码取图主流程",
+    "subtitle": "ImageRequest 进入 ImagePipeline 后按 URI 类型组装 Producer 链：位图缓存、解码、磁盘缓存、网络依次兜底，最终交给 Drawee 显示。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/12-fresco/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/facebook/fresco",
+      "provider": "github",
+      "revision": "c35022415ffd9bebbc0f68e0f0c6281c44e26c11"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "pipe", "label": "管道编排" },
+    { "id": "prod", "label": "生产者链" },
+    { "id": "cache", "label": "缓存与网络" },
+    { "id": "view", "label": "显示层" }
+  ],
+  "phases": [
+    { "id": "submit", "label": "构造与提交", "fromCol": 0, "toCol": 1 },
+    { "id": "chain", "label": "选链与查缓存", "fromCol": 2, "toCol": 2 },
+    { "id": "fetch", "label": "解码与缓存读取", "fromCol": 3, "toCol": 3 },
+    { "id": "show", "label": "拉取与显示", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "n_build",
+    "n_fetch",
+    "n_seq",
+    "n_bmpget",
+    "n_decode",
+    "n_disk",
+    "n_net",
+    "n_drawee"
+  ],
+  "nodes": [
+    {
+      "id": "n_build",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "构造请求",
+      "sublabel": "ImageRequest",
+      "width": 148,
+      "sources": [
+        { "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/request/ImageRequestBuilder.java", "line": 518, "end_line": 521 },
+        { "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/request/ImageRequest.java", "line": 152, "end_line": 154 }
+      ]
+    },
+    {
+      "id": "n_fetch",
+      "lane": "pipe",
+      "col": 1,
+      "type": "backend",
+      "label": "提交解码请求",
+      "sublabel": "解码请求",
+      "width": 152,
+      "sources": [
+        { "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/core/ImagePipeline.kt", "line": 358, "end_line": 390 }
+      ]
+    },
+    {
+      "id": "n_seq",
+      "lane": "pipe",
+      "col": 2,
+      "type": "backend",
+      "label": "编排生产者链",
+      "sublabel": "选链工厂",
+      "width": 156,
+      "sources": [
+        { "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/core/ProducerSequenceFactory.kt", "line": 185, "end_line": 202 }
+      ]
+    },
+    {
+      "id": "n_bmpget",
+      "lane": "prod",
+      "col": 2,
+      "type": "messagebus",
+      "label": "查位图缓存",
+      "sublabel": "BitmapCache",
+      "width": 148,
+      "sources": [
+        { "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/BitmapMemoryCacheGetProducer.kt", "line": 17, "end_line": 29 },
+        { "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/BitmapMemoryCacheProducer.java", "line": 47, "end_line": 88 }
+      ]
+    },
+    {
+      "id": "n_hit",
+      "lane": "view",
+      "col": 2,
+      "type": "frontend",
+      "label": "缓存命中直达",
+      "sublabel": "shortcut",
+      "width": 140,
+      "sources": [
+        { "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/BitmapMemoryCacheProducer.java", "line": 66, "end_line": 88 }
+      ]
+    },
+    {
+      "id": "n_decode",
+      "lane": "prod",
+      "col": 3,
+      "type": "messagebus",
+      "label": "增量解码",
+      "sublabel": "DecodeProducer",
+      "width": 152,
+      "sources": [
+        { "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/DecodeProducer.kt", "line": 74, "end_line": 105 }
+      ]
+    },
+    {
+      "id": "n_disk",
+      "lane": "cache",
+      "col": 3,
+      "type": "database",
+      "label": "读磁盘缓存",
+      "sublabel": "DiskCacheRead",
+      "width": 148,
+      "sources": [
+        { "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/DiskCacheReadProducer.java", "line": 65, "end_line": 110 }
+      ]
+    },
+    {
+      "id": "n_net",
+      "lane": "cache",
+      "col": 4,
+      "type": "external",
+      "label": "网络拉取",
+      "sublabel": "NetworkFetch",
+      "width": 148,
+      "sources": [
+        { "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/NetworkFetchProducer.java", "line": 68, "end_line": 96 }
+      ]
+    },
+    {
+      "id": "n_drawee",
+      "lane": "view",
+      "col": 4,
+      "type": "frontend",
+      "label": "显示到视图",
+      "sublabel": "DraweeView",
+      "width": 148,
+      "sources": [
+        { "path": "drawee/src/main/java/com/facebook/drawee/controller/AbstractDraweeController.java", "line": 503, "end_line": 546 },
+        { "path": "drawee/src/main/java/com/facebook/drawee/controller/AbstractDraweeController.java", "line": 584, "end_line": 600 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_build_fetch", "from": "n_build", "to": "n_fetch", "label": "fetch" },
+    { "id": "e_fetch_seq", "from": "n_fetch", "to": "n_seq", "label": "选序列" },
+    { "id": "e_seq_bmpget", "from": "n_seq", "to": "n_bmpget", "label": "produce" },
+    { "id": "e_bmpget_decode", "from": "n_bmpget", "to": "n_decode", "label": "未命中" },
+    { "id": "e_decode_disk", "from": "n_decode", "to": "n_disk", "label": "请求编码图" },
+    { "id": "e_disk_net", "from": "n_disk", "to": "n_net", "label": "磁盘未命中" },
+    { "id": "e_net_drawee", "from": "n_net", "to": "n_drawee", "label": "结果回传" },
+    { "id": "e_bmpget_hit", "from": "n_bmpget", "to": "n_hit", "label": "命中", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "链的组装顺序",
+      "items": [
+        "networkFetchSequence = 位图缓存读取 → 线程切换 → 位图缓存 → 解码 → 编码缓存 → 磁盘缓存 → 网络抓取",
+        "ProducerSequenceFactory 按 SourceUriType 选链，本地文件、content、asset 各有独立序列"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "结果如何回到 UI",
+      "items": [
+        "ImagePipeline.submitFetchRequest 用 CloseableProducerToDataSourceAdapter 把 Producer 回调转成 DataSource",
+        "AbstractDraweeController.submitRequest 订阅 DataSource，onNewResultInternal 把 image 交给 DraweeHierarchy"
+      ]
+    }
+  ]
+}

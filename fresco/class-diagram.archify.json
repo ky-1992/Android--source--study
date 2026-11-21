@@ -1,0 +1,710 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Fresco ImagePipeline 核心类型结构",
+    "subtitle": "ImagePipeline 按 ImageRequest 选择生产者链；Producer 逐级 produceResults，结果经 DataSource 交给 DraweeController 显示。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/12-fresco/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/facebook/fresco",
+      "provider": "github",
+      "revision": "c35022415ffd9bebbc0f68e0f0c6281c44e26c11"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "producer",
+      "label": "Producer",
+      "kind": "interface",
+      "sublabel": "单个取图任务",
+      "row": 0,
+      "col": 1,
+      "methods": [
+        {
+          "name": "produceResults",
+          "parameters": "consumer: Consumer<T>, context: ProducerContext",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/Producer.kt",
+          "line": 21,
+          "end_line": 30
+        }
+      ]
+    },
+    {
+      "id": "consumer",
+      "label": "Consumer",
+      "kind": "interface",
+      "sublabel": "结果回调接口",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        {
+          "name": "onNewResult",
+          "parameters": "newResult: T?, status: Int",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onFailure",
+          "parameters": "t: Throwable?",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onCancellation",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onProgressUpdate",
+          "parameters": "progress: Float",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/Consumer.kt",
+          "line": 33,
+          "end_line": 71
+        }
+      ]
+    },
+    {
+      "id": "producer_context",
+      "label": "ProducerContext",
+      "kind": "interface",
+      "sublabel": "请求上下文与取消",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "imageRequest",
+          "type": "ImageRequest",
+          "visibility": "public"
+        },
+        {
+          "name": "id",
+          "type": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "producerListener",
+          "type": "ProducerListener2",
+          "visibility": "public"
+        },
+        {
+          "name": "lowestPermittedRequestLevel",
+          "type": "ImageRequest.RequestLevel",
+          "visibility": "public"
+        },
+        {
+          "name": "isPrefetch",
+          "type": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "priority",
+          "type": "Priority",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "addCallbacks",
+          "parameters": "callbacks: ProducerContextCallbacks",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "putOriginExtra",
+          "parameters": "origin: String?",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/ProducerContext.kt",
+          "line": 26,
+          "end_line": 76
+        }
+      ]
+    },
+    {
+      "id": "decode_producer",
+      "label": "DecodeProducer",
+      "kind": "class",
+      "sublabel": "编码图解码为位图",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "byteArrayPool",
+          "type": "ByteArrayPool",
+          "visibility": "public"
+        },
+        {
+          "name": "executor",
+          "type": "Executor",
+          "visibility": "public"
+        },
+        {
+          "name": "imageDecoder",
+          "type": "ImageDecoder",
+          "visibility": "public"
+        },
+        {
+          "name": "downsampleEnabledForNetwork",
+          "type": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "inputProducer",
+          "type": "Producer<EncodedImage>",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "produceResults",
+          "parameters": "consumer: Consumer<CloseableReference<CloseableImage>>, context: ProducerContext",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/DecodeProducer.kt",
+          "line": 50,
+          "end_line": 72
+        },
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/DecodeProducer.kt",
+          "line": 74,
+          "end_line": 105
+        }
+      ]
+    },
+    {
+      "id": "bitmap_cache_producer",
+      "label": "BitmapMemoryCacheProducer",
+      "kind": "class",
+      "sublabel": "位图内存缓存读写",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "PRODUCER_NAME",
+          "type": "String",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "mMemoryCache",
+          "type": "MemoryCache<CacheKey, CloseableImage>",
+          "visibility": "private"
+        },
+        {
+          "name": "mCacheKeyFactory",
+          "type": "CacheKeyFactory",
+          "visibility": "private"
+        },
+        {
+          "name": "mInputProducer",
+          "type": "Producer<CloseableReference<CloseableImage>>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "produceResults",
+          "parameters": "consumer: Consumer<CloseableReference<CloseableImage>>, producerContext: ProducerContext",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/BitmapMemoryCacheProducer.java",
+          "line": 25,
+          "end_line": 45
+        },
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/BitmapMemoryCacheProducer.java",
+          "line": 47,
+          "end_line": 48
+        }
+      ]
+    },
+    {
+      "id": "network_fetch_producer",
+      "label": "NetworkFetchProducer",
+      "kind": "class",
+      "sublabel": "网络拉取编码图",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "PRODUCER_NAME",
+          "type": "String",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "READ_SIZE",
+          "type": "int",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "mPooledByteBufferFactory",
+          "type": "PooledByteBufferFactory",
+          "visibility": "protected"
+        },
+        {
+          "name": "mByteArrayPool",
+          "type": "ByteArrayPool",
+          "visibility": "private"
+        },
+        {
+          "name": "mNetworkFetcher",
+          "type": "NetworkFetcher",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "produceResults",
+          "parameters": "consumer: Consumer<EncodedImage>, context: ProducerContext",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onResponse",
+          "parameters": "fetchState: FetchState, responseData: InputStream, responseContentLength: Int",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/NetworkFetchProducer.java",
+          "line": 41,
+          "end_line": 66
+        },
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/NetworkFetchProducer.java",
+          "line": 68,
+          "end_line": 96
+        },
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/NetworkFetchProducer.java",
+          "line": 97,
+          "end_line": 99
+        }
+      ]
+    },
+    {
+      "id": "bitmap_cache_get",
+      "label": "BitmapMemoryCacheGetProducer",
+      "kind": "class",
+      "sublabel": "只读位图缓存命中",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "PRODUCER_NAME",
+          "type": "String",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "wrapConsumer",
+          "parameters": "consumer, cacheKey: CacheKey, isMemoryCacheEnabled: Boolean",
+          "returns": "Consumer<CloseableReference<CloseableImage>>",
+          "visibility": "public"
+        },
+        {
+          "name": "getProducerName",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/producers/BitmapMemoryCacheGetProducer.kt",
+          "line": 17,
+          "end_line": 39
+        }
+      ]
+    },
+    {
+      "id": "sequence_factory",
+      "label": "ProducerSequenceFactory",
+      "kind": "class",
+      "sublabel": "按请求组装生产者链",
+      "row": 3,
+      "col": 1,
+      "methods": [
+        {
+          "name": "getDecodedImageProducerSequence",
+          "parameters": "imageRequest: ImageRequest",
+          "returns": "Producer<CloseableReference<CloseableImage>>",
+          "visibility": "public"
+        },
+        {
+          "name": "getDefaultBasicDecodedImageSequence",
+          "parameters": "imageRequest: ImageRequest",
+          "returns": "Producer<CloseableReference<CloseableImage>>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/core/ProducerSequenceFactory.kt",
+          "line": 34,
+          "end_line": 60
+        },
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/core/ProducerSequenceFactory.kt",
+          "line": 185,
+          "end_line": 202
+        },
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/core/ProducerSequenceFactory.kt",
+          "line": 221,
+          "end_line": 236
+        }
+      ]
+    },
+    {
+      "id": "image_request",
+      "label": "ImageRequest",
+      "kind": "class",
+      "sublabel": "一次取图的全部参数",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mCacheChoice",
+          "type": "CacheChoice",
+          "visibility": "private"
+        },
+        {
+          "name": "mSourceUri",
+          "type": "Uri",
+          "visibility": "private"
+        },
+        {
+          "name": "mSourceUriType",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mResizeOptions",
+          "type": "ResizeOptions",
+          "visibility": "private"
+        },
+        {
+          "name": "mRotationOptions",
+          "type": "RotationOptions",
+          "visibility": "private"
+        },
+        {
+          "name": "mRequestPriority",
+          "type": "Priority",
+          "visibility": "private"
+        },
+        {
+          "name": "mLowestPermittedRequestLevel",
+          "type": "RequestLevel",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "fromUri",
+          "parameters": "uriString: String",
+          "returns": "ImageRequest",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "getSourceUri",
+          "parameters": "",
+          "returns": "Uri",
+          "visibility": "public"
+        },
+        {
+          "name": "getPriority",
+          "parameters": "",
+          "returns": "Priority",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/request/ImageRequest.java",
+          "line": 52,
+          "end_line": 100
+        },
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/request/ImageRequest.java",
+          "line": 156,
+          "end_line": 158
+        },
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/request/ImageRequest.java",
+          "line": 219,
+          "end_line": 221
+        }
+      ]
+    },
+    {
+      "id": "image_pipeline",
+      "label": "ImagePipeline",
+      "kind": "class",
+      "sublabel": "取图入口与缓存持有者",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "producerSequenceFactory",
+          "type": "ProducerSequenceFactoryInterface",
+          "visibility": "public"
+        },
+        {
+          "name": "bitmapMemoryCache",
+          "type": "MemoryCache<CacheKey, CloseableImage>",
+          "visibility": "public"
+        },
+        {
+          "name": "cacheKeyFactory",
+          "type": "CacheKeyFactory",
+          "visibility": "public"
+        },
+        {
+          "name": "idCounter",
+          "type": "AtomicLong",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "fetchDecodedImage",
+          "parameters": "imageRequest: ImageRequest?, callerContext: Any?, lowestPermittedRequestLevelOnSubmit: RequestLevel",
+          "returns": "DataSource<CloseableReference<CloseableImage>>",
+          "visibility": "public"
+        },
+        {
+          "name": "generateUniqueFutureId",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "submitFetchRequest",
+          "parameters": "producerSequence, imageRequest, lowestPermittedRequestLevelOnSubmit, callerContext, requestListener, uiComponentId, extras",
+          "returns": "DataSource<CloseableReference<T>>",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/core/ImagePipeline.kt",
+          "line": 54,
+          "end_line": 66
+        },
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/core/ImagePipeline.kt",
+          "line": 358,
+          "end_line": 390
+        },
+        {
+          "path": "imagepipeline/src/main/java/com/facebook/imagepipeline/core/ImagePipeline.kt",
+          "line": 1191,
+          "end_line": 1235
+        }
+      ]
+    },
+    {
+      "id": "drawee_controller",
+      "label": "AbstractDraweeController",
+      "kind": "abstract",
+      "sublabel": "订阅 DataSource 并上屏",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mDataSource",
+          "type": "DataSource<T>",
+          "visibility": "private"
+        },
+        {
+          "name": "mFetchedImage",
+          "type": "T",
+          "visibility": "private"
+        },
+        {
+          "name": "mIsRequestSubmitted",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "mSettableDraweeHierarchy",
+          "type": "SettableDraweeHierarchy",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onAttach",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "submitRequest",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onNewResultInternal",
+          "parameters": "id, dataSource, image, progress, isFinished, wasImmediate, deliverTempResult",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "getDataSource",
+          "parameters": "",
+          "returns": "DataSource<T>",
+          "visibility": "protected",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "drawee/src/main/java/com/facebook/drawee/controller/AbstractDraweeController.java",
+          "line": 58,
+          "end_line": 59
+        },
+        {
+          "path": "drawee/src/main/java/com/facebook/drawee/controller/AbstractDraweeController.java",
+          "line": 503,
+          "end_line": 546
+        },
+        {
+          "path": "drawee/src/main/java/com/facebook/drawee/controller/AbstractDraweeController.java",
+          "line": 584,
+          "end_line": 600
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r_decode_real",
+      "from": "decode_producer",
+      "to": "producer",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "r_bitmapcache_real",
+      "from": "bitmap_cache_producer",
+      "to": "producer",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "r_network_real",
+      "from": "network_fetch_producer",
+      "to": "producer",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "r_get_extends",
+      "from": "bitmap_cache_get",
+      "to": "bitmap_cache_producer",
+      "kind": "inheritance",
+      "label": "只读复用"
+    },
+    {
+      "id": "r_pipeline_seq",
+      "from": "image_pipeline",
+      "to": "sequence_factory",
+      "kind": "composition",
+      "label": "持有"
+    },
+    {
+      "id": "r_pipeline_request",
+      "from": "image_pipeline",
+      "to": "image_request",
+      "kind": "association",
+      "label": "入参"
+    },
+    {
+      "id": "r_controller_pipeline",
+      "from": "drawee_controller",
+      "to": "image_pipeline",
+      "kind": "dependency",
+      "label": "取 DataSource"
+    },
+    {
+      "id": "r_producer_consumer",
+      "from": "producer",
+      "to": "consumer",
+      "kind": "dependency",
+      "label": "回调"
+    },
+    {
+      "id": "r_producer_context",
+      "from": "producer",
+      "to": "producer_context",
+      "kind": "dependency",
+      "label": "入参"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "请求入口",
+      "items": [
+        "ImagePipeline.fetchDecodedImage 先用 ProducerSequenceFactory 选链，再由 submitFetchRequest 包成 SettableProducerContext",
+        "返回的 DataSource 由 CloseableProducerToDataSourceAdapter 把 Producer 回调翻译成 DataSource 事件"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "缓存分层",
+      "items": [
+        "BitmapMemoryCacheGetProducer 只读位图缓存，命中即返回；未命中才走 DecodeProducer 与磁盘/网络取数",
+        "DecodeProducer 用 Executor 做增量解码，onNewResult(isLast=false) 先把中间结果交给上层"
+      ]
+    }
+  ]
+}
