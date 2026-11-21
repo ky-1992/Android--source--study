@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "SlidingMenu 核心类型结构",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/14-SlidingMenu/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/jfeinstein10/SlidingMenu",
+      "provider": "github",
+      "revision": "4254feca3ece9397cd501921ee733f19ea0fdad8"
+    }
+  },
+  "layout": { "mode": "grid" },
+  "types": [
+    {
+      "id": "above",
+      "label": "CustomViewAbove",
+      "kind": "class",
+      "sublabel": "内容容器：处理触摸与页面切换",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        { "name": "setCurrentItem", "parameters": "int, boolean", "returns": "void", "visibility": "public" },
+        { "name": "setOnPageChangeListener", "parameters": "OnPageChangeListener", "returns": "void", "visibility": "public" },
+        { "name": "setTouchMode", "parameters": "int", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/CustomViewAbove.java", "line": 34, "end_line": 60 }]
+    },
+    {
+      "id": "menu",
+      "label": "SlidingMenu",
+      "kind": "class",
+      "sublabel": "门面：组合上下两层视图",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "mViewAbove", "type": "CustomViewAbove", "visibility": "private" },
+        { "name": "mViewBehind", "type": "CustomViewBehind", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "attachToActivity", "parameters": "Activity, int", "returns": "void", "visibility": "public" },
+        { "name": "setMode", "parameters": "int", "returns": "void", "visibility": "public" },
+        { "name": "toggle", "parameters": "boolean", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/SlidingMenu.java", "line": 32, "end_line": 70 },
+        { "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/SlidingMenu.java", "line": 291, "end_line": 345 }
+      ]
+    },
+    {
+      "id": "behind",
+      "label": "CustomViewBehind",
+      "kind": "class",
+      "sublabel": "菜单层：绘制与滚动菜单视图",
+      "row": 0,
+      "col": 2,
+      "methods": [
+        { "name": "setCustomViewAbove", "parameters": "CustomViewAbove", "returns": "void", "visibility": "public" },
+        { "name": "setContent", "parameters": "View", "returns": "void", "visibility": "public" },
+        { "name": "scrollTo", "parameters": "int, int", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/CustomViewBehind.java", "line": 18, "end_line": 44 }]
+    },
+    {
+      "id": "page_listener",
+      "label": "OnPageChangeListener",
+      "kind": "interface",
+      "sublabel": "滑动进度回调",
+      "row": 1,
+      "col": 0,
+      "methods": [
+        { "name": "onPageScrolled", "parameters": "int, float, int", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "onPageSelected", "parameters": "int", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/CustomViewAbove.java", "line": 107, "end_line": 130 }]
+    },
+    {
+      "id": "helper",
+      "label": "SlidingActivityHelper",
+      "kind": "class",
+      "sublabel": "把 SlidingMenu 绑定到 Activity",
+      "row": 1,
+      "col": 1,
+      "methods": [
+        { "name": "onCreate", "parameters": "Bundle", "returns": "void", "visibility": "public" },
+        { "name": "setBehindContentView", "parameters": "View, LayoutParams", "returns": "void", "visibility": "public" },
+        { "name": "showMenu", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/app/SlidingActivityHelper.java", "line": 14, "end_line": 53 }]
+    },
+    {
+      "id": "activity",
+      "label": "SlidingActivity",
+      "kind": "class",
+      "sublabel": "宿主 Activity：内容 + 菜单",
+      "row": 2,
+      "col": 2,
+      "methods": [
+        { "name": "onCreate", "parameters": "Bundle", "returns": "void", "visibility": "protected" },
+        { "name": "setBehindContentView", "parameters": "int", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/app/SlidingActivity.java", "line": 11, "end_line": 49 }]
+    },
+    {
+      "id": "simple_listener",
+      "label": "SimpleOnPageChangeListener",
+      "kind": "class",
+      "sublabel": "空实现适配器",
+      "row": 2,
+      "col": 0,
+      "methods": [
+        { "name": "onPageScrolled", "parameters": "int, float, int", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/CustomViewAbove.java", "line": 135, "end_line": 150 }]
+    }
+  ],
+  "relationships": [
+    { "id": "menu_above", "from": "menu", "to": "above", "kind": "composition", "label": "持有内容层" },
+    { "id": "menu_behind", "from": "menu", "to": "behind", "kind": "composition", "label": "持有菜单层" },
+    { "id": "helper_menu", "from": "helper", "to": "menu", "kind": "dependency", "label": "创建并绑定" },
+    { "id": "activity_helper", "from": "activity", "to": "helper", "kind": "composition" },
+    { "id": "above_listener", "from": "above", "to": "page_listener", "kind": "dependency", "label": "回调进度" },
+    { "id": "simple_realizes", "from": "simple_listener", "to": "page_listener", "kind": "realization" },
+    { "id": "behind_above", "from": "behind", "to": "above", "kind": "association", "label": "读取内容偏移" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两层视图模型",
+      "items": [
+        "SlidingMenu 本身是 RelativeLayout：CustomViewAbove 放内容，CustomViewBehind 放菜单",
+        "拖动时 CustomViewAbove 让内容平移，CustomViewBehind 按 scrollScale 做视差"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "动画扩展",
+      "items": [
+        "CanvasTransformer 可对菜单层 Canvas 做缩放/旋转/自定义变换",
+        "OnOpen/OnClose/OnOpened/OnClosed 四个监听覆盖完整状态流转"
+      ]
+    }
+  ]
+}

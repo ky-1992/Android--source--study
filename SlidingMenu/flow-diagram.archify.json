@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "SlidingMenu 绑定与拖拽流程",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/14-SlidingMenu/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/jfeinstein10/SlidingMenu",
+      "provider": "github",
+      "revision": "4254feca3ece9397cd501921ee733f19ea0fdad8"
+    }
+  },
+  "lanes": [
+    { "id": "host", "label": "宿主 Activity" },
+    { "id": "menu", "label": "SlidingMenu" },
+    { "id": "above", "label": "内容层" },
+    { "id": "behind", "label": "菜单层" }
+  ],
+  "phases": [
+    { "id": "bind", "label": "初始化绑定", "fromCol": 0, "toCol": 1, "variant": "default" },
+    { "id": "drag", "label": "拖拽与动画", "fromCol": 2, "toCol": 4, "variant": "emphasis" }
+  ],
+  "mainPath": ["host", "menu_attach", "above", "scroll", "behind", "anim"],
+  "nodes": [
+    { "id": "host", "lane": "host", "col": 0, "type": "frontend", "label": "SlidingActivity", "sublabel": "setBehindContentView", "width": 150, "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/app/SlidingActivity.java", "line": 11, "end_line": 29 }] },
+    { "id": "menu_attach", "lane": "menu", "col": 1, "type": "backend", "label": "attachToActivity", "sublabel": "构造两层视图", "width": 150, "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/SlidingMenu.java", "line": 291, "end_line": 345 }] },
+    { "id": "above", "lane": "above", "col": 2, "type": "backend", "label": "CustomViewAbove", "sublabel": "拦截触摸 / 计算偏移", "width": 150, "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/CustomViewAbove.java", "line": 197, "end_line": 250 }] },
+    { "id": "scroll", "lane": "above", "col": 3, "type": "backend", "label": "showMenu / toggle", "sublabel": "setCurrentItem", "width": 150, "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/SlidingMenu.java", "line": 483, "end_line": 542 }] },
+    { "id": "behind", "lane": "behind", "col": 3, "type": "backend", "label": "CustomViewBehind", "sublabel": "scrollBehindTo", "width": 150, "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/CustomViewBehind.java", "line": 100, "end_line": 128 }] },
+    { "id": "anim", "lane": "behind", "col": 4, "type": "security", "label": "CanvasTransformer", "sublabel": "菜单层变换", "width": 150, "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/SlidingMenu.java", "line": 154, "end_line": 162 }] },
+    { "id": "state", "lane": "menu", "col": 4, "type": "messagebus", "label": "OnOpen/OnClose", "sublabel": "状态回调", "width": 150, "sources": [{ "path": "library/src/com/jeremyfeinstein/slidingmenu/lib/SlidingMenu.java", "line": 86, "end_line": 150 }] }
+  ],
+  "edges": [
+    { "id": "e1", "from": "host", "to": "menu_attach", "label": "onPostCreate 绑定", "variant": "emphasis" },
+    { "id": "e2", "from": "menu_attach", "to": "above", "label": "setContent" },
+    { "id": "e3", "from": "above", "to": "scroll", "label": "拖拽结束", "variant": "emphasis" },
+    { "id": "e4", "from": "scroll", "to": "behind", "label": "滚动菜单层" },
+    { "id": "e5", "from": "behind", "to": "anim", "label": "transformCanvas" },
+    { "id": "e6", "from": "scroll", "to": "state", "label": "触发监听", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "一次绑定的三件事",
+      "items": [
+        "SlidingActivityHelper 创建 SlidingMenu 并 attachToActivity",
+        "菜单视图放进 CustomViewBehind，内容视图放进 CustomViewAbove",
+        "SlidingMenu 作为根布局参与 Activity 的 setContentView"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "触摸与状态",
+      "items": [
+        "CustomViewAbove 拦截拖拽并回调 onPageScrolled(percentOpen)",
+        "状态：Closed → Opening → Open，对应 OnOpen/OnOpened 等回调"
+      ]
+    }
+  ]
+}

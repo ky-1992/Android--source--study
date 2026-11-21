@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "c470ec17-0c95-4740-8222-a7183d83a96d",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/14-SlidingMenu/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/14-SlidingMenu/class-diagram.html",
+  "specification": {
+    "sha256": "3aea644c9e253b112302d46403d2c69c24965818cb2fdf04c03963089b9276e0",
+    "bytes": 6403
+  },
+  "artifact": {
+    "sha256": "43b1806b26b17ee0187dfa872ad773fea3c5d89300ee8bedb891314c3ed8be94",
+    "bytes": 856994
+  }
+}
