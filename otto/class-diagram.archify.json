@@ -1,0 +1,550 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Otto 核心类型结构",
+    "subtitle": "Bus 用两张 ConcurrentMap 保存处理器与生产者；AnnotatedHandlerFinder 通过反射解析 @Subscribe / @Produce。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/53-otto/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/square/otto",
+      "provider": "github",
+      "revision": "2a67589abd91879cf23a8c96542b59349485ec3d"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "bus",
+      "label": "Bus",
+      "kind": "class",
+      "sublabel": "注册与分发的门面",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "handlersByType",
+          "type": "ConcurrentMap<Class<?>, Set<EventHandler>>",
+          "visibility": "private"
+        },
+        {
+          "name": "producersByType",
+          "type": "ConcurrentMap<Class<?>, EventProducer>",
+          "visibility": "private"
+        },
+        {
+          "name": "enforcer",
+          "type": "ThreadEnforcer",
+          "visibility": "private"
+        },
+        {
+          "name": "handlerFinder",
+          "type": "HandlerFinder",
+          "visibility": "private"
+        },
+        {
+          "name": "eventsToDispatch",
+          "type": "ThreadLocal<ConcurrentLinkedQueue<EventWithHandler>>",
+          "visibility": "private"
+        },
+        {
+          "name": "isDispatching",
+          "type": "ThreadLocal<Boolean>",
+          "visibility": "private"
+        },
+        {
+          "name": "flattenHierarchyCache",
+          "type": "ConcurrentMap<Class<?>, Set<Class<?>>>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "register",
+          "parameters": "object: Object",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "unregister",
+          "parameters": "object: Object",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "post",
+          "parameters": "event: Object",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "enqueueEvent",
+          "parameters": "event: Object, handler: EventHandler",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "dispatchQueuedEvents",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "dispatch",
+          "parameters": "event: Object, wrapper: EventHandler",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "flattenHierarchy",
+          "parameters": "concreteClass: Class<?>",
+          "returns": "Set<Class<?>>",
+          "visibility": "package"
+        },
+        {
+          "name": "dispatchProducerResultToHandler",
+          "parameters": "handler: EventHandler, producer: EventProducer",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "otto/src/main/java/com/squareup/otto/Bus.java",
+          "line": 87,
+          "end_line": 120
+        },
+        {
+          "path": "otto/src/main/java/com/squareup/otto/Bus.java",
+          "line": 184,
+          "end_line": 241
+        },
+        {
+          "path": "otto/src/main/java/com/squareup/otto/Bus.java",
+          "line": 313,
+          "end_line": 338
+        }
+      ]
+    },
+    {
+      "id": "handler_finder",
+      "label": "HandlerFinder",
+      "kind": "interface",
+      "sublabel": "查找处理器与生产者",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "ANNOTATED",
+          "type": "HandlerFinder",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "findAllProducers",
+          "parameters": "listener: Object",
+          "returns": "Map<Class<?>, EventProducer>",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "findAllSubscribers",
+          "parameters": "listener: Object",
+          "returns": "Map<Class<?>, Set<EventHandler>>",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "otto/src/main/java/com/squareup/otto/HandlerFinder.java",
+          "line": 23,
+          "end_line": 40
+        }
+      ]
+    },
+    {
+      "id": "annotated_finder",
+      "label": "AnnotatedHandlerFinder",
+      "kind": "class",
+      "sublabel": "反射解析注解方法",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "PRODUCERS_CACHE",
+          "type": "ConcurrentMap<Class<?>, Map<Class<?>, Method>>",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "SUBSCRIBERS_CACHE",
+          "type": "ConcurrentMap<Class<?>, Map<Class<?>, Set<Method>>>",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "loadAnnotatedMethods",
+          "parameters": "listenerClass: Class<?>, producerMethods, subscriberMethods",
+          "returns": "void",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "findAllProducers",
+          "parameters": "listener: Object",
+          "returns": "Map<Class<?>, EventProducer>",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "findAllSubscribers",
+          "parameters": "listener: Object",
+          "returns": "Map<Class<?>, Set<EventHandler>>",
+          "visibility": "package",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "otto/src/main/java/com/squareup/otto/AnnotatedHandlerFinder.java",
+          "line": 36,
+          "end_line": 44
+        },
+        {
+          "path": "otto/src/main/java/com/squareup/otto/AnnotatedHandlerFinder.java",
+          "line": 62,
+          "end_line": 130
+        },
+        {
+          "path": "otto/src/main/java/com/squareup/otto/AnnotatedHandlerFinder.java",
+          "line": 153,
+          "end_line": 173
+        }
+      ]
+    },
+    {
+      "id": "thread_enforcer",
+      "label": "ThreadEnforcer",
+      "kind": "interface",
+      "sublabel": "主线程约束策略",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "ANY",
+          "type": "ThreadEnforcer",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "MAIN",
+          "type": "ThreadEnforcer",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "enforce",
+          "parameters": "bus: Bus",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "otto/src/main/java/com/squareup/otto/ThreadEnforcer.java",
+          "line": 26,
+          "end_line": 50
+        }
+      ]
+    },
+    {
+      "id": "event_handler",
+      "label": "EventHandler",
+      "kind": "class",
+      "sublabel": "包装单个 @Subscribe 方法",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "target",
+          "type": "Object",
+          "visibility": "private"
+        },
+        {
+          "name": "method",
+          "type": "Method",
+          "visibility": "private"
+        },
+        {
+          "name": "hashCode",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "valid",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "isValid",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "invalidate",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "handleEvent",
+          "parameters": "event: Object",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "equals",
+          "parameters": "obj: Object",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "otto/src/main/java/com/squareup/otto/EventHandler.java",
+          "line": 34,
+          "end_line": 61
+        },
+        {
+          "path": "otto/src/main/java/com/squareup/otto/EventHandler.java",
+          "line": 84,
+          "end_line": 98
+        }
+      ]
+    },
+    {
+      "id": "event_with_handler",
+      "label": "Bus.EventWithHandler",
+      "kind": "class",
+      "sublabel": "待投递的事件处理器对",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "event",
+          "type": "Object",
+          "visibility": "package"
+        },
+        {
+          "name": "handler",
+          "type": "EventHandler",
+          "visibility": "package"
+        }
+      ],
+      "methods": [
+        {
+          "name": "EventWithHandler",
+          "parameters": "event: Object, handler: EventHandler",
+          "returns": "EventWithHandler",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "otto/src/main/java/com/squareup/otto/Bus.java",
+          "line": 469,
+          "end_line": 478
+        }
+      ]
+    },
+    {
+      "id": "event_producer",
+      "label": "EventProducer",
+      "kind": "class",
+      "sublabel": "包装单个 @Produce 方法",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "target",
+          "type": "Object",
+          "visibility": "package"
+        },
+        {
+          "name": "method",
+          "type": "Method",
+          "visibility": "private"
+        },
+        {
+          "name": "hashCode",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "valid",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "isValid",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "invalidate",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "produceEvent",
+          "parameters": "",
+          "returns": "Object",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "otto/src/main/java/com/squareup/otto/EventProducer.java",
+          "line": 30,
+          "end_line": 57
+        },
+        {
+          "path": "otto/src/main/java/com/squareup/otto/EventProducer.java",
+          "line": 79,
+          "end_line": 93
+        }
+      ]
+    },
+    {
+      "id": "subscribe",
+      "label": "Subscribe",
+      "kind": "interface",
+      "sublabel": "运行时注解（单参方法）",
+      "row": 2,
+      "col": 0,
+      "sources": [
+        {
+          "path": "otto/src/main/java/com/squareup/otto/Subscribe.java",
+          "line": 34,
+          "end_line": 37
+        }
+      ]
+    },
+    {
+      "id": "produce",
+      "label": "Produce",
+      "kind": "interface",
+      "sublabel": "运行时注解（无参方法）",
+      "row": 2,
+      "col": 2,
+      "sources": [
+        {
+          "path": "otto/src/main/java/com/squareup/otto/Produce.java",
+          "line": 32,
+          "end_line": 35
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "finder_delegates",
+      "from": "handler_finder",
+      "to": "annotated_finder",
+      "kind": "dependency",
+      "label": "ANNOTATED"
+    },
+    {
+      "id": "bus_uses_finder",
+      "from": "bus",
+      "to": "handler_finder",
+      "kind": "dependency",
+      "label": "handlerFinder"
+    },
+    {
+      "id": "bus_uses_enforcer",
+      "from": "bus",
+      "to": "thread_enforcer",
+      "kind": "dependency",
+      "label": "enforcer"
+    },
+    {
+      "id": "bus_queues_pair",
+      "from": "bus",
+      "to": "event_with_handler",
+      "kind": "composition",
+      "label": "投递队列"
+    },
+    {
+      "id": "bus_owns_handlers",
+      "from": "bus",
+      "to": "event_handler",
+      "kind": "composition",
+      "label": "handlersByType"
+    },
+    {
+      "id": "bus_owns_producers",
+      "from": "bus",
+      "to": "event_producer",
+      "kind": "composition",
+      "label": "producersByType"
+    },
+    {
+      "id": "finder_creates_handler",
+      "from": "annotated_finder",
+      "to": "event_handler",
+      "kind": "composition",
+      "label": "创建"
+    },
+    {
+      "id": "finder_reads_subscribe",
+      "from": "annotated_finder",
+      "to": "subscribe",
+      "kind": "association",
+      "label": "解析"
+    },
+    {
+      "id": "producer_wraps_produce",
+      "from": "event_producer",
+      "to": "produce",
+      "kind": "association",
+      "label": "注解方法"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "注册路径",
+      "items": [
+        "register 先用 handlerFinder 找生产者，putIfAbsent 到 producersByType，重复注册直接抛异常",
+        "再把处理器 addAll 进 CopyOnWriteArraySet；已有生产者的类型会立刻补发一次生产者结果"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "投递路径",
+      "items": [
+        "post 先 flattenHierarchy 展开父类链（getClassesFor 只沿 superclass 走），再按类型逐个入队",
+        "dispatchQueuedEvents 用 isDispatching 防重入，事件按入队顺序反射调用，无订阅者则包成 DeadEvent"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "class",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/53-otto/class-diagram.archify.json",
+    "sha256": "dce78fd5756bbe7b35ce11f16dc8afc677e509d0fb24aeb639b2fef978040c34",
+    "bytes": 13980
+  },
+  "artifact": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/53-otto/class-diagram.html",
+    "sha256": "7de3bfc3167c265c619c497d9686bce3cb594d8c2309631077ee6e821b989bc5",
+    "bytes": 883779
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/53-otto/class-diagram.finalize.json",
+    "summaryReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/53-otto/class-diagram.finalize-summary.json",
+    "browserCheckReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/53-otto/class-diagram.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-21T07:37:33.770Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 15941,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

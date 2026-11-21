@@ -1,0 +1,178 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Otto 注册与事件分发主流程",
+    "subtitle": "register 用反射找出 @Produce / @Subscribe 方法并登记；post 展开类型、入队后反射调用，无人订阅则包装成 DeadEvent 重投。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/53-otto/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/square/otto",
+      "provider": "github",
+      "revision": "2a67589abd91879cf23a8c96542b59349485ec3d"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "finder", "label": "方法解析" },
+    { "id": "bus", "label": "总线核心" },
+    { "id": "dispatch", "label": "分发执行" }
+  ],
+  "phases": [
+    { "id": "p_register", "label": "注册", "fromCol": 0, "toCol": 2 },
+    { "id": "p_post", "label": "投递", "fromCol": 3, "toCol": 3 },
+    { "id": "p_dispatch", "label": "分发", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "n_register",
+    "n_find",
+    "n_produce",
+    "n_bind",
+    "n_post",
+    "n_flatten",
+    "n_enqueue",
+    "n_dispatch"
+  ],
+  "nodes": [
+    {
+      "id": "n_register",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "注册对象",
+      "sublabel": "register",
+      "width": 148,
+      "sources": [
+        { "path": "otto/src/main/java/com/squareup/otto/Bus.java", "line": 184, "end_line": 241 }
+      ]
+    },
+    {
+      "id": "n_find",
+      "lane": "finder",
+      "col": 1,
+      "type": "backend",
+      "label": "扫描注解",
+      "sublabel": "反射+两级缓存",
+      "width": 152,
+      "sources": [
+        { "path": "otto/src/main/java/com/squareup/otto/AnnotatedHandlerFinder.java", "line": 62, "end_line": 130 }
+      ]
+    },
+    {
+      "id": "n_produce",
+      "lane": "finder",
+      "col": 2,
+      "type": "backend",
+      "label": "收集生产者",
+      "sublabel": "findAllProducers",
+      "width": 152,
+      "sources": [
+        { "path": "otto/src/main/java/com/squareup/otto/AnnotatedHandlerFinder.java", "line": 133, "end_line": 150 }
+      ]
+    },
+    {
+      "id": "n_bind",
+      "lane": "bus",
+      "col": 2,
+      "type": "messagebus",
+      "label": "写入订阅表",
+      "sublabel": "两张 Map",
+      "width": 152,
+      "sources": [
+        { "path": "otto/src/main/java/com/squareup/otto/Bus.java", "line": 190, "end_line": 224 }
+      ]
+    },
+    {
+      "id": "n_post",
+      "lane": "app",
+      "col": 3,
+      "type": "external",
+      "label": "发布事件",
+      "sublabel": "post(event)",
+      "width": 148,
+      "sources": [
+        { "path": "otto/src/main/java/com/squareup/otto/Bus.java", "line": 313, "end_line": 331 }
+      ]
+    },
+    {
+      "id": "n_flatten",
+      "lane": "bus",
+      "col": 3,
+      "type": "messagebus",
+      "label": "展开事件类型",
+      "sublabel": "父类链+缓存",
+      "width": 154,
+      "sources": [
+        { "path": "otto/src/main/java/com/squareup/otto/Bus.java", "line": 421, "end_line": 450 }
+      ]
+    },
+    {
+      "id": "n_enqueue",
+      "lane": "bus",
+      "col": 4,
+      "type": "backend",
+      "label": "事件入队",
+      "sublabel": "线程本地队列",
+      "width": 150,
+      "sources": [
+        { "path": "otto/src/main/java/com/squareup/otto/Bus.java", "line": 344, "end_line": 346 },
+        { "path": "otto/src/main/java/com/squareup/otto/Bus.java", "line": 352, "end_line": 374 }
+      ]
+    },
+    {
+      "id": "n_dispatch",
+      "lane": "dispatch",
+      "col": 4,
+      "type": "backend",
+      "label": "反射调用",
+      "sublabel": "handleEvent",
+      "width": 148,
+      "sources": [
+        { "path": "otto/src/main/java/com/squareup/otto/Bus.java", "line": 383, "end_line": 390 },
+        { "path": "otto/src/main/java/com/squareup/otto/EventHandler.java", "line": 84, "end_line": 98 }
+      ]
+    },
+    {
+      "id": "n_dead",
+      "lane": "app",
+      "col": 4,
+      "type": "security",
+      "label": "死信重投",
+      "sublabel": "DeadEvent",
+      "width": 142,
+      "sources": [
+        { "path": "otto/src/main/java/com/squareup/otto/Bus.java", "line": 333, "end_line": 335 },
+        { "path": "otto/src/main/java/com/squareup/otto/DeadEvent.java", "line": 27, "end_line": 43 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_reg_find", "from": "n_register", "to": "n_find", "label": "register", "variant": "default", "role": "main" },
+    { "id": "e_find_produce", "from": "n_find", "to": "n_produce", "label": "生产者方法", "variant": "default", "role": "main" },
+    { "id": "e_produce_bind", "from": "n_produce", "to": "n_bind", "label": "登记", "variant": "default", "role": "main" },
+    { "id": "e_bind_post", "from": "n_bind", "to": "n_post", "label": "注册完成", "variant": "default", "role": "main" },
+    { "id": "e_post_flatten", "from": "n_post", "to": "n_flatten", "label": "逐类型匹配", "variant": "default", "role": "main" },
+    { "id": "e_flatten_enqueue", "from": "n_flatten", "to": "n_enqueue", "label": "命中订阅", "variant": "default", "role": "main" },
+    { "id": "e_enqueue_dispatch", "from": "n_enqueue", "to": "n_dispatch", "label": "出队", "variant": "emphasis", "role": "main" },
+    { "id": "e_post_dead", "from": "n_post", "to": "n_dead", "label": "无订阅者", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "线程约束",
+      "items": [
+        "register / unregister / post 入口都先调 enforcer.enforce(this)，默认 ThreadEnforcer.MAIN 会在非主线程直接抛 IllegalStateException",
+        "构造 Bus 时可传入 ThreadEnforcer.ANY 或自定义实现来放开约束"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "重入与死信",
+      "items": [
+        "dispatchQueuedEvents 用 ThreadLocal<Boolean> isDispatching 防重入，处理中再次 post 的事件留在队列末尾顺序执行",
+        "unregister 把 EventHandler.invalidate()，已入队但已注销的处理器会被 isValid 检查跳过"
+      ]
+    }
+  ]
+}
