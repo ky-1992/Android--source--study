@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "class",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/class-diagram.archify.json",
+    "sha256": "431bddd5b6970e86f04b2fefd94b600ec7c2358a8aefe35fef3771c469166a63",
+    "bytes": 10952
+  },
+  "artifact": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/class-diagram.html",
+    "sha256": "ffd9e0e3ee7b8b5d84cdef64b1ca95eab5ed03ad7e2ce0d871c1aaf6f18e5f5e",
+    "bytes": 878894
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/class-diagram.finalize.json",
+    "summaryReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/class-diagram.finalize-summary.json",
+    "browserCheckReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/class-diagram.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-19T14:45:18.953Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 10097,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  },
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "routesOverSuggestedBends": 1,
+      "routesOverSuggestedStretch": 1
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [],
+      "detours": [
+        {
+          "relationship": {
+            "id": "composer_fetches_technique",
+            "from": "animation_composer",
+            "to": "techniques",
+            "label": "构造时取",
+            "collectionIndex": 1,
+            "artifactIndex": 2
+          },
+          "bends": 4,
+          "stretch": 1.541,
+          "directCorridorBlockers": [
+            {
+              "id": "yoyo",
+              "label": "YoYo",
+              "box": [
+                460,
+                60,
+                300,
+                314
+              ]
+            }
+          ]
+        }
+      ],
+      "truncated": false
+    },
+    "repair": "Advisory only: this mode places or routes these relationships itself. Report them; do not remove relationships or meaning to reduce crossings."
+  }
+}

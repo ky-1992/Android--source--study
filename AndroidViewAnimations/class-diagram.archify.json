@@ -1,0 +1,236 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "AndroidViewAnimations 核心类型结构",
+    "subtitle": "YoYo.AnimationComposer 收集链式参数，Techniques 枚举用反射取实现；所有技法都继承 BaseViewAnimator 往同一个 AnimatorSet 里塞子动画。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/31-AndroidViewAnimations/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/daimajia/AndroidViewAnimations",
+      "provider": "github",
+      "revision": "6a35c466d23e49c5cd174289ebe8d9ccdbc69044"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "yoyo",
+      "label": "YoYo",
+      "kind": "class",
+      "sublabel": "链式调用入口",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "animator", "type": "BaseViewAnimator", "visibility": "private" },
+        { "name": "duration", "type": "long", "visibility": "private" },
+        { "name": "delay", "type": "long", "visibility": "private" },
+        { "name": "repeatTimes", "type": "int", "visibility": "private" },
+        { "name": "interpolator", "type": "Interpolator", "visibility": "private" },
+        { "name": "target", "type": "View", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "with", "parameters": "techniques: Techniques", "returns": "AnimationComposer", "visibility": "public", "static": true },
+        { "name": "with", "parameters": "animator: BaseViewAnimator", "returns": "AnimationComposer", "visibility": "public", "static": true },
+        { "name": "play", "parameters": "", "returns": "BaseViewAnimator", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/YoYo.java", "line": 38, "end_line": 76 },
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/YoYo.java", "line": 253, "end_line": 280 }
+      ]
+    },
+    {
+      "id": "animation_composer",
+      "label": "AnimationComposer",
+      "kind": "class",
+      "sublabel": "链式参数收集器",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        { "name": "animator", "type": "BaseViewAnimator", "visibility": "private" },
+        { "name": "duration", "type": "long", "visibility": "private" },
+        { "name": "callbacks", "type": "List<AnimatorListener>", "visibility": "private" },
+        { "name": "pivotX", "type": "float", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "duration", "parameters": "duration: long", "returns": "AnimationComposer", "visibility": "public" },
+        { "name": "repeat", "parameters": "times: int", "returns": "AnimationComposer", "visibility": "public" },
+        { "name": "pivot", "parameters": "pivotX: float, pivotY: float", "returns": "AnimationComposer", "visibility": "public" },
+        { "name": "onEnd", "parameters": "callback: AnimatorCallback", "returns": "AnimationComposer", "visibility": "public" },
+        { "name": "playOn", "parameters": "target: View", "returns": "YoYoString", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/YoYo.java", "line": 100, "end_line": 121 },
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/YoYo.java", "line": 154, "end_line": 216 }
+      ]
+    },
+    {
+      "id": "techniques",
+      "label": "Techniques",
+      "kind": "enum",
+      "sublabel": "技法到实现类的映射",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        { "name": "Bounce" },
+        { "name": "Hinge" },
+        { "name": "FadeIn" },
+        { "name": "SlideInLeft" },
+        { "name": "FlipInY" },
+        { "name": "TakingOff" }
+      ],
+      "methods": [
+        { "name": "getAnimator", "parameters": "", "returns": "BaseViewAnimator", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/Techniques.java", "line": 92, "end_line": 111 },
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/Techniques.java", "line": 171, "end_line": 183 }
+      ]
+    },
+    {
+      "id": "base_view_animator",
+      "label": "BaseViewAnimator",
+      "kind": "abstract",
+      "sublabel": "AnimatorSet 模板基类",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "DURATION", "type": "long", "visibility": "public", "static": true },
+        { "name": "mAnimatorSet", "type": "AnimatorSet", "visibility": "private" },
+        { "name": "mDuration", "type": "long", "visibility": "private" },
+        { "name": "mRepeatTimes", "type": "int", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "prepare", "parameters": "target: View", "returns": "void", "visibility": "protected", "abstract": true },
+        { "name": "setTarget", "parameters": "target: View", "returns": "BaseViewAnimator", "visibility": "public" },
+        { "name": "reset", "parameters": "target: View", "returns": "void", "visibility": "public" },
+        { "name": "start", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "setDuration", "parameters": "duration: long", "returns": "BaseViewAnimator", "visibility": "public" },
+        { "name": "getAnimatorAgent", "parameters": "", "returns": "AnimatorSet", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/BaseViewAnimator.java", "line": 35, "end_line": 56 },
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/BaseViewAnimator.java", "line": 72, "end_line": 95 },
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/BaseViewAnimator.java", "line": 145, "end_line": 147 }
+      ]
+    },
+    {
+      "id": "bounce_animator",
+      "label": "BounceAnimator",
+      "kind": "class",
+      "sublabel": "纵向弹跳",
+      "row": 2,
+      "col": 0,
+      "methods": [
+        { "name": "prepare", "parameters": "target: View", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/attention/BounceAnimator.java", "line": 32, "end_line": 38 }
+      ]
+    },
+    {
+      "id": "bounce_in_animator",
+      "label": "BounceInAnimator",
+      "kind": "class",
+      "sublabel": "缩放弹入",
+      "row": 2,
+      "col": 1,
+      "methods": [
+        { "name": "prepare", "parameters": "target: View", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/bouncing_entrances/BounceInAnimator.java", "line": 32, "end_line": 40 }
+      ]
+    },
+    {
+      "id": "flip_in_y_animator",
+      "label": "FlipInYAnimator",
+      "kind": "class",
+      "sublabel": "Y 轴翻转进入",
+      "row": 2,
+      "col": 2,
+      "methods": [
+        { "name": "prepare", "parameters": "target: View", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/flippers/FlipInYAnimator.java", "line": 32, "end_line": 39 }
+      ]
+    },
+    {
+      "id": "slide_in_left_animator",
+      "label": "SlideInLeftAnimator",
+      "kind": "class",
+      "sublabel": "自左平移滑入",
+      "row": 3,
+      "col": 0,
+      "methods": [
+        { "name": "prepare", "parameters": "target: View", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/sliders/SlideInLeftAnimator.java", "line": 33, "end_line": 42 }
+      ]
+    },
+    {
+      "id": "hinge_animator",
+      "label": "HingeAnimator",
+      "kind": "class",
+      "sublabel": "Glider 缓动铰链",
+      "row": 3,
+      "col": 1,
+      "methods": [
+        { "name": "prepare", "parameters": "target: View", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/specials/HingeAnimator.java", "line": 34, "end_line": 48 }
+      ]
+    },
+    {
+      "id": "taking_off_animator",
+      "label": "TakingOffAnimator",
+      "kind": "class",
+      "sublabel": "放大淡出",
+      "row": 3,
+      "col": 2,
+      "methods": [
+        { "name": "prepare", "parameters": "target: View", "returns": "void", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/specials/out/TakingOffAnimator.java", "line": 10, "end_line": 18 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "composer_holds_animator", "from": "animation_composer", "to": "base_view_animator", "kind": "association", "label": "持有" },
+    { "id": "composer_fetches_technique", "from": "animation_composer", "to": "techniques", "kind": "dependency", "label": "构造时取" },
+    { "id": "yoyo_creates_composer", "from": "yoyo", "to": "animation_composer", "kind": "composition", "label": "with()" },
+    { "id": "yoyo_drives_animator", "from": "yoyo", "to": "base_view_animator", "kind": "association", "label": "play() 配置" },
+    { "id": "techniques_creates_animator", "from": "techniques", "to": "base_view_animator", "kind": "dependency", "label": "反射实例化" },
+    { "id": "bounce_extends", "from": "bounce_animator", "to": "base_view_animator", "kind": "inheritance" },
+    { "id": "bounce_in_extends", "from": "bounce_in_animator", "to": "base_view_animator", "kind": "inheritance" },
+    { "id": "flip_in_y_extends", "from": "flip_in_y_animator", "to": "base_view_animator", "kind": "inheritance" },
+    { "id": "slide_in_left_extends", "from": "slide_in_left_animator", "to": "base_view_animator", "kind": "inheritance" },
+    { "id": "hinge_extends", "from": "hinge_animator", "to": "base_view_animator", "kind": "inheritance" },
+    { "id": "taking_off_extends", "from": "taking_off_animator", "to": "base_view_animator", "kind": "inheritance" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "一个 AnimatorSet 走到底",
+      "items": [
+        "BaseViewAnimator 在字段初始化块里 new AnimatorSet()，子类只在 prepare() 里用 getAnimatorAgent().playTogether(...) 添加子动画",
+        "start() 统一把 mRepeatTimes / mRepeatMode 写给每个 ValueAnimator，再 setDuration 并 start"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "枚举 + 反射分发",
+      "items": [
+        "Techniques 每个枚举值携带 Class，getAnimator() 用 newInstance() 创建，因此新增技法只需加一个枚举值和一个类",
+        "AnimationComposer 用链式方法收集参数，playOn() 才真正 setTarget、配置 pivot 与重复，然后交给 YoYo.play()"
+      ]
+    }
+  ]
+}

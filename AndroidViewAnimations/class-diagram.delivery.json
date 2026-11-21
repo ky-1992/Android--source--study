@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "453c4e0e-df89-4602-98f3-5efc2bba080b",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/class-diagram.html",
+  "specification": {
+    "sha256": "431bddd5b6970e86f04b2fefd94b600ec7c2358a8aefe35fef3771c469166a63",
+    "bytes": 10952
+  },
+  "artifact": {
+    "sha256": "ffd9e0e3ee7b8b5d84cdef64b1ca95eab5ed03ad7e2ce0d871c1aaf6f18e5f5e",
+    "bytes": 878894
+  }
+}

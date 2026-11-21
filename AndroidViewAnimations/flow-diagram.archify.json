@@ -1,0 +1,157 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "AndroidViewAnimations 从链式调用到动画播放",
+    "subtitle": "YoYo.with(Techniques) 先建 AnimationComposer 收集参数，playOn 时真正 setTarget、prepare 子动画并启动 AnimatorSet。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/31-AndroidViewAnimations/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/daimajia/AndroidViewAnimations",
+      "provider": "github",
+      "revision": "6a35c466d23e49c5cd174289ebe8d9ccdbc69044"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "yoyo", "label": "YoYo 门面" },
+    { "id": "base", "label": "动画基类" },
+    { "id": "system", "label": "系统动画" }
+  ],
+  "phases": [
+    { "id": "build", "label": "构建与配置", "fromCol": 0, "toCol": 2 },
+    { "id": "play", "label": "播放与回调", "fromCol": 3, "toCol": 4, "variant": "emphasis" }
+  ],
+  "mainPath": ["n_chain", "n_composer", "n_tech", "n_play", "n_target", "n_start"],
+  "nodes": [
+    {
+      "id": "n_chain",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "链式调用",
+      "sublabel": "with(Tech)",
+      "width": 140,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/YoYo.java", "line": 70, "end_line": 76 }
+      ]
+    },
+    {
+      "id": "n_composer",
+      "lane": "yoyo",
+      "col": 1,
+      "type": "cloud",
+      "label": "构建配置器",
+      "sublabel": "记录参数",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/YoYo.java", "line": 100, "end_line": 121 },
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/YoYo.java", "line": 123, "end_line": 171 }
+      ]
+    },
+    {
+      "id": "n_tech",
+      "lane": "yoyo",
+      "col": 2,
+      "type": "cloud",
+      "label": "解析技法",
+      "sublabel": "枚举反射",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/Techniques.java", "line": 92, "end_line": 111 },
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/Techniques.java", "line": 177, "end_line": 183 }
+      ]
+    },
+    {
+      "id": "n_play",
+      "lane": "yoyo",
+      "col": 3,
+      "type": "cloud",
+      "label": "触发播放",
+      "sublabel": "playOn",
+      "width": 144,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/YoYo.java", "line": 213, "end_line": 216 },
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/YoYo.java", "line": 253, "end_line": 280 }
+      ]
+    },
+    {
+      "id": "n_target",
+      "lane": "base",
+      "col": 4,
+      "type": "backend",
+      "label": "设置目标",
+      "sublabel": "setTarget()",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/BaseViewAnimator.java", "line": 50, "end_line": 56 }
+      ]
+    },
+    {
+      "id": "n_start",
+      "lane": "system",
+      "col": 4,
+      "type": "backend",
+      "label": "启动动画集",
+      "sublabel": "AnimatorSet",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/BaseViewAnimator.java", "line": 86, "end_line": 95 }
+      ]
+    },
+    {
+      "id": "n_callback",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "监听回调",
+      "sublabel": "onEnd()",
+      "width": 144,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/BaseViewAnimator.java", "line": 111, "end_line": 114 },
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/YoYo.java", "line": 183, "end_line": 191 }
+      ]
+    },
+    {
+      "id": "n_reset",
+      "lane": "yoyo",
+      "col": 4,
+      "type": "cloud",
+      "label": "停止复位",
+      "sublabel": "reset()",
+      "width": 140,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/BaseViewAnimator.java", "line": 72, "end_line": 81 },
+        { "path": "library/src/main/java/com/daimajia/androidanimations/library/YoYo.java", "line": 241, "end_line": 250 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_chain_composer", "from": "n_chain", "to": "n_composer", "label": "创建", "role": "main" },
+    { "id": "e_composer_tech", "from": "n_composer", "to": "n_tech", "label": "取实现类", "role": "main" },
+    { "id": "e_tech_play", "from": "n_tech", "to": "n_play", "label": "playOn", "role": "main" },
+    { "id": "e_play_target", "from": "n_play", "to": "n_target", "label": "play()", "role": "main" },
+    { "id": "e_target_start", "from": "n_target", "to": "n_start", "label": "animate()", "role": "main" },
+    { "id": "e_play_callback", "from": "n_play", "to": "n_callback", "label": "addListener", "role": "branch", "variant": "dashed" },
+    { "id": "e_play_reset", "from": "n_play", "to": "n_reset", "label": "stop(true)", "role": "branch", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两段式 API",
+      "items": [
+        "with() 阶段只构造 AnimationComposer 并缓存参数，不接触 View；playOn() 之后才把参数写回 BaseViewAnimator",
+        "playOn 返回 YoYoString，可 stop()/stop(true)，true 表示取消后调用 reset 把视图还原"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "统一收口",
+      "items": [
+        "YoYo.play() 负责算 pivot（默认取 View 中心）、setDuration / repeat / interpolator / delay，再 animate()",
+        "BaseViewAnimator.start() 给每个 ValueAnimator 回写重复次数与模式，最后 AnimatorSet.start 一次性启动"
+      ]
+    }
+  ]
+}

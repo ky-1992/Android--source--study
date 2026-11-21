@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "workflow",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/flow-diagram.archify.json",
+    "sha256": "656eeb7c729903c45639b8aa07711eeba2c36b90caa279668c6bb64420432349",
+    "bytes": 5952
+  },
+  "artifact": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/flow-diagram.html",
+    "sha256": "488f57be897026389e2ad91d0cfb07f424d67cc2cf84a8e0033f425675fe058d",
+    "bytes": 844985
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/flow-diagram.finalize.json",
+    "summaryReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/flow-diagram.finalize-summary.json",
+    "browserCheckReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/31-AndroidViewAnimations/flow-diagram.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-19T14:45:18.953Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 11563,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}
