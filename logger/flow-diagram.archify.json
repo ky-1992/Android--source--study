@@ -1,0 +1,170 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "logger 一次日志的格式化流程",
+    "subtitle": "Logger.d 经 LoggerPrinter 取 ThreadLocal 标签并格式化参数，遍历适配器后在 PrettyFormatStrategy 里加边框、线程与栈头，最后写 Logcat。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/35-logger/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/orhanobut/logger",
+      "provider": "github",
+      "revision": "0a0e922ee40ae0904bf29e56b81094920c09a485"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "printer", "label": "打印核心" },
+    { "id": "format", "label": "格式化策略" },
+    { "id": "sink", "label": "输出端" }
+  ],
+  "phases": [
+    { "id": "entry", "label": "入口", "fromCol": 0, "toCol": 0 },
+    { "id": "dispatch", "label": "组装与分发", "fromCol": 1, "toCol": 2 },
+    { "id": "head", "label": "头部信息", "fromCol": 3, "toCol": 3 },
+    { "id": "emit", "label": "内容与落地", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": ["call", "format_args", "route_adapter", "header", "chunk", "logcat"],
+  "nodes": [
+    {
+      "id": "call",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "调用日志",
+      "sublabel": "Logger.d",
+      "width": 148,
+      "sources": [
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/Logger.kt", "line": 24, "end_line": 34 },
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/LoggerPrinter.kt", "line": 22, "end_line": 30 }
+      ]
+    },
+    {
+      "id": "format_args",
+      "lane": "printer",
+      "col": 1,
+      "type": "backend",
+      "label": "标签与参数",
+      "sublabel": "tag + args",
+      "width": 148,
+      "sources": [
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/LoggerPrinter.kt", "line": 81, "end_line": 87 },
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/LoggerPrinter.kt", "line": 18, "end_line": 20 }
+      ]
+    },
+    {
+      "id": "route_adapter",
+      "lane": "printer",
+      "col": 2,
+      "type": "backend",
+      "label": "遍历适配器",
+      "sublabel": "isLoggable",
+      "width": 152,
+      "sources": [
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/LoggerPrinter.kt", "line": 66, "end_line": 79 }
+      ]
+    },
+    {
+      "id": "json",
+      "lane": "format",
+      "col": 1,
+      "type": "backend",
+      "label": "JSON/XML 美化",
+      "sublabel": "toString(2)",
+      "width": 148,
+      "sources": [
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/LoggerPrinter.kt", "line": 32, "end_line": 64 }
+      ]
+    },
+    {
+      "id": "csv",
+      "lane": "format",
+      "col": 2,
+      "type": "backend",
+      "label": "CSV 行格式",
+      "sublabel": "时间戳+级别",
+      "width": 152,
+      "sources": [
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/CsvFormatStrategy.kt", "line": 17, "end_line": 23 }
+      ]
+    },
+    {
+      "id": "header",
+      "lane": "format",
+      "col": 3,
+      "type": "backend",
+      "label": "线程与栈头",
+      "sublabel": "stackTrace",
+      "width": 152,
+      "sources": [
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/PrettyFormatStrategy.kt", "line": 32, "end_line": 59 }
+      ]
+    },
+    {
+      "id": "chunk",
+      "lane": "format",
+      "col": 4,
+      "type": "backend",
+      "label": "分段输出",
+      "sublabel": "4000 字节",
+      "width": 152,
+      "sources": [
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/PrettyFormatStrategy.kt", "line": 11, "end_line": 30 },
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/PrettyFormatStrategy.kt", "line": 61, "end_line": 66 }
+      ]
+    },
+    {
+      "id": "disk",
+      "lane": "sink",
+      "col": 3,
+      "type": "database",
+      "label": "文件落盘",
+      "sublabel": "WriteHandler",
+      "width": 148,
+      "sources": [
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/DiskLogStrategy.kt", "line": 11, "end_line": 29 }
+      ]
+    },
+    {
+      "id": "logcat",
+      "lane": "sink",
+      "col": 4,
+      "type": "cloud",
+      "label": "Logcat 输出",
+      "sublabel": "Log.println",
+      "width": 152,
+      "sources": [
+        { "path": "logger/src/main/kotlin/com/orhanobut/logger/LogcatLogStrategy.kt", "line": 6, "end_line": 9 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_call_args", "from": "call", "to": "format_args", "label": "转发" },
+    { "id": "e_args_adapter", "from": "format_args", "to": "route_adapter", "label": "log()" },
+    { "id": "e_adapter_header", "from": "route_adapter", "to": "header", "label": "美化通路" },
+    { "id": "e_header_chunk", "from": "header", "to": "chunk", "label": "边框+内容" },
+    { "id": "e_chunk_logcat", "from": "chunk", "to": "logcat", "label": "逐行写" },
+    { "id": "e_call_json", "from": "call", "to": "json", "label": "Logger.json", "variant": "dashed", "role": "branch" },
+    { "id": "e_adapter_csv", "from": "route_adapter", "to": "csv", "label": "文件适配器", "variant": "dashed", "role": "branch" },
+    { "id": "e_csv_disk", "from": "csv", "to": "disk", "label": "CSV 追加" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "标签只作用于下一次",
+      "items": [
+        "Logger.t(tag) 把标签写进 ThreadLocal，logMessage 读一次就 remove，天然线程隔离",
+        "优先级用 2~7 的整数，直接等于 android.util.Log 的常量，格式化层不再做映射"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "美化如何分帧",
+      "items": [
+        "上边框 ┌、线程信息、栈头 ├ 由 methodCount 控制，内容行统一加 │ 前缀",
+        "按 UTF-8 字节切 4000 一帧并回退到字符边界，避免中文被截断"
+      ]
+    }
+  ]
+}

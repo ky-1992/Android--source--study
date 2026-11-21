@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "9aca0342-c903-4229-955c-06851fcc294b",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/35-logger/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/35-logger/flow-diagram.html",
+  "specification": {
+    "sha256": "e44b47eb5eda61042d88fd4f730942664b7fa3132c1c7dada10f150e60c46709",
+    "bytes": 5943
+  },
+  "artifact": {
+    "sha256": "667d95689fe445a2845eeb86ba70cdcf2758525ee0248c30e67550ad2cd1f3b7",
+    "bytes": 847027
+  }
+}

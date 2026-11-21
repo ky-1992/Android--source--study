@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "68abd6ac-73b2-4296-b5fc-40147f55c231",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/35-logger/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/35-logger/class-diagram.html",
+  "specification": {
+    "sha256": "b7b651961e7b56fda47d8735e0733f7b9565f63b9d596e274161eb93abfd0e74",
+    "bytes": 15206
+  },
+  "artifact": {
+    "sha256": "c45057f2060623c597659d8c40b150fd2c5586c7eb98cc8f82db78e0b3269ea3",
+    "bytes": 891413
+  }
+}

@@ -1,0 +1,609 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "logger 核心类型结构",
+    "subtitle": "Logger 单例持有 Printer；LoggerPrinter 遍历 LogAdapter，Adapter 选 FormatStrategy 美化后再交给 LogStrategy 落地。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/35-logger/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/orhanobut/logger",
+      "provider": "github",
+      "revision": "0a0e922ee40ae0904bf29e56b81094920c09a485"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "logger",
+      "label": "Logger",
+      "kind": "class",
+      "sublabel": "全局门面 object",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "VERBOSE",
+          "type": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "DEBUG",
+          "type": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "INFO",
+          "type": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "WARN",
+          "type": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "ERROR",
+          "type": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "ASSERT",
+          "type": "int",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "printer",
+          "type": "Printer",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "addLogAdapter",
+          "parameters": "adapter: LogAdapter",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "d",
+          "parameters": "message: String, vararg args: Any?",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "e",
+          "parameters": "throwable: Throwable?, message: String",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "t",
+          "parameters": "tag: String?",
+          "returns": "Printer",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "json",
+          "parameters": "json: String?",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "xml",
+          "parameters": "xml: String?",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "log",
+          "parameters": "priority, tag, message, throwable",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/Logger.kt",
+          "line": 4,
+          "end_line": 12
+        },
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/Logger.kt",
+          "line": 14,
+          "end_line": 22
+        },
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/Logger.kt",
+          "line": 24,
+          "end_line": 34
+        }
+      ]
+    },
+    {
+      "id": "printer",
+      "label": "Printer",
+      "kind": "interface",
+      "sublabel": "打印操作接口",
+      "row": 1,
+      "col": 0,
+      "methods": [
+        {
+          "name": "addAdapter",
+          "parameters": "adapter: LogAdapter",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "t",
+          "parameters": "tag: String?",
+          "returns": "Printer",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "json",
+          "parameters": "json: String?",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "xml",
+          "parameters": "xml: String?",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "log",
+          "parameters": "priority, tag, message, throwable",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "clearLogAdapters",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/Printer.kt",
+          "line": 4,
+          "end_line": 19
+        }
+      ]
+    },
+    {
+      "id": "logger_printer",
+      "label": "LoggerPrinter",
+      "kind": "class",
+      "sublabel": "标签/参数/JSON 处理",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "localTag",
+          "type": "ThreadLocal<String>",
+          "visibility": "private"
+        },
+        {
+          "name": "logAdapters",
+          "type": "MutableList<LogAdapter>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "logMessage",
+          "parameters": "priority, throwable, message, args",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "log",
+          "parameters": "priority, tag, message, throwable",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "json",
+          "parameters": "json: String?",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "xml",
+          "parameters": "xml: String?",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/LoggerPrinter.kt",
+          "line": 14,
+          "end_line": 16
+        },
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/LoggerPrinter.kt",
+          "line": 66,
+          "end_line": 88
+        },
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/LoggerPrinter.kt",
+          "line": 32,
+          "end_line": 64
+        }
+      ]
+    },
+    {
+      "id": "log_adapter",
+      "label": "LogAdapter",
+      "kind": "interface",
+      "sublabel": "过滤 + 路由",
+      "row": 1,
+      "col": 1,
+      "methods": [
+        {
+          "name": "isLoggable",
+          "parameters": "priority: Int, tag: String?",
+          "returns": "boolean",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "log",
+          "parameters": "priority: Int, tag: String?, message: String",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/LogAdapter.kt",
+          "line": 4,
+          "end_line": 7
+        }
+      ]
+    },
+    {
+      "id": "android_log_adapter",
+      "label": "AndroidLogAdapter",
+      "kind": "class",
+      "sublabel": "默认 Logcat 适配器",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "formatStrategy",
+          "type": "FormatStrategy",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "isLoggable",
+          "parameters": "priority: Int, tag: String?",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "log",
+          "parameters": "priority, tag, message",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/AndroidLogAdapter.kt",
+          "line": 4,
+          "end_line": 10
+        }
+      ]
+    },
+    {
+      "id": "format_strategy",
+      "label": "FormatStrategy",
+      "kind": "interface",
+      "sublabel": "单方法格式化",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        {
+          "name": "log",
+          "parameters": "priority: Int, tag: String?, message: String",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/FormatStrategy.kt",
+          "line": 4,
+          "end_line": 6
+        }
+      ]
+    },
+    {
+      "id": "pretty_format_strategy",
+      "label": "PrettyFormatStrategy",
+      "kind": "class",
+      "sublabel": "边框/线程/栈头美化",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "methodCount",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "methodOffset",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "showThreadInfo",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "logStrategy",
+          "type": "LogStrategy",
+          "visibility": "private"
+        },
+        {
+          "name": "tag",
+          "type": "String?",
+          "visibility": "private"
+        },
+        {
+          "name": "CHUNK_SIZE",
+          "type": "int",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "log",
+          "parameters": "priority, tag, message",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "logHeaderContent",
+          "parameters": "priority: Int, tag: String?",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "logContent",
+          "parameters": "priority: Int, tag: String?, chunk: String",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/PrettyFormatStrategy.kt",
+          "line": 4,
+          "end_line": 10
+        },
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/PrettyFormatStrategy.kt",
+          "line": 11,
+          "end_line": 30
+        },
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/PrettyFormatStrategy.kt",
+          "line": 32,
+          "end_line": 59
+        }
+      ]
+    },
+    {
+      "id": "logcat_log_strategy",
+      "label": "LogcatLogStrategy",
+      "kind": "class",
+      "sublabel": "写 Log.println",
+      "row": 3,
+      "col": 1,
+      "methods": [
+        {
+          "name": "log",
+          "parameters": "priority, tag, message",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/LogcatLogStrategy.kt",
+          "line": 6,
+          "end_line": 9
+        }
+      ]
+    },
+    {
+      "id": "log_strategy",
+      "label": "LogStrategy",
+      "kind": "interface",
+      "sublabel": "最终落地出口",
+      "row": 3,
+      "col": 2,
+      "methods": [
+        {
+          "name": "log",
+          "parameters": "priority: Int, tag: String?, message: String",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/LogStrategy.kt",
+          "line": 4,
+          "end_line": 6
+        }
+      ]
+    },
+    {
+      "id": "csv_format_strategy",
+      "label": "CsvFormatStrategy",
+      "kind": "class",
+      "sublabel": "时间戳+级别 CSV 行",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "date",
+          "type": "Date",
+          "visibility": "private"
+        },
+        {
+          "name": "dateFormat",
+          "type": "SimpleDateFormat",
+          "visibility": "private"
+        },
+        {
+          "name": "logStrategy",
+          "type": "LogStrategy",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "log",
+          "parameters": "priority, tag, message",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/CsvFormatStrategy.kt",
+          "line": 11,
+          "end_line": 23
+        },
+        {
+          "path": "logger/src/main/kotlin/com/orhanobut/logger/CsvFormatStrategy.kt",
+          "line": 36,
+          "end_line": 50
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "logger_holds_printer",
+      "from": "logger",
+      "to": "printer",
+      "kind": "composition",
+      "label": "printer 字段"
+    },
+    {
+      "id": "loggerprinter_impl",
+      "from": "logger_printer",
+      "to": "printer",
+      "kind": "realization"
+    },
+    {
+      "id": "loggerprinter_adapters",
+      "from": "logger_printer",
+      "to": "log_adapter",
+      "kind": "aggregation",
+      "label": "logAdapters"
+    },
+    {
+      "id": "android_impl_adapter",
+      "from": "android_log_adapter",
+      "to": "log_adapter",
+      "kind": "realization"
+    },
+    {
+      "id": "android_uses_format",
+      "from": "android_log_adapter",
+      "to": "format_strategy",
+      "kind": "association",
+      "label": "formatStrategy"
+    },
+    {
+      "id": "pretty_impl_format",
+      "from": "pretty_format_strategy",
+      "to": "format_strategy",
+      "kind": "realization"
+    },
+    {
+      "id": "csv_impl_format",
+      "from": "csv_format_strategy",
+      "to": "format_strategy",
+      "kind": "realization"
+    },
+    {
+      "id": "pretty_uses_out",
+      "from": "pretty_format_strategy",
+      "to": "log_strategy",
+      "kind": "association",
+      "label": "logStrategy"
+    },
+    {
+      "id": "csv_uses_out",
+      "from": "csv_format_strategy",
+      "to": "log_strategy",
+      "kind": "association",
+      "label": "logStrategy"
+    },
+    {
+      "id": "logcat_impl_out",
+      "from": "logcat_log_strategy",
+      "to": "log_strategy",
+      "kind": "realization"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "三层可替换",
+      "items": [
+        "Printer 决定怎么组织一条日志（标签、参数、JSON/XML），换它等于换整套打印行为",
+        "LogAdapter 决定是否放行、交给谁格式化；AndroidLogAdapter 与 DiskLogAdapter 只是默认装配"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "格式化与出口解耦",
+      "items": [
+        "FormatStrategy 只负责生成文本，真正写出去的是 LogStrategy",
+        "PrettyFormatStrategy 默认 LogcatLogStrategy；CsvFormatStrategy 默认用 HandlerThread 后台写文件"
+      ]
+    }
+  ]
+}
