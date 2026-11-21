@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "recyclerview-animators 核心类型结构",
+    "subtitle": "BaseItemAnimator 统一排队与延迟，子类只覆写属性动画；AnimationAdapter 是另一条 adapter 侧动画路径。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/41-recyclerview-animators/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/wasabeef/recyclerview-animators",
+      "provider": "github",
+      "revision": "6c5c7748e86f43d3d03f7b3122f473e1fd807681"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "base_item_animator",
+      "label": "BaseItemAnimator",
+      "kind": "abstract",
+      "sublabel": "动画调度骨架",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "pendingRemovals", "type": "ArrayList<ViewHolder>", "visibility": "private" },
+        { "name": "pendingAdditions", "type": "ArrayList<ViewHolder>", "visibility": "private" },
+        { "name": "pendingMoves", "type": "ArrayList<MoveInfo>", "visibility": "private" },
+        { "name": "addAnimations", "type": "ArrayList<ViewHolder>", "visibility": "protected" },
+        { "name": "interpolator", "type": "Interpolator", "visibility": "protected" }
+      ],
+      "methods": [
+        { "name": "animateRemove", "parameters": "holder: ViewHolder", "returns": "Boolean", "visibility": "public" },
+        { "name": "animateAdd", "parameters": "holder: ViewHolder", "returns": "Boolean", "visibility": "public" },
+        { "name": "animateMove", "parameters": "holder, fromX, fromY, toX, toY", "returns": "Boolean", "visibility": "public" },
+        { "name": "runPendingAnimations", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "endAnimation", "parameters": "item: ViewHolder", "returns": "void", "visibility": "public" },
+        { "name": "animateAddImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "protected", "abstract": true }
+      ],
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 29, "end_line": 42 },
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 91, "end_line": 181 },
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 187, "end_line": 190 }
+      ]
+    },
+    {
+      "id": "animate_view_holder",
+      "label": "AnimateViewHolder",
+      "kind": "interface",
+      "sublabel": "逐 holder 自定义动画",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        { "name": "preAnimateAddImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "preAnimateRemoveImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "animateAddImpl", "parameters": "holder: ViewHolder, listener: AnimatorListener", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "animateRemoveImpl", "parameters": "holder: ViewHolder, listener: AnimatorListener", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/holder/AnimateViewHolder.kt", "line": 6, "end_line": 14 }
+      ]
+    },
+    {
+      "id": "fade_in_animator",
+      "label": "FadeInAnimator",
+      "kind": "class",
+      "sublabel": "淡入淡出",
+      "row": 1,
+      "col": 0,
+      "methods": [
+        { "name": "animateRemoveImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "protected" },
+        { "name": "preAnimateAddImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "protected" },
+        { "name": "animateAddImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/FadeInAnimator.kt", "line": 21, "end_line": 49 }
+      ]
+    },
+    {
+      "id": "slide_in_left_animator",
+      "label": "SlideInLeftAnimator",
+      "kind": "class",
+      "sublabel": "左侧滑入滑出",
+      "row": 1,
+      "col": 1,
+      "methods": [
+        { "name": "animateRemoveImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "protected" },
+        { "name": "preAnimateAddImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "protected" },
+        { "name": "animateAddImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/SlideInLeftAnimator.kt", "line": 21, "end_line": 49 }
+      ]
+    },
+    {
+      "id": "scale_in_animator",
+      "label": "ScaleInAnimator",
+      "kind": "class",
+      "sublabel": "缩放出现",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        { "name": "animateRemoveImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "protected" },
+        { "name": "preAnimateAddImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "protected" },
+        { "name": "animateAddImpl", "parameters": "holder: ViewHolder", "returns": "void", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/ScaleInAnimator.kt", "line": 21, "end_line": 49 }
+      ]
+    },
+    {
+      "id": "view_helper",
+      "label": "ViewHelper",
+      "kind": "class",
+      "sublabel": "属性复位单例",
+      "row": 2,
+      "col": 2,
+      "methods": [
+        { "name": "clear", "parameters": "v: View", "returns": "void", "visibility": "public", "static": true }
+      ],
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/internal/ViewHelper.kt", "line": 20, "end_line": 36 }
+      ]
+    },
+    {
+      "id": "animation_adapter",
+      "label": "AnimationAdapter",
+      "kind": "abstract",
+      "sublabel": "adapter 侧入场动画",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "duration", "type": "Int", "visibility": "private" },
+        { "name": "interpolator", "type": "Interpolator", "visibility": "private" },
+        { "name": "lastPosition", "type": "Int", "visibility": "private" },
+        { "name": "isFirstOnly", "type": "Boolean", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onBindViewHolder", "parameters": "holder: ViewHolder, position: Int", "returns": "void", "visibility": "public" },
+        { "name": "getAnimators", "parameters": "view: View", "returns": "Array<Animator>", "visibility": "protected", "abstract": true },
+        { "name": "setDuration", "parameters": "duration: Int", "returns": "void", "visibility": "public" },
+        { "name": "setFirstOnly", "parameters": "firstOnly: Boolean", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/adapters/AnimationAdapter.kt", "line": 27, "end_line": 33 },
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/adapters/AnimationAdapter.kt", "line": 77, "end_line": 89 },
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/adapters/AnimationAdapter.kt", "line": 112, "end_line": 115 }
+      ]
+    },
+    {
+      "id": "alpha_in_adapter",
+      "label": "AlphaInAnimationAdapter",
+      "kind": "class",
+      "sublabel": "只给 alpha 的包装",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        { "name": "from", "type": "Float", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "getAnimators", "parameters": "view: View", "returns": "Array<Animator>", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/adapters/AlphaInAnimationAdapter.kt", "line": 23, "end_line": 33 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "base_checks_holder", "from": "base_item_animator", "to": "animate_view_holder", "kind": "dependency", "label": "is 判断" },
+    { "id": "base_clears_view", "from": "base_item_animator", "to": "view_helper", "kind": "dependency", "label": "clear()" },
+    { "id": "fade_extends_base", "from": "fade_in_animator", "to": "base_item_animator", "kind": "inheritance", "label": "继承" },
+    { "id": "slide_extends_base", "from": "slide_in_left_animator", "to": "base_item_animator", "kind": "inheritance", "label": "继承" },
+    { "id": "scale_extends_base", "from": "scale_in_animator", "to": "base_item_animator", "kind": "inheritance", "label": "继承" },
+    { "id": "adapter_clears_view", "from": "animation_adapter", "to": "view_helper", "kind": "dependency", "label": "clear()" },
+    { "id": "alpha_extends_adapter", "from": "alpha_in_adapter", "to": "animation_adapter", "kind": "inheritance", "label": "继承" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两套入口",
+      "items": [
+        "ItemAnimator 路线：BaseItemAnimator 子类挂在 RecyclerView.itemAnimator 上，处理增删移改",
+        "Adapter 路线：AnimationAdapter 包一层原 Adapter，在 onBindViewHolder 里播放入场动画"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "子类要写的三件事",
+      "items": [
+        "preAnimateAddImpl 摆好初始属性，animateAddImpl / animateRemoveImpl 用 ViewPropertyAnimator 归位",
+        "listener 必须传 DefaultAddAnimatorListener 或 DefaultRemoveAnimatorListener，否则 dispatch 不会回调、isRunning 卡住"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "change 动画默认关闭",
+      "items": [
+        "init 里 supportsChangeAnimations = false（L48–L50），需要时自行打开",
+        "animateChange 遇到同一个 holder 会退化成 animateMove（L326–L330）"
+      ]
+    }
+  ]
+}

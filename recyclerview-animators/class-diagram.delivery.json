@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "42f4ba7f-bc9e-4a52-8bc1-bcb5e75f1913",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/41-recyclerview-animators/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/41-recyclerview-animators/class-diagram.html",
+  "specification": {
+    "sha256": "8315107739cdd894416690bf9b47a29ae0d0b02153986f4f600c7c153ef4e9bf",
+    "bytes": 10113
+  },
+  "artifact": {
+    "sha256": "032cfbedd520eaa25db0ad2bcd212c63507b18f48956ff372b771203abf85304",
+    "bytes": 877899
+  }
+}

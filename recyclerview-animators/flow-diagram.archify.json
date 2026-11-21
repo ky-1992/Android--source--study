@@ -1,0 +1,190 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "recyclerview-animators 单次 item 动画流程",
+    "subtitle": "RecyclerView 调 animateAdd/Remove 入队，runPendingAnimations 分批延迟执行，子类用属性动画收尾。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/41-recyclerview-animators/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/wasabeef/recyclerview-animators",
+      "provider": "github",
+      "revision": "6c5c7748e86f43d3d03f7b3122f473e1fd807681"
+    }
+  },
+  "lanes": [
+    { "id": "rv", "label": "列表控件" },
+    { "id": "anim", "label": "ItemAnimator" },
+    { "id": "holder", "label": "ViewHolder" },
+    { "id": "view", "label": "View 动画" }
+  ],
+  "phases": [
+    { "id": "enqueue", "label": "入队", "fromCol": 0, "toCol": 1, "variant": "emphasis" },
+    { "id": "schedule", "label": "调度", "fromCol": 2, "toCol": 2, "variant": "default" },
+    { "id": "play", "label": "播放", "fromCol": 3, "toCol": 3, "variant": "default" },
+    { "id": "settle", "label": "收尾", "fromCol": 4, "toCol": 4, "variant": "dashed" }
+  ],
+  "mainPath": [
+    "n_notify",
+    "n_animate_call",
+    "n_pre_animate",
+    "n_run_pending",
+    "n_impl",
+    "n_property_anim",
+    "n_end_listener",
+    "n_dispatch_finish"
+  ],
+  "nodes": [
+    {
+      "id": "n_notify",
+      "lane": "rv",
+      "col": 0,
+      "type": "frontend",
+      "label": "数据变更",
+      "sublabel": "notifyXxx",
+      "width": 148,
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 227, "end_line": 243 }
+      ]
+    },
+    {
+      "id": "n_animate_call",
+      "lane": "anim",
+      "col": 1,
+      "type": "backend",
+      "label": "入队待播",
+      "sublabel": "pendingAdditions",
+      "width": 160,
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 31, "end_line": 41 },
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 227, "end_line": 243 }
+      ]
+    },
+    {
+      "id": "n_holder_hook",
+      "lane": "holder",
+      "col": 1,
+      "type": "frontend",
+      "label": "自定义钩子",
+      "sublabel": "扩展点",
+      "width": 148,
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/holder/AnimateViewHolder.kt", "line": 6, "end_line": 14 },
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 191, "end_line": 207 }
+      ]
+    },
+    {
+      "id": "n_pre_animate",
+      "lane": "view",
+      "col": 1,
+      "type": "external",
+      "label": "属性复位",
+      "sublabel": "clear()",
+      "width": 146,
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/internal/ViewHelper.kt", "line": 20, "end_line": 36 },
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 191, "end_line": 198 }
+      ]
+    },
+    {
+      "id": "n_run_pending",
+      "lane": "anim",
+      "col": 2,
+      "type": "backend",
+      "label": "统一调度",
+      "sublabel": "runPending",
+      "width": 156,
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 91, "end_line": 181 }
+      ]
+    },
+    {
+      "id": "n_impl",
+      "lane": "holder",
+      "col": 3,
+      "type": "frontend",
+      "label": "执行实现",
+      "sublabel": "animateAddImpl",
+      "width": 154,
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/FadeInAnimator.kt", "line": 37, "end_line": 49 },
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 187, "end_line": 225 }
+      ]
+    },
+    {
+      "id": "n_property_anim",
+      "lane": "view",
+      "col": 3,
+      "type": "external",
+      "label": "属性动画",
+      "sublabel": "View.animate()",
+      "width": 152,
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/FadeInAnimator.kt", "line": 41, "end_line": 49 },
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 278, "end_line": 320 }
+      ]
+    },
+    {
+      "id": "n_end_listener",
+      "lane": "holder",
+      "col": 4,
+      "type": "frontend",
+      "label": "结束回调",
+      "sublabel": "onAnimationEnd",
+      "width": 152,
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 624, "end_line": 640 }
+      ]
+    },
+    {
+      "id": "n_dispatch_finish",
+      "lane": "anim",
+      "col": 4,
+      "type": "backend",
+      "label": "派发完成",
+      "sublabel": "dispatchFinish",
+      "width": 152,
+      "sources": [
+        { "path": "animators/src/main/java/jp/wasabeef/recyclerview/animators/BaseItemAnimator.kt", "line": 509, "end_line": 525 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_notify_call", "from": "n_notify", "to": "n_animate_call", "label": "animateXxx", "role": "main" },
+    { "id": "e_call_pre", "from": "n_animate_call", "to": "n_pre_animate", "label": "先复位", "role": "main" },
+    { "id": "e_pre_run", "from": "n_pre_animate", "to": "n_run_pending", "label": "预置完成", "role": "main" },
+    { "id": "e_call_hook", "from": "n_animate_call", "to": "n_holder_hook", "label": "is 判断", "variant": "dashed", "role": "branch" },
+    { "id": "e_hook_impl", "from": "n_holder_hook", "to": "n_impl", "label": "覆写", "variant": "dashed", "role": "branch" },
+    { "id": "e_run_impl", "from": "n_run_pending", "to": "n_impl", "label": "逐条", "role": "main" },
+    { "id": "e_impl_prop", "from": "n_impl", "to": "n_property_anim", "label": "启动", "role": "main" },
+    { "id": "e_prop_end", "from": "n_property_anim", "to": "n_end_listener", "label": "end 回调", "role": "main" },
+    { "id": "e_end_finish", "from": "n_end_listener", "to": "n_dispatch_finish", "label": "dispatch", "role": "main" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "为什么要排队",
+      "items": [
+        "remove 先跑；move 延迟 removeDuration；add 延迟 remove + max(move, change)，避免同屏打架",
+        "每批用 ArrayList 拷贝 + Runnable，endAnimation 时能整批取消（L444–L507）"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "错峰延迟",
+      "items": [
+        "getRemoveDelay = |oldPosition * removeDuration / 4|，getAddDelay 用 adapterPosition",
+        "位置越靠后启动越晚，列表滚动时形成波纹感"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "扩展点",
+      "items": [
+        "holder 实现 AnimateViewHolder 即可让同一 RecyclerView 的每个 item 有不同的增删动画",
+        "AnimateViewHolder 走 holder 自己的 listener，子类 BaseItemAnimator 的默认 listener 不会被用到"
+      ]
+    }
+  ]
+}
