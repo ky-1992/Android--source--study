@@ -1,0 +1,231 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "AndroidSlidingUpPanel 核心类型结构",
+    "subtitle": "SlidingUpPanelLayout 作为唯一 ViewGroup 持有 ViewDragHelper，把拖动结果换算成 PanelState；ScrollableViewHelper 负责内嵌滚动视图的手势让渡判定。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/39-AndroidSlidingUpPanel/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/umano/AndroidSlidingUpPanel",
+      "provider": "github",
+      "revision": "45a460435b07e764138a700328836cafc1ed5c42"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "panel",
+      "label": "SlidingUpPanelLayout",
+      "kind": "class",
+      "sublabel": "两子 View 的上拉容器",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "mDragHelper", "type": "ViewDragHelper", "visibility": "private" },
+        { "name": "mSlideableView", "type": "View", "visibility": "private" },
+        { "name": "mScrollableViewHelper", "type": "ScrollableViewHelper", "visibility": "private" },
+        { "name": "mSlideState", "type": "PanelState", "visibility": "private" },
+        { "name": "mSlideOffset", "type": "float", "visibility": "private" },
+        { "name": "mPanelHeight", "type": "int", "visibility": "private" },
+        { "name": "mAnchorPoint", "type": "float", "visibility": "private" },
+        { "name": "mPanelSlideListeners", "type": "List<PanelSlideListener>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onMeasure", "parameters": "widthMeasureSpec, heightMeasureSpec", "returns": "void", "visibility": "protected" },
+        { "name": "onLayout", "parameters": "changed, l, t, r, b", "returns": "void", "visibility": "protected" },
+        { "name": "dispatchTouchEvent", "parameters": "ev: MotionEvent", "returns": "boolean", "visibility": "public" },
+        { "name": "onInterceptTouchEvent", "parameters": "ev: MotionEvent", "returns": "boolean", "visibility": "public" },
+        { "name": "computePanelTopPosition", "parameters": "slideOffset: float", "returns": "int", "visibility": "private" },
+        { "name": "setPanelState", "parameters": "state: PanelState", "returns": "void", "visibility": "public" },
+        { "name": "onPanelDragged", "parameters": "newTop: int", "returns": "void", "visibility": "private" },
+        { "name": "drawChild", "parameters": "canvas, child, drawingTime", "returns": "boolean", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java", "line": 30, "end_line": 47 },
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java", "line": 220, "end_line": 229 },
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java", "line": 1062, "end_line": 1069 }
+      ]
+    },
+    {
+      "id": "panel_state",
+      "label": "PanelState",
+      "kind": "enum",
+      "sublabel": "面板的五种停靠状态",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        { "name": "EXPANDED" },
+        { "name": "COLLAPSED" },
+        { "name": "ANCHORED" },
+        { "name": "HIDDEN" },
+        { "name": "DRAGGING" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java", "line": 169, "end_line": 175 }
+      ]
+    },
+    {
+      "id": "layout_params",
+      "label": "SlidingUpPanelLayout.LayoutParams",
+      "kind": "class",
+      "sublabel": "带 weight 的布局参数",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        { "name": "weight", "type": "float", "visibility": "public" },
+        { "name": "ATTRS", "type": "int[]", "visibility": "private", "static": true }
+      ],
+      "methods": [
+        { "name": "LayoutParams", "parameters": "c: Context, attrs: AttributeSet", "returns": "LayoutParams", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java", "line": 1446, "end_line": 1489 }
+      ]
+    },
+    {
+      "id": "panel_listener",
+      "label": "SlidingUpPanelLayout.PanelSlideListener",
+      "kind": "interface",
+      "sublabel": "滑动与状态变化回调",
+      "row": 1,
+      "col": 0,
+      "methods": [
+        { "name": "onPanelSlide", "parameters": "panel: View, slideOffset: float", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "onPanelStateChanged", "parameters": "panel: View, previousState, newState", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java", "line": 234, "end_line": 249 }
+      ]
+    },
+    {
+      "id": "drag_helper",
+      "label": "ViewDragHelper",
+      "kind": "class",
+      "sublabel": "自定义 ViewGroup 拖拽引擎",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "mDragState", "type": "int", "visibility": "private" },
+        { "name": "mCallback", "type": "Callback", "visibility": "private" },
+        { "name": "mCapturedView", "type": "View", "visibility": "private" },
+        { "name": "mScroller", "type": "ScrollerCompat", "visibility": "private" },
+        { "name": "mTouchSlop", "type": "int", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "create", "parameters": "forParent, sensitivity, interpolator, cb", "returns": "ViewDragHelper", "visibility": "public", "static": true },
+        { "name": "shouldInterceptTouchEvent", "parameters": "ev: MotionEvent", "returns": "boolean", "visibility": "public" },
+        { "name": "processTouchEvent", "parameters": "ev: MotionEvent", "returns": "void", "visibility": "public" },
+        { "name": "smoothSlideViewTo", "parameters": "child, finalLeft, finalTop", "returns": "boolean", "visibility": "public" },
+        { "name": "settleCapturedViewAt", "parameters": "finalLeft, finalTop", "returns": "boolean", "visibility": "public" },
+        { "name": "continueSettling", "parameters": "deferCallbacks: boolean", "returns": "boolean", "visibility": "public" },
+        { "name": "abort", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/ViewDragHelper.java", "line": 39, "end_line": 102 },
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/ViewDragHelper.java", "line": 110, "end_line": 140 },
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/ViewDragHelper.java", "line": 587, "end_line": 596 }
+      ]
+    },
+    {
+      "id": "scroll_helper",
+      "label": "ScrollableViewHelper",
+      "kind": "class",
+      "sublabel": "滚动位置换算与让渡",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        { "name": "getScrollableViewScrollPosition", "parameters": "scrollableView: View, isSlidingUp: boolean", "returns": "int", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/ScrollableViewHelper.java", "line": 13, "end_line": 62 }
+      ]
+    },
+    {
+      "id": "simple_listener",
+      "label": "SimplePanelSlideListener",
+      "kind": "class",
+      "sublabel": "空实现适配器",
+      "row": 2,
+      "col": 0,
+      "methods": [
+        { "name": "onPanelSlide", "parameters": "panel: View, slideOffset: float", "returns": "void", "visibility": "public" },
+        { "name": "onPanelStateChanged", "parameters": "panel: View, previousState, newState", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java", "line": 255, "end_line": 263 }
+      ]
+    },
+    {
+      "id": "vgh_callback",
+      "label": "ViewDragHelper.Callback",
+      "kind": "abstract",
+      "sublabel": "拖拽策略抽象类",
+      "row": 2,
+      "col": 1,
+      "methods": [
+        { "name": "tryCaptureView", "parameters": "child: View, pointerId: int", "returns": "boolean", "visibility": "public", "abstract": true },
+        { "name": "onViewReleased", "parameters": "releasedChild, xvel, yvel", "returns": "void", "visibility": "public" },
+        { "name": "onViewPositionChanged", "parameters": "changedView, left, top, dx, dy", "returns": "void", "visibility": "public" },
+        { "name": "onViewDragStateChanged", "parameters": "state: int", "returns": "void", "visibility": "public" },
+        { "name": "clampViewPositionVertical", "parameters": "child, top, dy", "returns": "int", "visibility": "public" },
+        { "name": "getViewVerticalDragRange", "parameters": "child: View", "returns": "int", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/ViewDragHelper.java", "line": 149, "end_line": 202 },
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/ViewDragHelper.java", "line": 260, "end_line": 325 }
+      ]
+    },
+    {
+      "id": "drag_callback",
+      "label": "SlidingUpPanelLayout.DragHelperCallback",
+      "kind": "class",
+      "sublabel": "吸附与夹取的具体策略",
+      "row": 2,
+      "col": 2,
+      "methods": [
+        { "name": "tryCaptureView", "parameters": "child: View, pointerId: int", "returns": "boolean", "visibility": "public" },
+        { "name": "onViewReleased", "parameters": "releasedChild, xvel, yvel", "returns": "void", "visibility": "public" },
+        { "name": "onViewDragStateChanged", "parameters": "state: int", "returns": "void", "visibility": "public" },
+        { "name": "clampViewPositionVertical", "parameters": "child, top, dy", "returns": "int", "visibility": "public" },
+        { "name": "getViewVerticalDragRange", "parameters": "child: View", "returns": "int", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java", "line": 1353, "end_line": 1359 },
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java", "line": 1394, "end_line": 1427 },
+        { "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java", "line": 1430, "end_line": 1443 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "panel_has_state", "from": "panel", "to": "panel_state", "kind": "association", "label": "mSlideState" },
+    { "id": "panel_params", "from": "panel", "to": "layout_params", "kind": "dependency", "label": "generate" },
+    { "id": "panel_listens", "from": "panel", "to": "panel_listener", "kind": "aggregation", "label": "监听器" },
+    { "id": "panel_drag", "from": "panel", "to": "drag_helper", "kind": "composition", "label": "mDragHelper" },
+    { "id": "panel_scroll", "from": "panel", "to": "scroll_helper", "kind": "aggregation", "label": "滚动判定" },
+    { "id": "drag_has_callback", "from": "drag_helper", "to": "vgh_callback", "kind": "composition", "label": "mCallback" },
+    { "id": "drag_callback_extends", "from": "drag_callback", "to": "vgh_callback", "kind": "inheritance" },
+    { "id": "simple_implements", "from": "simple_listener", "to": "panel_listener", "kind": "realization" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "布局契约",
+      "items": [
+        "必须是恰好 2 个子 View：第 0 个是主内容，第 1 个是可滑动面板，onMeasure 里直接抛异常校验",
+        "mIsSlidingUp 由 gravity 决定，所有 top 计算都围绕 computePanelTopPosition 的 offset 展开"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "状态机",
+      "items": [
+        "拖动中置 DRAGGING，松手后由 onViewDragStateChanged 依 offset 收敛到 EXPANDED/COLLAPSED/ANCHORED/HIDDEN",
+        "setPanelState 走 smoothSlideTo → ViewDragHelper.smoothSlideViewTo → computeScroll 逐帧推进"
+      ]
+    }
+  ]
+}

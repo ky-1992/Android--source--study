@@ -1,0 +1,352 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "AndroidSlidingUpPanel 手势拖拽主流程",
+    "subtitle": "触摸先经容器方向判定，再交给 ViewDragHelper 捕获面板；拖动时换算 slideOffset 并重绘，松手后按速度与锚点吸附到目标状态。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/39-AndroidSlidingUpPanel/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/umano/AndroidSlidingUpPanel",
+      "provider": "github",
+      "revision": "45a460435b07e764138a700328836cafc1ed5c42"
+    }
+  },
+  "lanes": [
+    {
+      "id": "touch",
+      "label": "触摸输入"
+    },
+    {
+      "id": "layout",
+      "label": "面板容器"
+    },
+    {
+      "id": "drag",
+      "label": "拖拽助手"
+    },
+    {
+      "id": "state",
+      "label": "状态标记"
+    },
+    {
+      "id": "render",
+      "label": "重绘渲染"
+    }
+  ],
+  "phases": [
+    {
+      "id": "down",
+      "label": "按下分发",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "judge",
+      "label": "拦截判定",
+      "fromCol": 2,
+      "toCol": 2
+    },
+    {
+      "id": "dragmove",
+      "label": "拖拽",
+      "fromCol": 3,
+      "toCol": 3
+    },
+    {
+      "id": "settle",
+      "label": "松手收敛",
+      "fromCol": 4,
+      "toCol": 4
+    }
+  ],
+  "mainPath": [
+    "touch_down",
+    "dispatch",
+    "intercept",
+    "vdh_intercept",
+    "capture",
+    "panel_drag",
+    "release",
+    "settle"
+  ],
+  "nodes": [
+    {
+      "id": "touch_down",
+      "lane": "touch",
+      "col": 0,
+      "type": "external",
+      "label": "手指按下",
+      "sublabel": "ACTION_DOWN",
+      "width": 146,
+      "sources": [
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 958,
+          "end_line": 972
+        }
+      ]
+    },
+    {
+      "id": "dispatch",
+      "lane": "layout",
+      "col": 1,
+      "type": "backend",
+      "label": "触摸分发",
+      "sublabel": "dy 方向判定",
+      "width": 148,
+      "sources": [
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 958,
+          "end_line": 1045
+        }
+      ]
+    },
+    {
+      "id": "intercept",
+      "lane": "layout",
+      "col": 2,
+      "type": "backend",
+      "label": "拦截判定",
+      "sublabel": "onIntercept",
+      "width": 148,
+      "sources": [
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 884,
+          "end_line": 941
+        }
+      ]
+    },
+    {
+      "id": "vdh_intercept",
+      "lane": "drag",
+      "col": 2,
+      "type": "backend",
+      "label": "slop 判定",
+      "sublabel": "shouldIntercept",
+      "width": 152,
+      "sources": [
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/ViewDragHelper.java",
+          "line": 983,
+          "end_line": 1092
+        }
+      ]
+    },
+    {
+      "id": "capture",
+      "lane": "drag",
+      "col": 3,
+      "type": "backend",
+      "label": "捕获面板",
+      "sublabel": "tryCaptureView",
+      "width": 152,
+      "sources": [
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/ViewDragHelper.java",
+          "line": 1093,
+          "end_line": 1140
+        },
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 1356,
+          "end_line": 1359
+        }
+      ]
+    },
+    {
+      "id": "panel_drag",
+      "lane": "layout",
+      "col": 3,
+      "type": "backend",
+      "label": "更新偏移",
+      "sublabel": "onPanelDragged",
+      "width": 152,
+      "sources": [
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 1158,
+          "end_line": 1184
+        },
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 1387,
+          "end_line": 1391
+        }
+      ]
+    },
+    {
+      "id": "release",
+      "lane": "drag",
+      "col": 4,
+      "type": "backend",
+      "label": "松手定位",
+      "sublabel": "onViewReleased",
+      "width": 152,
+      "sources": [
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 1394,
+          "end_line": 1427
+        }
+      ]
+    },
+    {
+      "id": "settle",
+      "lane": "state",
+      "col": 4,
+      "type": "backend",
+      "label": "平滑收敛",
+      "sublabel": "continueSettling",
+      "width": 154,
+      "sources": [
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/ViewDragHelper.java",
+          "line": 587,
+          "end_line": 596
+        },
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 1246,
+          "end_line": 1256
+        }
+      ]
+    },
+    {
+      "id": "panel_state",
+      "lane": "state",
+      "col": 3,
+      "type": "backend",
+      "label": "状态标记",
+      "sublabel": "PanelState",
+      "width": 142,
+      "sources": [
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 1361,
+          "end_line": 1380
+        },
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 169,
+          "end_line": 175
+        }
+      ]
+    },
+    {
+      "id": "draw",
+      "lane": "render",
+      "col": 4,
+      "type": "frontend",
+      "label": "阴影与遮罩",
+      "sublabel": "drawChild",
+      "width": 150,
+      "sources": [
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 1186,
+          "end_line": 1222
+        },
+        {
+          "path": "library/src/main/java/com/sothree/slidinguppanel/SlidingUpPanelLayout.java",
+          "line": 1258,
+          "end_line": 1278
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_down_dispatch",
+      "from": "touch_down",
+      "to": "dispatch",
+      "label": "下发",
+      "role": "main"
+    },
+    {
+      "id": "e_dispatch_intercept",
+      "from": "dispatch",
+      "to": "intercept",
+      "label": "判定",
+      "role": "main"
+    },
+    {
+      "id": "e_intercept_vdh",
+      "from": "intercept",
+      "to": "vdh_intercept",
+      "label": "委托",
+      "role": "main"
+    },
+    {
+      "id": "e_vdh_capture",
+      "from": "vdh_intercept",
+      "to": "capture",
+      "label": "超过 slop",
+      "role": "main"
+    },
+    {
+      "id": "e_capture_drag",
+      "from": "capture",
+      "to": "panel_drag",
+      "label": "位置回调",
+      "role": "main"
+    },
+    {
+      "id": "e_drag_release",
+      "from": "panel_drag",
+      "to": "release",
+      "label": "ACTION_UP",
+      "role": "main"
+    },
+    {
+      "id": "e_release_settle",
+      "from": "release",
+      "to": "settle",
+      "label": "settle",
+      "role": "main"
+    },
+    {
+      "id": "e_drag_state",
+      "from": "panel_drag",
+      "to": "panel_state",
+      "label": "DRAGGING",
+      "role": "branch"
+    },
+    {
+      "id": "e_drag_draw",
+      "from": "panel_drag",
+      "to": "draw",
+      "label": "重绘",
+      "role": "branch"
+    },
+    {
+      "id": "e_settle_state",
+      "from": "settle",
+      "to": "panel_state",
+      "label": "落位",
+      "variant": "dashed",
+      "role": "branch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "嵌套滚动的让渡",
+      "items": [
+        "dispatchTouchEvent 用 dy 方向与 ScrollableViewHelper 的滚动余量决定谁处理这次手势",
+        "列表顶部继续上拉时把事件转给面板，面板收起时转回列表，必要时补发 CANCEL/DOWN"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "松手吸附规则",
+      "items": [
+        "有速度：朝展开方向且未过锚点则停锚点，过了则全展开；反向同理回到锚点或收起",
+        "无速度：按 (1+anchor)/2 与 anchor/2 两个阈值决定展开、锚定或收起"
+      ]
+    }
+  ]
+}
