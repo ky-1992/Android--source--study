@@ -1,0 +1,811 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "ZXing core 编解码核心类型",
+    "subtitle": "MultiFormatReader 按 hints 选择 Reader；图像经 LuminanceSource → Binarizer → BitMatrix，再由 Detector 与 Decoder 还原 Result。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/09-zxing/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/zxing/zxing",
+      "provider": "github",
+      "revision": "16ef4322b619b02d716c4ada40b0fefd719168d9"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "multi_format_reader",
+      "label": "MultiFormatReader",
+      "kind": "class",
+      "sublabel": "多格式解码门面",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "EMPTY_READER_ARRAY",
+          "type": "Reader[]",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "hints",
+          "type": "Map<DecodeHintType,?>",
+          "visibility": "private"
+        },
+        {
+          "name": "readers",
+          "type": "Reader[]",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "decode",
+          "parameters": "image: BinaryBitmap",
+          "returns": "Result",
+          "visibility": "public"
+        },
+        {
+          "name": "decodeWithState",
+          "parameters": "image: BinaryBitmap",
+          "returns": "Result",
+          "visibility": "public"
+        },
+        {
+          "name": "setHints",
+          "parameters": "hints: Map<DecodeHintType,?>",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "decodeInternal",
+          "parameters": "image: BinaryBitmap",
+          "returns": "Result",
+          "visibility": "private"
+        },
+        {
+          "name": "reset",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/MultiFormatReader.java",
+          "line": 38,
+          "end_line": 43
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/MultiFormatReader.java",
+          "line": 82,
+          "end_line": 95
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/MultiFormatReader.java",
+          "line": 169,
+          "end_line": 198
+        }
+      ]
+    },
+    {
+      "id": "qr_code_reader",
+      "label": "QRCodeReader",
+      "kind": "class",
+      "sublabel": "QR 定位 + 解码的组合",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "NO_POINTS",
+          "type": "ResultPoint[]",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "decoder",
+          "type": "Decoder",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "decode",
+          "parameters": "image: BinaryBitmap, hints",
+          "returns": "Result",
+          "visibility": "public"
+        },
+        {
+          "name": "reset",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "extractPureBits",
+          "parameters": "image: BitMatrix",
+          "returns": "BitMatrix",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "moduleSize",
+          "parameters": "leftTopBlack: int[], image: BitMatrix",
+          "returns": "float",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/QRCodeReader.java",
+          "line": 44,
+          "end_line": 48
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/QRCodeReader.java",
+          "line": 68,
+          "end_line": 107
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/QRCodeReader.java",
+          "line": 118,
+          "end_line": 198
+        }
+      ]
+    },
+    {
+      "id": "detector",
+      "label": "Detector",
+      "kind": "class",
+      "sublabel": "找定位图案并透视采样",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "image",
+          "type": "BitMatrix",
+          "visibility": "private"
+        },
+        {
+          "name": "resultPointCallback",
+          "type": "ResultPointCallback",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "detect",
+          "parameters": "hints: Map<DecodeHintType,?>",
+          "returns": "DetectorResult",
+          "visibility": "public"
+        },
+        {
+          "name": "processFinderPatternInfo",
+          "parameters": "info: FinderPatternInfo",
+          "returns": "DetectorResult",
+          "visibility": "protected"
+        },
+        {
+          "name": "sampleGrid",
+          "parameters": "image, transform, dimension",
+          "returns": "BitMatrix",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/detector/Detector.java",
+          "line": 39,
+          "end_line": 45
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/detector/Detector.java",
+          "line": 75,
+          "end_line": 85
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/detector/Detector.java",
+          "line": 86,
+          "end_line": 143
+        }
+      ]
+    },
+    {
+      "id": "decoder",
+      "label": "Decoder",
+      "kind": "class",
+      "sublabel": "版本/纠错码解码",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "rsDecoder",
+          "type": "ReedSolomonDecoder",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "decode",
+          "parameters": "bits: BitMatrix",
+          "returns": "DecoderResult",
+          "visibility": "public"
+        },
+        {
+          "name": "decode",
+          "parameters": "bits: BitMatrix, hints",
+          "returns": "DecoderResult",
+          "visibility": "public"
+        },
+        {
+          "name": "correctErrors",
+          "parameters": "codewordBytes: byte[], numDataCodewords: int",
+          "returns": "int",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/decoder/Decoder.java",
+          "line": 36,
+          "end_line": 42
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/decoder/Decoder.java",
+          "line": 76,
+          "end_line": 129
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/decoder/Decoder.java",
+          "line": 130,
+          "end_line": 173
+        }
+      ]
+    },
+    {
+      "id": "result",
+      "label": "Result",
+      "kind": "class",
+      "sublabel": "文本、原始字节与点位",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "text",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "rawBytes",
+          "type": "byte[]",
+          "visibility": "private"
+        },
+        {
+          "name": "resultPoints",
+          "type": "ResultPoint[]",
+          "visibility": "private"
+        },
+        {
+          "name": "format",
+          "type": "BarcodeFormat",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getText",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "getBarcodeFormat",
+          "parameters": "",
+          "returns": "BarcodeFormat",
+          "visibility": "public"
+        },
+        {
+          "name": "putMetadata",
+          "parameters": "type: ResultMetadataType, value: Object",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/Result.java",
+          "line": 27,
+          "end_line": 35
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/Result.java",
+          "line": 53,
+          "end_line": 70
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/Result.java",
+          "line": 95,
+          "end_line": 113
+        }
+      ]
+    },
+    {
+      "id": "multi_format_writer",
+      "label": "MultiFormatWriter",
+      "kind": "class",
+      "sublabel": "按格式选择编码器",
+      "row": 2,
+      "col": 0,
+      "methods": [
+        {
+          "name": "encode",
+          "parameters": "contents: String, format: BarcodeFormat, width: int, height: int",
+          "returns": "BitMatrix",
+          "visibility": "public"
+        },
+        {
+          "name": "encode",
+          "parameters": "contents, format, width, height, hints",
+          "returns": "BitMatrix",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/MultiFormatWriter.java",
+          "line": 42,
+          "end_line": 52
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/MultiFormatWriter.java",
+          "line": 53,
+          "end_line": 70
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/MultiFormatWriter.java",
+          "line": 84,
+          "end_line": 103
+        }
+      ]
+    },
+    {
+      "id": "bit_matrix",
+      "label": "BitMatrix",
+      "kind": "class",
+      "sublabel": "位打包的黑白矩阵",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "width",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "rowSize",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "bits",
+          "type": "int[]",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "get",
+          "parameters": "x: int, y: int",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "set",
+          "parameters": "x: int, y: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getEnclosingRectangle",
+          "parameters": "",
+          "returns": "int[]",
+          "visibility": "public"
+        },
+        {
+          "name": "rotate",
+          "parameters": "degrees: int",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/common/BitMatrix.java",
+          "line": 36,
+          "end_line": 41
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/common/BitMatrix.java",
+          "line": 58,
+          "end_line": 69
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/common/BitMatrix.java",
+          "line": 160,
+          "end_line": 176
+        }
+      ]
+    },
+    {
+      "id": "binarizer",
+      "label": "Binarizer",
+      "kind": "abstract",
+      "sublabel": "亮度到 1 bit 的抽象",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "source",
+          "type": "LuminanceSource",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getBlackRow",
+          "parameters": "y: int, row: BitArray",
+          "returns": "BitArray",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getBlackMatrix",
+          "parameters": "",
+          "returns": "BitMatrix",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "createBinarizer",
+          "parameters": "source: LuminanceSource",
+          "returns": "Binarizer",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getLuminanceSource",
+          "parameters": "",
+          "returns": "LuminanceSource",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/Binarizer.java",
+          "line": 30,
+          "end_line": 39
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/Binarizer.java",
+          "line": 56,
+          "end_line": 77
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/Binarizer.java",
+          "line": 79,
+          "end_line": 86
+        }
+      ]
+    },
+    {
+      "id": "binary_bitmap",
+      "label": "BinaryBitmap",
+      "kind": "class",
+      "sublabel": "二值化结果的惰性缓存",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "binarizer",
+          "type": "Binarizer",
+          "visibility": "private"
+        },
+        {
+          "name": "matrix",
+          "type": "BitMatrix",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getBlackRow",
+          "parameters": "y: int, row: BitArray",
+          "returns": "BitArray",
+          "visibility": "public"
+        },
+        {
+          "name": "getBlackMatrix",
+          "parameters": "",
+          "returns": "BitMatrix",
+          "visibility": "public"
+        },
+        {
+          "name": "isCropSupported",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "rotateCounterClockwise",
+          "parameters": "",
+          "returns": "BinaryBitmap",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/BinaryBitmap.java",
+          "line": 28,
+          "end_line": 35
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/BinaryBitmap.java",
+          "line": 78,
+          "end_line": 90
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/BinaryBitmap.java",
+          "line": 125,
+          "end_line": 141
+        }
+      ]
+    },
+    {
+      "id": "hybrid_binarizer",
+      "label": "HybridBinarizer",
+      "kind": "class",
+      "sublabel": "5x5 分块局部阈值",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "BLOCK_SIZE_POWER",
+          "type": "int",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "MINIMUM_DIMENSION",
+          "type": "int",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "matrix",
+          "type": "BitMatrix",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getBlackMatrix",
+          "parameters": "",
+          "returns": "BitMatrix",
+          "visibility": "public"
+        },
+        {
+          "name": "createBinarizer",
+          "parameters": "source: LuminanceSource",
+          "returns": "Binarizer",
+          "visibility": "public"
+        },
+        {
+          "name": "calculateThresholdForBlock",
+          "parameters": "luminances, subWidth, subHeight, ...",
+          "returns": "void",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/common/HybridBinarizer.java",
+          "line": 40,
+          "end_line": 54
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/common/HybridBinarizer.java",
+          "line": 62,
+          "end_line": 90
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/common/HybridBinarizer.java",
+          "line": 101,
+          "end_line": 132
+        }
+      ]
+    },
+    {
+      "id": "luminance_source",
+      "label": "LuminanceSource",
+      "kind": "abstract",
+      "sublabel": "平台位图的灰度抽象",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "width",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "height",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getRow",
+          "parameters": "y: int, row: byte[]",
+          "returns": "byte[]",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getMatrix",
+          "parameters": "",
+          "returns": "byte[]",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "isCropSupported",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "crop",
+          "parameters": "left, top, width, height",
+          "returns": "LuminanceSource",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/LuminanceSource.java",
+          "line": 28,
+          "end_line": 35
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/LuminanceSource.java",
+          "line": 50,
+          "end_line": 60
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/LuminanceSource.java",
+          "line": 79,
+          "end_line": 96
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "mf_reader_selects",
+      "from": "multi_format_reader",
+      "to": "qr_code_reader",
+      "kind": "dependency",
+      "label": "持有 Reader[]"
+    },
+    {
+      "id": "qr_uses_detector",
+      "from": "qr_code_reader",
+      "to": "detector",
+      "kind": "dependency",
+      "label": "detect"
+    },
+    {
+      "id": "qr_owns_decoder",
+      "from": "qr_code_reader",
+      "to": "decoder",
+      "kind": "composition",
+      "label": "持有"
+    },
+    {
+      "id": "qr_builds_result",
+      "from": "qr_code_reader",
+      "to": "result",
+      "kind": "dependency",
+      "label": "构造"
+    },
+    {
+      "id": "detector_reads_matrix",
+      "from": "detector",
+      "to": "bit_matrix",
+      "kind": "composition",
+      "label": "采样"
+    },
+    {
+      "id": "binarizer_makes_matrix",
+      "from": "binarizer",
+      "to": "bit_matrix",
+      "kind": "dependency",
+      "label": "getBlackMatrix"
+    },
+    {
+      "id": "writer_makes_matrix",
+      "from": "multi_format_writer",
+      "to": "bit_matrix",
+      "kind": "dependency",
+      "label": "encode 产出"
+    },
+    {
+      "id": "binarizer_owns_source",
+      "from": "binarizer",
+      "to": "luminance_source",
+      "kind": "composition",
+      "label": "持有"
+    },
+    {
+      "id": "bitmap_owns_binarizer",
+      "from": "binary_bitmap",
+      "to": "binarizer",
+      "kind": "composition",
+      "label": "持有"
+    },
+    {
+      "id": "bitmap_caches_matrix",
+      "from": "binary_bitmap",
+      "to": "bit_matrix",
+      "kind": "dependency",
+      "label": "惰性缓存"
+    },
+    {
+      "id": "hybrid_is_binarizer",
+      "from": "hybrid_binarizer",
+      "to": "binarizer",
+      "kind": "inheritance",
+      "label": "继承"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "解码入口：多格式调度",
+      "items": [
+        "setHints 按 POSSIBLE_FORMATS 组装 readers 数组，TRY_HARDER 时把 1D Reader 放到数组末尾",
+        "decodeInternal 逐个 Reader.decode 并捕获 ReaderException 继续尝试，ALSO_INVERTED 时翻转矩阵再跑一轮"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "三层位图抽象",
+      "items": [
+        "LuminanceSource 只负责给灰度行/矩阵，平台差异（PlanarYUV、RGBLuminanceSource）都在子类",
+        "Binarizer 决定阈值：HybridBinarizer 用 5x5 分块局部阈值，小图回退 GlobalHistogramBinarizer",
+        "BinaryBitmap.getBlackMatrix 首次调用才二值化并缓存，1D Reader 命中时 2D 二值化完全不会发生"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "QR 双路径",
+      "items": [
+        "常规路径：Detector 找三个定位图案 → 透视变换 → sampleGrid 采样出模块矩阵",
+        "PURE_BARCODE 路径：QRCodeReader.extractPureBits 直接从黑白边界推算模块大小，跳过定位"
+      ]
+    }
+  ]
+}

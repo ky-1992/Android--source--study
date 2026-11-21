@@ -1,0 +1,350 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "ZXing 单张条码图解码主流程",
+    "subtitle": "MultiFormatReader 按 hints 选 Reader；亮度源二值化出 BitMatrix，QRCodeReader 定位采样后交给 Decoder 纠错，最终产出 Result。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/09-zxing/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/zxing/zxing",
+      "provider": "github",
+      "revision": "16ef4322b619b02d716c4ada40b0fefd719168d9"
+    }
+  },
+  "lanes": [
+    {
+      "id": "app",
+      "label": "调用方"
+    },
+    {
+      "id": "input",
+      "label": "输入层"
+    },
+    {
+      "id": "bin",
+      "label": "二值化"
+    },
+    {
+      "id": "rec",
+      "label": "定位解码"
+    },
+    {
+      "id": "out",
+      "label": "分支与结果"
+    }
+  ],
+  "phases": [
+    {
+      "id": "p_input",
+      "label": "输入",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "p_bin",
+      "label": "二值化",
+      "fromCol": 2,
+      "toCol": 2
+    },
+    {
+      "id": "p_rec",
+      "label": "定位解码",
+      "fromCol": 3,
+      "toCol": 3
+    },
+    {
+      "id": "p_out",
+      "label": "结果",
+      "fromCol": 4,
+      "toCol": 4
+    }
+  ],
+  "mainPath": [
+    "n_call",
+    "n_lum",
+    "n_bitmap",
+    "n_bin",
+    "n_matrix",
+    "n_detect",
+    "n_decoder",
+    "n_result"
+  ],
+  "nodes": [
+    {
+      "id": "n_call",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "发起解码",
+      "sublabel": "decodeWithState",
+      "width": 150,
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/MultiFormatReader.java",
+          "line": 82,
+          "end_line": 95
+        }
+      ]
+    },
+    {
+      "id": "n_lum",
+      "lane": "input",
+      "col": 1,
+      "type": "frontend",
+      "label": "灰度亮度源",
+      "sublabel": "PlanarYUV",
+      "width": 148,
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/PlanarYUVLuminanceSource.java",
+          "line": 39,
+          "end_line": 47
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/PlanarYUVLuminanceSource.java",
+          "line": 79,
+          "end_line": 98
+        }
+      ]
+    },
+    {
+      "id": "n_bitmap",
+      "lane": "input",
+      "col": 2,
+      "type": "backend",
+      "label": "BinaryBitmap",
+      "sublabel": "包装二值化器",
+      "width": 152,
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/BinaryBitmap.java",
+          "line": 28,
+          "end_line": 40
+        }
+      ]
+    },
+    {
+      "id": "n_bin",
+      "lane": "bin",
+      "col": 2,
+      "type": "backend",
+      "label": "局部阈值",
+      "sublabel": "getBlackMatrix",
+      "width": 152,
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/common/HybridBinarizer.java",
+          "line": 62,
+          "end_line": 90
+        }
+      ]
+    },
+    {
+      "id": "n_pure",
+      "lane": "out",
+      "col": 3,
+      "type": "backend",
+      "label": "纯码直提",
+      "sublabel": "extractPureBits",
+      "width": 152,
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/QRCodeReader.java",
+          "line": 118,
+          "end_line": 198
+        }
+      ]
+    },
+    {
+      "id": "n_matrix",
+      "lane": "bin",
+      "col": 3,
+      "type": "database",
+      "label": "位矩阵",
+      "sublabel": "BitMatrix",
+      "width": 140,
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/common/BitMatrix.java",
+          "line": 58,
+          "end_line": 69
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/common/BitMatrix.java",
+          "line": 160,
+          "end_line": 176
+        }
+      ]
+    },
+    {
+      "id": "n_detect",
+      "lane": "rec",
+      "col": 3,
+      "type": "backend",
+      "label": "定位采样",
+      "sublabel": "Detector.detect",
+      "width": 152,
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/detector/Detector.java",
+          "line": 75,
+          "end_line": 85
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/detector/Detector.java",
+          "line": 86,
+          "end_line": 143
+        }
+      ]
+    },
+    {
+      "id": "n_decoder",
+      "lane": "rec",
+      "col": 4,
+      "type": "backend",
+      "label": "解码纠错",
+      "sublabel": "Decoder.decode",
+      "width": 150,
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/decoder/Decoder.java",
+          "line": 76,
+          "end_line": 129
+        }
+      ]
+    },
+    {
+      "id": "n_result",
+      "lane": "out",
+      "col": 4,
+      "type": "external",
+      "label": "Result",
+      "sublabel": "文本+点位",
+      "width": 140,
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/qrcode/QRCodeReader.java",
+          "line": 95,
+          "end_line": 107
+        },
+        {
+          "path": "core/src/main/java/com/google/zxing/Result.java",
+          "line": 53,
+          "end_line": 70
+        }
+      ]
+    },
+    {
+      "id": "n_fallback",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "格式回退",
+      "sublabel": "换下一个 Reader",
+      "width": 152,
+      "sources": [
+        {
+          "path": "core/src/main/java/com/google/zxing/MultiFormatReader.java",
+          "line": 169,
+          "end_line": 198
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e_call_lum",
+      "from": "n_call",
+      "to": "n_lum",
+      "label": "传入图片"
+    },
+    {
+      "id": "e_lum_bitmap",
+      "from": "n_lum",
+      "to": "n_bitmap",
+      "label": "灰度行"
+    },
+    {
+      "id": "e_bitmap_bin",
+      "from": "n_bitmap",
+      "to": "n_bin",
+      "label": "按需二值化"
+    },
+    {
+      "id": "e_bin_matrix",
+      "from": "n_bin",
+      "to": "n_matrix",
+      "label": "输出矩阵"
+    },
+    {
+      "id": "e_matrix_detect",
+      "from": "n_matrix",
+      "to": "n_detect",
+      "label": "黑白模块"
+    },
+    {
+      "id": "e_detect_decoder",
+      "from": "n_detect",
+      "to": "n_decoder",
+      "label": "采样矩阵"
+    },
+    {
+      "id": "e_decoder_result",
+      "from": "n_decoder",
+      "to": "n_result",
+      "label": "DecoderResult"
+    },
+    {
+      "id": "e_bitmap_pure",
+      "from": "n_bitmap",
+      "to": "n_pure",
+      "label": "PURE_BARCODE",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e_pure_decoder",
+      "from": "n_pure",
+      "to": "n_decoder",
+      "label": "跳过定位",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e_decoder_fallback",
+      "from": "n_decoder",
+      "to": "n_fallback",
+      "label": "ReaderException",
+      "variant": "dashed",
+      "role": "error"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "二值化策略",
+      "items": [
+        "HybridBinarizer 把图切成 8x8 块、按 5x5 邻域算局部阈值，小图回退 GlobalHistogramBinarizer",
+        "BinaryBitmap.getBlackMatrix 首次请求才真正二值化并缓存，避免 1D Reader 命中时做无用功"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "失败与分支",
+      "items": [
+        "带上 PURE_BARCODE hint 时，QRCodeReader 用 extractPureBits 直接从黑白边界推算模块，跳过 Detector",
+        "任何 Reader 抛 ReaderException 时 decodeInternal 换下一个 Reader；ALSO_INVERTED 会翻转整块矩阵再试一轮"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "编码侧对照",
+      "items": [
+        "MultiFormatWriter 按 BarcodeFormat switch 出具体 Writer，encode 的返回值同样是 BitMatrix",
+        "解码与编码共用 BitMatrix，所以 QRCodeWriter 生成的矩阵可以直接回灌 Decoder 做自测"
+      ]
+    }
+  ]
+}
