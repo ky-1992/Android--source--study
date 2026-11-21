@@ -1,0 +1,191 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Calligraphy 字体注入主流程",
+    "subtitle": "attachBaseContext 换出 CalligraphyLayoutInflater，布局解析时由 Factory 包装链回调 CalligraphyFactory，解析字体路径后加载并 setTypeface。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/38-Calligraphy/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/chrisjenx/Calligraphy",
+      "provider": "github",
+      "revision": "085e441954d787bd4ef31f245afe5f2f2a311ea5"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "应用层" },
+    { "id": "inflater", "label": "布局注入" },
+    { "id": "factory", "label": "字体工厂" },
+    { "id": "utils", "label": "工具解析" },
+    { "id": "font", "label": "类型加载" }
+  ],
+  "phases": [
+    { "id": "setup", "label": "接入", "fromCol": 0, "toCol": 1 },
+    { "id": "hook", "label": "拦截", "fromCol": 2, "toCol": 2 },
+    { "id": "resolve", "label": "解析", "fromCol": 3, "toCol": 3 },
+    { "id": "apply", "label": "应用", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "app_wrap",
+    "inflater_swap",
+    "inflater_hook",
+    "factory_enter",
+    "utils_resolve",
+    "font_apply"
+  ],
+  "nodes": [
+    {
+      "id": "app_wrap",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "包装 Context",
+      "sublabel": "wrap(base)",
+      "width": 148,
+      "sources": [
+        { "path": "CalligraphySample/src/main/java/uk/co/chrisjenx/calligraphy/sample/MainActivity.java", "line": 63, "end_line": 66 }
+      ]
+    },
+    {
+      "id": "inflater_swap",
+      "lane": "inflater",
+      "col": 1,
+      "type": "backend",
+      "label": "替换 Inflater",
+      "sublabel": "getSystemService",
+      "width": 152,
+      "sources": [
+        { "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyContextWrapper.java", "line": 107, "end_line": 116 }
+      ]
+    },
+    {
+      "id": "inflater_hook",
+      "lane": "inflater",
+      "col": 2,
+      "type": "backend",
+      "label": "接管创建",
+      "sublabel": "onCreateView",
+      "width": 148,
+      "sources": [
+        { "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyLayoutInflater.java", "line": 135, "end_line": 173 }
+      ]
+    },
+    {
+      "id": "custom_view",
+      "lane": "app",
+      "col": 2,
+      "type": "external",
+      "label": "自定义 View",
+      "sublabel": "反射构造",
+      "width": 140,
+      "sources": [
+        { "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyLayoutInflater.java", "line": 188, "end_line": 219 }
+      ]
+    },
+    {
+      "id": "factory_enter",
+      "lane": "factory",
+      "col": 3,
+      "type": "backend",
+      "label": "视图分发",
+      "sublabel": "onViewCreated",
+      "width": 152,
+      "sources": [
+        { "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyFactory.java", "line": 108, "end_line": 143 }
+      ]
+    },
+    {
+      "id": "utils_resolve",
+      "lane": "utils",
+      "col": 3,
+      "type": "backend",
+      "label": "解析字体路径",
+      "sublabel": "样式逐层回退",
+      "width": 156,
+      "sources": [
+        { "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyFactory.java", "line": 181, "end_line": 196 },
+        { "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyUtils.java", "line": 157, "end_line": 173 }
+      ]
+    },
+    {
+      "id": "config_init",
+      "lane": "app",
+      "col": 3,
+      "type": "external",
+      "label": "初始化配置",
+      "sublabel": "initDefault",
+      "width": 140,
+      "sources": [
+        { "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyConfig.java", "line": 72, "end_line": 84 }
+      ]
+    },
+    {
+      "id": "font_apply",
+      "lane": "font",
+      "col": 4,
+      "type": "database",
+      "label": "加载并应用",
+      "sublabel": "缓存复用",
+      "width": 148,
+      "sources": [
+        { "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/TypefaceUtils.java", "line": 31, "end_line": 46 },
+        { "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyUtils.java", "line": 141, "end_line": 147 }
+      ]
+    },
+    {
+      "id": "toolbar_scan",
+      "lane": "factory",
+      "col": 4,
+      "type": "backend",
+      "label": "Toolbar 扫描",
+      "sublabel": "补注入标题",
+      "width": 152,
+      "sources": [
+        { "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyFactory.java", "line": 203, "end_line": 220 }
+      ]
+    },
+    {
+      "id": "has_typeface_node",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "HasTypeface",
+      "sublabel": "反射 setTypeface",
+      "width": 148,
+      "sources": [
+        { "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyFactory.java", "line": 151, "end_line": 164 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_wrap_swap", "from": "app_wrap", "to": "inflater_swap", "label": "wrap", "role": "main" },
+    { "id": "e_swap_hook", "from": "inflater_swap", "to": "inflater_hook", "label": "inflate", "role": "main" },
+    { "id": "e_hook_factory", "from": "inflater_hook", "to": "factory_enter", "label": "回调", "role": "main" },
+    { "id": "e_factory_resolve", "from": "factory_enter", "to": "utils_resolve", "label": "取路径", "role": "main" },
+    { "id": "e_resolve_apply", "from": "utils_resolve", "to": "font_apply", "label": "load", "role": "main" },
+    { "id": "e_hook_custom", "from": "inflater_hook", "to": "custom_view", "label": "createView", "variant": "dashed", "role": "branch" },
+    { "id": "e_config_factory", "from": "config_init", "to": "factory_enter", "label": "默认字体", "variant": "dashed", "role": "branch" },
+    { "id": "e_wrap_config", "from": "app_wrap", "to": "config_init", "label": "init", "variant": "dashed", "role": "branch" },
+    { "id": "e_factory_toolbar", "from": "factory_enter", "to": "toolbar_scan", "label": "扫码子视图", "role": "branch" },
+    { "id": "e_factory_hastypeface", "from": "factory_enter", "to": "has_typeface_node", "label": "接口", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "为什么改 Context",
+      "items": [
+        "LayoutInflater 由 Context.getSystemService 提供，wrap 后 Activity 内所有 inflate 自然走注入版",
+        "CalligraphyLayoutInflater 用 WrapperFactory2 包住外部 Factory2，回调后再应用字体"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "字体路径回退顺序",
+      "items": [
+        "xml 属性 → style → TextAppearance → 主题 attr（含 ActionBar 标题特判）→ Config 默认路径",
+        "每条路径都过 TypefaceUtils.load，按文件路径命中 sCachedFonts 即复用"
+      ]
+    }
+  ]
+}

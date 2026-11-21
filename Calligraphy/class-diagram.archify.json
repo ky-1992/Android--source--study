@@ -1,0 +1,782 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Calligraphy 核心类型结构",
+    "subtitle": "CalligraphyConfig 存配置，CalligraphyContextWrapper 换出定制 LayoutInflater，再由 CalligraphyFactory 在 onViewCreated 时给 TextView 应用字体。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/38-Calligraphy/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/chrisjenx/Calligraphy",
+      "provider": "github",
+      "revision": "085e441954d787bd4ef31f245afe5f2f2a311ea5"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "config_builder",
+      "label": "CalligraphyConfig.Builder",
+      "kind": "class",
+      "sublabel": "可变配置的装配入口",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "reflection",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "customViewCreation",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "attrId",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "fontAssetPath",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "mStyleClassMap",
+          "type": "Map<Class<? extends TextView>, Integer>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setDefaultFontPath",
+          "parameters": "defaultFontAssetPath: String",
+          "returns": "Builder",
+          "visibility": "public"
+        },
+        {
+          "name": "setFontAttrId",
+          "parameters": "fontAssetAttrId: int",
+          "returns": "Builder",
+          "visibility": "public"
+        },
+        {
+          "name": "addCustomStyle",
+          "parameters": "styleClass, styleResourceAttribute",
+          "returns": "Builder",
+          "visibility": "public"
+        },
+        {
+          "name": "addCustomViewWithSetTypeface",
+          "parameters": "clazz: Class<?>",
+          "returns": "Builder",
+          "visibility": "public"
+        },
+        {
+          "name": "disablePrivateFactoryInjection",
+          "parameters": "",
+          "returns": "Builder",
+          "visibility": "public"
+        },
+        {
+          "name": "build",
+          "parameters": "",
+          "returns": "CalligraphyConfig",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyConfig.java",
+          "line": 174,
+          "end_line": 208
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyConfig.java",
+          "line": 216,
+          "end_line": 232
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyConfig.java",
+          "line": 315,
+          "end_line": 318
+        }
+      ]
+    },
+    {
+      "id": "config",
+      "label": "CalligraphyConfig",
+      "kind": "class",
+      "sublabel": "全局不可变配置与单例",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "DEFAULT_STYLES",
+          "type": "Map<Class<? extends TextView>, Integer>",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "sInstance",
+          "type": "CalligraphyConfig",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "mFontPath",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "mAttrId",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mClassStyleAttributeMap",
+          "type": "Map<Class<? extends TextView>, Integer>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "initDefault",
+          "parameters": "calligraphyConfig: CalligraphyConfig",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "get",
+          "parameters": "",
+          "returns": "CalligraphyConfig",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "getFontPath",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "getClassStyles",
+          "parameters": "",
+          "returns": "Map<Class<? extends TextView>, Integer>",
+          "visibility": "package"
+        },
+        {
+          "name": "getAttrId",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "isCustomViewHasTypeface",
+          "parameters": "view: View",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyConfig.java",
+          "line": 25,
+          "end_line": 47
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyConfig.java",
+          "line": 64,
+          "end_line": 84
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyConfig.java",
+          "line": 120,
+          "end_line": 131
+        }
+      ]
+    },
+    {
+      "id": "context_wrapper",
+      "label": "CalligraphyContextWrapper",
+      "kind": "class",
+      "sublabel": "换出注入版 LayoutInflater",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mInflater",
+          "type": "CalligraphyLayoutInflater",
+          "visibility": "private"
+        },
+        {
+          "name": "mAttributeId",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "wrap",
+          "parameters": "base: Context",
+          "returns": "ContextWrapper",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "onActivityCreateView",
+          "parameters": "activity, parent, view, name, context, attr",
+          "returns": "View",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "get",
+          "parameters": "activity: Activity",
+          "returns": "CalligraphyActivityFactory",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "getSystemService",
+          "parameters": "name: String",
+          "returns": "Object",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyContextWrapper.java",
+          "line": 30,
+          "end_line": 32
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyContextWrapper.java",
+          "line": 58,
+          "end_line": 60
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyContextWrapper.java",
+          "line": 107,
+          "end_line": 116
+        }
+      ]
+    },
+    {
+      "id": "utils",
+      "label": "CalligraphyUtils",
+      "kind": "class",
+      "sublabel": "字体路径解析与应用",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "ANDROID_ATTR_TEXT_APPEARANCE",
+          "type": "int[]",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "sToolbarCheck",
+          "type": "Boolean",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "sAppCompatViewCheck",
+          "type": "Boolean",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "applyFontToTextView",
+          "parameters": "context, textView, typeface, deferred",
+          "returns": "boolean",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "applyTypefaceSpan",
+          "parameters": "s: CharSequence, typeface: Typeface",
+          "returns": "CharSequence",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "pullFontPathFromView",
+          "parameters": "context, attrs, attributeId",
+          "returns": "String",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "pullFontPathFromTextAppearance",
+          "parameters": "context, attrs, attributeId",
+          "returns": "String",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "pullFontPathFromTheme",
+          "parameters": "context, styleAttrId, subStyleAttrId, attributeId",
+          "returns": "String",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "canCheckForV7Toolbar",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "package",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyUtils.java",
+          "line": 55,
+          "end_line": 105
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyUtils.java",
+          "line": 157,
+          "end_line": 173
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyUtils.java",
+          "line": 252,
+          "end_line": 313
+        }
+      ]
+    },
+    {
+      "id": "layout_inflater",
+      "label": "CalligraphyLayoutInflater",
+      "kind": "class",
+      "sublabel": "包装 Factory 链的注入器",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mAttributeId",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mCalligraphyFactory",
+          "type": "CalligraphyFactory",
+          "visibility": "private"
+        },
+        {
+          "name": "mSetPrivateFactory",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "mConstructorArgs",
+          "type": "Field",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "cloneInContext",
+          "parameters": "newContext: Context",
+          "returns": "LayoutInflater",
+          "visibility": "public"
+        },
+        {
+          "name": "inflate",
+          "parameters": "parser, root: ViewGroup, attachToRoot: boolean",
+          "returns": "View",
+          "visibility": "public"
+        },
+        {
+          "name": "setFactory",
+          "parameters": "factory: Factory",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setFactory2",
+          "parameters": "factory2: Factory2",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onCreateView",
+          "parameters": "parent: View, name: String, attrs: AttributeSet",
+          "returns": "View",
+          "visibility": "protected"
+        },
+        {
+          "name": "createCustomViewInternal",
+          "parameters": "parent, view, name, viewContext, attrs",
+          "returns": "View",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyLayoutInflater.java",
+          "line": 20,
+          "end_line": 50
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyLayoutInflater.java",
+          "line": 82,
+          "end_line": 124
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyLayoutInflater.java",
+          "line": 135,
+          "end_line": 173
+        }
+      ]
+    },
+    {
+      "id": "factory",
+      "label": "CalligraphyFactory",
+      "kind": "class",
+      "sublabel": "视图创建后的字体注入",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "ACTION_BAR_TITLE",
+          "type": "String",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "ACTION_BAR_SUBTITLE",
+          "type": "String",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "mAttributeId",
+          "type": "int[]",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onViewCreated",
+          "parameters": "view: View, context: Context, attrs: AttributeSet",
+          "returns": "View",
+          "visibility": "public"
+        },
+        {
+          "name": "onViewCreatedInternal",
+          "parameters": "view: View, context: Context, attrs: AttributeSet",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "getStyleForTextView",
+          "parameters": "view: TextView",
+          "returns": "int[]",
+          "visibility": "protected",
+          "static": true
+        },
+        {
+          "name": "isActionBarTitle",
+          "parameters": "view: TextView",
+          "returns": "boolean",
+          "visibility": "protected",
+          "static": true
+        },
+        {
+          "name": "resolveFontPath",
+          "parameters": "context: Context, attrs: AttributeSet",
+          "returns": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "applyFontToToolbar",
+          "parameters": "view: Toolbar",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyFactory.java",
+          "line": 25,
+          "end_line": 42
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyFactory.java",
+          "line": 108,
+          "end_line": 143
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyFactory.java",
+          "line": 181,
+          "end_line": 219
+        }
+      ]
+    },
+    {
+      "id": "typeface_utils",
+      "label": "TypefaceUtils",
+      "kind": "class",
+      "sublabel": "带缓存的 Typeface 加载",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "sCachedFonts",
+          "type": "Map<String, Typeface>",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "sCachedSpans",
+          "type": "Map<Typeface, CalligraphyTypefaceSpan>",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "load",
+          "parameters": "assetManager: AssetManager, filePath: String",
+          "returns": "Typeface",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "getSpan",
+          "parameters": "typeface: Typeface",
+          "returns": "CalligraphyTypefaceSpan",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "isLoaded",
+          "parameters": "typeface: Typeface",
+          "returns": "boolean",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/TypefaceUtils.java",
+          "line": 19,
+          "end_line": 46
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/TypefaceUtils.java",
+          "line": 54,
+          "end_line": 64
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/TypefaceUtils.java",
+          "line": 72,
+          "end_line": 74
+        }
+      ]
+    },
+    {
+      "id": "activity_factory",
+      "label": "CalligraphyActivityFactory",
+      "kind": "interface",
+      "sublabel": "Activity 侧创建回调",
+      "row": 2,
+      "col": 2,
+      "methods": [
+        {
+          "name": "onActivityCreateView",
+          "parameters": "parent, view, name, context, attrs",
+          "returns": "View",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyActivityFactory.java",
+          "line": 11,
+          "end_line": 33
+        }
+      ]
+    },
+    {
+      "id": "has_typeface",
+      "label": "HasTypeface",
+      "kind": "interface",
+      "sublabel": "自定义 View 字体契约",
+      "row": 2,
+      "col": 1,
+      "methods": [
+        {
+          "name": "setTypeface",
+          "parameters": "typeface: Typeface",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/HasTypeface.java",
+          "line": 18,
+          "end_line": 21
+        }
+      ]
+    },
+    {
+      "id": "typeface_span",
+      "label": "CalligraphyTypefaceSpan",
+      "kind": "class",
+      "sublabel": "局部文本换字体",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "typeface",
+          "type": "Typeface",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "updateDrawState",
+          "parameters": "drawState: TextPaint",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "updateMeasureState",
+          "parameters": "paint: TextPaint",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "apply",
+          "parameters": "paint: Paint",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyTypefaceSpan.java",
+          "line": 8,
+          "end_line": 17
+        },
+        {
+          "path": "calligraphy/src/main/java/uk/co/chrisjenx/calligraphy/CalligraphyTypefaceSpan.java",
+          "line": 19,
+          "end_line": 43
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "builder_builds_config",
+      "from": "config_builder",
+      "to": "config",
+      "kind": "dependency",
+      "label": "build()"
+    },
+    {
+      "id": "config_reads_utils",
+      "from": "config",
+      "to": "utils",
+      "kind": "dependency",
+      "label": "canAddV7"
+    },
+    {
+      "id": "wrapper_creates_inflater",
+      "from": "context_wrapper",
+      "to": "layout_inflater",
+      "kind": "dependency",
+      "label": "getSystemService"
+    },
+    {
+      "id": "inflater_holds_factory",
+      "from": "layout_inflater",
+      "to": "factory",
+      "kind": "composition",
+      "label": "持有"
+    },
+    {
+      "id": "inflater_implements",
+      "from": "layout_inflater",
+      "to": "activity_factory",
+      "kind": "realization"
+    },
+    {
+      "id": "factory_reads_config",
+      "from": "factory",
+      "to": "config",
+      "kind": "dependency",
+      "label": "默认字体"
+    },
+    {
+      "id": "factory_uses_utils",
+      "from": "factory",
+      "to": "utils",
+      "kind": "dependency",
+      "label": "解析路径"
+    },
+    {
+      "id": "factory_loads_typeface",
+      "from": "factory",
+      "to": "typeface_utils",
+      "kind": "dependency",
+      "label": "load()"
+    },
+    {
+      "id": "factory_sets_typeface",
+      "from": "factory",
+      "to": "has_typeface",
+      "kind": "dependency",
+      "label": "setTypeface"
+    },
+    {
+      "id": "utils_loads_typeface",
+      "from": "utils",
+      "to": "typeface_utils",
+      "kind": "dependency",
+      "label": "load()"
+    },
+    {
+      "id": "typeface_caches_span",
+      "from": "typeface_utils",
+      "to": "typeface_span",
+      "kind": "composition",
+      "label": "getSpan"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "注入链",
+      "items": [
+        "getSystemService 返回 CalligraphyLayoutInflater，使 Activity 的 inflate 全部走注入版",
+        "CalligraphyLayoutInflater 把外层 Factory/Factory2 包成 Wrapper，回调后交给 CalligraphyFactory"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "字体来源优先级",
+      "items": [
+        "resolveFontPath 依次试 xml 属性、style、TextAppearance，再退回主题 attr 与 Config 默认路径",
+        "TypefaceUtils 用 sCachedFonts 按路径缓存，isLoaded 避免重复设置"
+      ]
+    }
+  ]
+}

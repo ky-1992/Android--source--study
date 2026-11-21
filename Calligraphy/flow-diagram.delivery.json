@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "3023f8c7-c4c1-4959-be0a-31a7a0ac6c65",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/38-Calligraphy/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/38-Calligraphy/flow-diagram.html",
+  "specification": {
+    "sha256": "13f80f136e2ececc0ecd079a4ed7d12a4c1f2af0ddc8b37f6fde7edd7c79aca4",
+    "bytes": 7027
+  },
+  "artifact": {
+    "sha256": "d4b1309dc43d510a26a56aa59f96fb21856d0517a11ab716200b11e07e18402e",
+    "bytes": 850847
+  }
+}
