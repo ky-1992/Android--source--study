@@ -1,0 +1,179 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "AndroidSwipeLayout 一次滑动手势的主流程",
+    "subtitle": "触摸进入 onInterceptTouchEvent 做方向判定，ViewDragHelper 回调约束位移并派发事件，松手后按速度与占比落位。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/26-AndroidSwipeLayout/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/daimajia/AndroidSwipeLayout",
+      "provider": "github",
+      "revision": "5f8678b04751fb8510a88586b22e07ccf64bca99"
+    }
+  },
+  "lanes": [
+    { "id": "touch", "label": "触摸输入" },
+    { "id": "layout", "label": "SwipeLayout" },
+    { "id": "drag", "label": "ViewDragHelper" },
+    { "id": "callback", "label": "状态回调" }
+  ],
+  "phases": [
+    { "id": "judge", "label": "手势判定", "fromCol": 0, "toCol": 1 },
+    { "id": "follow", "label": "拖拽跟随", "fromCol": 2, "toCol": 3 },
+    { "id": "settle", "label": "回弹落位", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "touch_down",
+    "intercept",
+    "judge_dir",
+    "capture",
+    "clamp",
+    "position_cb",
+    "release",
+    "settle"
+  ],
+  "nodes": [
+    {
+      "id": "touch_down",
+      "lane": "touch",
+      "col": 0,
+      "type": "frontend",
+      "label": "手指按下",
+      "sublabel": "ACTION_DOWN",
+      "width": 146,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 903, "end_line": 927 }
+      ]
+    },
+    {
+      "id": "intercept",
+      "lane": "layout",
+      "col": 1,
+      "type": "backend",
+      "label": "拦截判定",
+      "sublabel": "onIntercept",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 903, "end_line": 961 }
+      ]
+    },
+    {
+      "id": "judge_dir",
+      "lane": "layout",
+      "col": 2,
+      "type": "backend",
+      "label": "方向判定",
+      "sublabel": "checkCanDrag",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 829, "end_line": 857 }
+      ]
+    },
+    {
+      "id": "capture",
+      "lane": "drag",
+      "col": 2,
+      "type": "backend",
+      "label": "捕获子视图",
+      "sublabel": "tryCapture",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 316, "end_line": 322 }
+      ]
+    },
+    {
+      "id": "clamp",
+      "lane": "drag",
+      "col": 3,
+      "type": "backend",
+      "label": "边界钳制",
+      "sublabel": "clampPosition",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 223, "end_line": 312 }
+      ]
+    },
+    {
+      "id": "position_cb",
+      "lane": "callback",
+      "col": 3,
+      "type": "backend",
+      "label": "位置回调",
+      "sublabel": "dispatchSwipe",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 348, "end_line": 395 },
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 517, "end_line": 530 }
+      ]
+    },
+    {
+      "id": "release",
+      "lane": "drag",
+      "col": 4,
+      "type": "backend",
+      "label": "松手判定",
+      "sublabel": "onViewReleased",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 337, "end_line": 346 },
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 1327, "end_line": 1368 }
+      ]
+    },
+    {
+      "id": "settle",
+      "lane": "callback",
+      "col": 4,
+      "type": "backend",
+      "label": "开合落位",
+      "sublabel": "open / close",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 1373, "end_line": 1390 },
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 1428, "end_line": 1445 }
+      ]
+    },
+    {
+      "id": "click_close",
+      "lane": "touch",
+      "col": 2,
+      "type": "frontend",
+      "label": "点击关闭",
+      "sublabel": "clickToClose",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 907, "end_line": 910 },
+        { "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java", "line": 1199, "end_line": 1203 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_down_intercept", "from": "touch_down", "to": "intercept", "label": "分发触摸" },
+    { "id": "e_intercept_judge", "from": "intercept", "to": "judge_dir", "label": "MOVE" },
+    { "id": "e_judge_capture", "from": "judge_dir", "to": "capture", "label": "锁定方向" },
+    { "id": "e_capture_clamp", "from": "capture", "to": "clamp", "label": "开始拖拽" },
+    { "id": "e_clamp_position", "from": "clamp", "to": "position_cb", "label": "位置变化" },
+    { "id": "e_position_release", "from": "position_cb", "to": "release", "label": "ACTION_UP" },
+    { "id": "e_release_settle", "from": "release", "to": "settle", "label": "速度或占比" },
+    { "id": "e_intercept_click", "from": "intercept", "to": "click_close", "label": "已打开且点 surface", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "方向判定规则",
+      "items": [
+        "Close 状态下按移动角度选边：水平 45° 内选 Left/Right，否则选 Top/Bottom",
+        "已打开或 Middle 状态时不再换边，直接用当前 mCurrentDragEdge 判断是否够格拖拽"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "落位与通知",
+      "items": [
+        "processHandRelease 以 getMinVelocity 为界，未过速则用 getLeft/getTop 算拖出百分比与阈值比较",
+        "dispatchSwipeEvent 用 mEventCounter 只在首次移动发 onStartOpen/onStartClose，到 Open/Close 后再发终态回调"
+      ]
+    }
+  ]
+}

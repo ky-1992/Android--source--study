@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "f112cfa9-1d38-42bd-9fc6-e60b2d2d3810",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/26-AndroidSwipeLayout/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/26-AndroidSwipeLayout/class-diagram.html",
+  "specification": {
+    "sha256": "487c11c59b20a836339bf75193b5f00208246adb74e226b4ac433449084847fe",
+    "bytes": 16846
+  },
+  "artifact": {
+    "sha256": "bd98aeaee80f526d1b06ea1c1437d04532774c71df3b97eb42c06368e5c91ee1",
+    "bytes": 899656
+  }
+}

@@ -1,0 +1,654 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "AndroidSwipeLayout 核心类型结构",
+    "subtitle": "SwipeLayout 用 ViewDragHelper 拖动 surface，三个内部枚举描述方向/模式/状态；适配器侧由 SwipeItemMangerImpl 维护开合记录。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/26-AndroidSwipeLayout/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/daimajia/AndroidSwipeLayout",
+      "provider": "github",
+      "revision": "5f8678b04751fb8510a88586b22e07ccf64bca99"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "swipe_layout",
+      "label": "SwipeLayout",
+      "kind": "class",
+      "sublabel": "可四向拖出的 FrameLayout 容器",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mDragHelper",
+          "type": "ViewDragHelper",
+          "visibility": "private"
+        },
+        {
+          "name": "mCurrentDragEdge",
+          "type": "DragEdge",
+          "visibility": "private"
+        },
+        {
+          "name": "mDragEdges",
+          "type": "LinkedHashMap<DragEdge, View>",
+          "visibility": "private"
+        },
+        {
+          "name": "mDragDistance",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mShowMode",
+          "type": "ShowMode",
+          "visibility": "private"
+        },
+        {
+          "name": "mSwipeListeners",
+          "type": "List<SwipeListener>",
+          "visibility": "private"
+        },
+        {
+          "name": "mClickToClose",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getOpenStatus",
+          "parameters": "",
+          "returns": "Status",
+          "visibility": "public"
+        },
+        {
+          "name": "open",
+          "parameters": "smooth: boolean, notify: boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "close",
+          "parameters": "smooth: boolean, notify: boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "toggle",
+          "parameters": "smooth: boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "processHandRelease",
+          "parameters": "xvel: float, yvel: float, isCloseBeforeDragged: boolean",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onInterceptTouchEvent",
+          "parameters": "ev: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "dispatchSwipeEvent",
+          "parameters": "surfaceLeft: int, surfaceTop: int, dx: int, dy: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "computeScroll",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setDragEdge",
+          "parameters": "dragEdge: DragEdge",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setShowMode",
+          "parameters": "mode: ShowMode",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java",
+          "line": 30,
+          "end_line": 57
+        },
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java",
+          "line": 220,
+          "end_line": 322
+        },
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java",
+          "line": 1303,
+          "end_line": 1316
+        }
+      ]
+    },
+    {
+      "id": "drag_edge",
+      "label": "DragEdge",
+      "kind": "enum",
+      "sublabel": "四个可拖出方向",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "Left"
+        },
+        {
+          "name": "Top"
+        },
+        {
+          "name": "Right"
+        },
+        {
+          "name": "Bottom"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java",
+          "line": 64,
+          "end_line": 69
+        }
+      ]
+    },
+    {
+      "id": "show_mode",
+      "label": "ShowMode",
+      "kind": "enum",
+      "sublabel": "底部视图的两种摆法",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "LayDown"
+        },
+        {
+          "name": "PullOut"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java",
+          "line": 71,
+          "end_line": 74
+        }
+      ]
+    },
+    {
+      "id": "status",
+      "label": "Status",
+      "kind": "enum",
+      "sublabel": "开合位置的三态",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "Middle"
+        },
+        {
+          "name": "Open"
+        },
+        {
+          "name": "Close"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java",
+          "line": 1291,
+          "end_line": 1295
+        }
+      ]
+    },
+    {
+      "id": "swipe_detector",
+      "label": "SwipeDetector",
+      "kind": "class",
+      "sublabel": "点击关闭与双击回调",
+      "row": 1,
+      "col": 0,
+      "methods": [
+        {
+          "name": "onSingleTapUp",
+          "parameters": "e: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "onDoubleTap",
+          "parameters": "e: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java",
+          "line": 1198,
+          "end_line": 1228
+        }
+      ]
+    },
+    {
+      "id": "swipe_listener",
+      "label": "SwipeListener",
+      "kind": "interface",
+      "sublabel": "开合过程的生命周期回调",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        {
+          "name": "onStartOpen",
+          "parameters": "layout: SwipeLayout",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onOpen",
+          "parameters": "layout: SwipeLayout",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onStartClose",
+          "parameters": "layout: SwipeLayout",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onClose",
+          "parameters": "layout: SwipeLayout",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onUpdate",
+          "parameters": "layout: SwipeLayout, leftOffset: int, topOffset: int",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onHandRelease",
+          "parameters": "layout: SwipeLayout, xvel: float, yvel: float",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/SwipeLayout.java",
+          "line": 115,
+          "end_line": 127
+        }
+      ]
+    },
+    {
+      "id": "swipe_adapter_interface",
+      "label": "SwipeAdapterInterface",
+      "kind": "interface",
+      "sublabel": "适配器对外暴露的资源 id",
+      "row": 2,
+      "col": 0,
+      "methods": [
+        {
+          "name": "getSwipeLayoutResourceId",
+          "parameters": "position: int",
+          "returns": "int",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "notifyDatasetChanged",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/interfaces/SwipeAdapterInterface.java",
+          "line": 3,
+          "end_line": 9
+        }
+      ]
+    },
+    {
+      "id": "item_manger_interface",
+      "label": "SwipeItemMangerInterface",
+      "kind": "interface",
+      "sublabel": "按 position 开合条目的契约",
+      "row": 3,
+      "col": 1,
+      "methods": [
+        {
+          "name": "openItem",
+          "parameters": "position: int",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "closeItem",
+          "parameters": "position: int",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "closeAllExcept",
+          "parameters": "layout: SwipeLayout",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "closeAllItems",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "isOpen",
+          "parameters": "position: int",
+          "returns": "boolean",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getMode",
+          "parameters": "",
+          "returns": "Attributes.Mode",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "setMode",
+          "parameters": "mode: Attributes.Mode",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/interfaces/SwipeItemMangerInterface.java",
+          "line": 8,
+          "end_line": 29
+        }
+      ]
+    },
+    {
+      "id": "base_swipe_adapter",
+      "label": "BaseSwipeAdapter",
+      "kind": "abstract",
+      "sublabel": "ListView/GridView 适配器基类",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mItemManger",
+          "type": "SwipeItemMangerImpl",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getView",
+          "parameters": "position: int, convertView: View, parent: ViewGroup",
+          "returns": "View",
+          "visibility": "public"
+        },
+        {
+          "name": "getSwipeLayoutResourceId",
+          "parameters": "position: int",
+          "returns": "int",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "generateView",
+          "parameters": "position: int, parent: ViewGroup",
+          "returns": "View",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "fillValues",
+          "parameters": "position: int, convertView: View",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "notifyDatasetChanged",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/adapters/BaseSwipeAdapter.java",
+          "line": 15,
+          "end_line": 24
+        },
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/adapters/BaseSwipeAdapter.java",
+          "line": 50,
+          "end_line": 59
+        }
+      ]
+    },
+    {
+      "id": "item_manger_impl",
+      "label": "SwipeItemMangerImpl",
+      "kind": "class",
+      "sublabel": "开合状态簿记与视图绑定",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mode",
+          "type": "Attributes.Mode",
+          "visibility": "private"
+        },
+        {
+          "name": "mOpenPosition",
+          "type": "int",
+          "visibility": "protected"
+        },
+        {
+          "name": "mOpenPositions",
+          "type": "Set<Integer>",
+          "visibility": "protected"
+        },
+        {
+          "name": "mShownLayouts",
+          "type": "Set<SwipeLayout>",
+          "visibility": "protected"
+        },
+        {
+          "name": "swipeAdapterInterface",
+          "type": "SwipeAdapterInterface",
+          "visibility": "protected"
+        }
+      ],
+      "methods": [
+        {
+          "name": "bind",
+          "parameters": "view: View, position: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "openItem",
+          "parameters": "position: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "closeItem",
+          "parameters": "position: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "closeAllExcept",
+          "parameters": "layout: SwipeLayout",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "isOpen",
+          "parameters": "position: int",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "setMode",
+          "parameters": "mode: Attributes.Mode",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/implments/SwipeItemMangerImpl.java",
+          "line": 20,
+          "end_line": 30
+        },
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/implments/SwipeItemMangerImpl.java",
+          "line": 50,
+          "end_line": 69
+        },
+        {
+          "path": "library/src/main/java/com/daimajia/swipe/implments/SwipeItemMangerImpl.java",
+          "line": 176,
+          "end_line": 213
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "layout_uses_edge",
+      "from": "swipe_layout",
+      "to": "drag_edge",
+      "kind": "association",
+      "label": "mCurrentDragEdge"
+    },
+    {
+      "id": "layout_uses_mode",
+      "from": "swipe_layout",
+      "to": "show_mode",
+      "kind": "association",
+      "label": "mShowMode"
+    },
+    {
+      "id": "layout_reads_status",
+      "from": "swipe_layout",
+      "to": "status",
+      "kind": "dependency",
+      "label": "getOpenStatus()"
+    },
+    {
+      "id": "layout_owns_detector",
+      "from": "swipe_layout",
+      "to": "swipe_detector",
+      "kind": "composition",
+      "label": "gestureDetector"
+    },
+    {
+      "id": "layout_notifies_listener",
+      "from": "swipe_layout",
+      "to": "swipe_listener",
+      "kind": "aggregation",
+      "label": "mSwipeListeners"
+    },
+    {
+      "id": "adapter_implements_item_manger",
+      "from": "base_swipe_adapter",
+      "to": "item_manger_interface",
+      "kind": "realization"
+    },
+    {
+      "id": "adapter_implements_swipe_adapter",
+      "from": "base_swipe_adapter",
+      "to": "swipe_adapter_interface",
+      "kind": "realization"
+    },
+    {
+      "id": "adapter_owns_manger",
+      "from": "base_swipe_adapter",
+      "to": "item_manger_impl",
+      "kind": "composition",
+      "label": "mItemManger"
+    },
+    {
+      "id": "impl_implements_item_manger",
+      "from": "item_manger_impl",
+      "to": "item_manger_interface",
+      "kind": "realization"
+    },
+    {
+      "id": "impl_binds_layout",
+      "from": "item_manger_impl",
+      "to": "swipe_layout",
+      "kind": "association",
+      "label": "bind()"
+    },
+    {
+      "id": "impl_reads_adapter",
+      "from": "item_manger_impl",
+      "to": "swipe_adapter_interface",
+      "kind": "dependency",
+      "label": "查资源 id"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "拖拽内核",
+      "items": [
+        "mDragHelperCallback 只放行 surface 与当前 bottom 视图，clamp 按 DragEdge 把位移限制在 0~mDragDistance",
+        "松手后 processHandRelease 先看速度，再按已拖出百分比与 0.25/0.75 阈值决定 open 或 close"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "适配器侧状态",
+      "items": [
+        "SwipeItemMangerImpl.bind 给每个 item 挂 OnLayoutListener 与 SwipeMemory，复用 View 时只改 position",
+        "Single 模式下 SwipeMemory 在 onStartOpen 里 closeAllExcept，保证列表同时只开一条"
+      ]
+    }
+  ]
+}
