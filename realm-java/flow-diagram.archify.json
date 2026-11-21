@@ -1,0 +1,200 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "realm-java 打开实例、写事务与查询主流程",
+    "subtitle": "getInstance 先查 RealmCache 引用计数，首次打开走 OsSharedRealm 的 JNI 调用；写事务与查询最终都落到 native 的表/结果对象上。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/27-realm-java/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/realm/realm-java",
+      "provider": "github",
+      "revision": "e5f4caac29d2ca36022352ef5c1f59045750e021"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "应用层" },
+    { "id": "api", "label": "Realm API" },
+    { "id": "cache", "label": "实例与查询" },
+    { "id": "jni", "label": "JNI 边界" }
+  ],
+  "phases": [
+    { "id": "init", "label": "初始化与取实例", "fromCol": 0, "toCol": 1 },
+    { "id": "open", "label": "打开与事务", "fromCol": 2, "toCol": 2 },
+    { "id": "query", "label": "查询与结果", "fromCol": 3, "toCol": 4 }
+  ],
+  "mainPath": [
+    "app_init",
+    "api_get",
+    "cache_hit",
+    "jni_open",
+    "api_tx",
+    "jni_commit",
+    "api_where",
+    "cache_build",
+    "jni_find",
+    "app_results"
+  ],
+  "nodes": [
+    {
+      "id": "app_init",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "初始化库",
+      "sublabel": "Realm.init",
+      "width": 148,
+      "sources": [
+        { "path": "realm/realm-library/src/main/java/io/realm/Realm.java", "line": 262, "end_line": 265 },
+        { "path": "realm/realm-library/src/main/java/io/realm/Realm.java", "line": 335, "end_line": 350 }
+      ]
+    },
+    {
+      "id": "api_get",
+      "lane": "api",
+      "col": 1,
+      "type": "backend",
+      "label": "获取实例",
+      "sublabel": "getInstance",
+      "width": 148,
+      "sources": [
+        { "path": "realm/realm-library/src/main/java/io/realm/Realm.java", "line": 459, "end_line": 466 }
+      ]
+    },
+    {
+      "id": "cache_hit",
+      "lane": "cache",
+      "col": 1,
+      "type": "backend",
+      "label": "复用实例",
+      "sublabel": "引用计数",
+      "width": 148,
+      "sources": [
+        { "path": "realm/realm-library/src/main/java/io/realm/RealmCache.java", "line": 420, "end_line": 423 },
+        { "path": "realm/realm-library/src/main/java/io/realm/RealmCache.java", "line": 431, "end_line": 443 }
+      ]
+    },
+    {
+      "id": "jni_open",
+      "lane": "jni",
+      "col": 2,
+      "type": "database",
+      "label": "打开库文件",
+      "sublabel": "OsSharedRealm",
+      "width": 156,
+      "sources": [
+        { "path": "realm/realm-library/src/main/java/io/realm/BaseRealm.java", "line": 141, "end_line": 144 },
+        { "path": "realm/realm-library/src/main/java/io/realm/internal/OsSharedRealm.java", "line": 246, "end_line": 249 }
+      ]
+    },
+    {
+      "id": "api_tx",
+      "lane": "api",
+      "col": 2,
+      "type": "backend",
+      "label": "开启写事务",
+      "sublabel": "beginTransaction",
+      "width": 156,
+      "sources": [
+        { "path": "realm/realm-library/src/main/java/io/realm/BaseRealm.java", "line": 446, "end_line": 449 },
+        { "path": "realm/realm-library/src/main/java/io/realm/Realm.java", "line": 1623, "end_line": 1642 }
+      ]
+    },
+    {
+      "id": "jni_commit",
+      "lane": "jni",
+      "col": 3,
+      "type": "database",
+      "label": "提交写盘",
+      "sublabel": "commit",
+      "width": 148,
+      "sources": [
+        { "path": "realm/realm-library/src/main/java/io/realm/BaseRealm.java", "line": 457, "end_line": 460 },
+        { "path": "realm/realm-library/src/main/java/io/realm/internal/OsSharedRealm.java", "line": 603, "end_line": 606 }
+      ]
+    },
+    {
+      "id": "api_where",
+      "lane": "api",
+      "col": 3,
+      "type": "backend",
+      "label": "构造查询",
+      "sublabel": "where()",
+      "width": 140,
+      "sources": [
+        { "path": "realm/realm-library/src/main/java/io/realm/Realm.java", "line": 1562, "end_line": 1565 },
+        { "path": "realm/realm-library/src/main/java/io/realm/RealmQuery.java", "line": 93, "end_line": 95 }
+      ]
+    },
+    {
+      "id": "cache_build",
+      "lane": "cache",
+      "col": 4,
+      "type": "backend",
+      "label": "拼装条件",
+      "sublabel": "TableQuery",
+      "width": 148,
+      "sources": [
+        { "path": "realm/realm-library/src/main/java/io/realm/RealmQuery.java", "line": 69, "end_line": 80 },
+        { "path": "realm/realm-library/src/main/java/io/realm/internal/TableQuery.java", "line": 33, "end_line": 40 }
+      ]
+    },
+    {
+      "id": "jni_find",
+      "lane": "jni",
+      "col": 4,
+      "type": "database",
+      "label": "执行查询",
+      "sublabel": "nativeFind",
+      "width": 148,
+      "sources": [
+        { "path": "realm/realm-library/src/main/java/io/realm/RealmQuery.java", "line": 2462, "end_line": 2467 },
+        { "path": "realm/realm-library/src/main/java/io/realm/internal/TableQuery.java", "line": 572, "end_line": 572 },
+        { "path": "realm/realm-library/src/main/java/io/realm/internal/OsResults.java", "line": 779, "end_line": 781 }
+      ]
+    },
+    {
+      "id": "app_results",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "返回结果",
+      "sublabel": "RealmResults",
+      "width": 156,
+      "sources": [
+        { "path": "realm/realm-library/src/main/java/io/realm/RealmResults.java", "line": 98, "end_line": 101 },
+        { "path": "realm/realm-library/src/main/java/io/realm/OrderedRealmCollectionImpl.java", "line": 41, "end_line": 48 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_init_get", "from": "app_init", "to": "api_get", "label": "初始化完成" },
+    { "id": "e_get_cache", "from": "api_get", "to": "cache_hit", "label": "查缓存", "variant": "emphasis" },
+    { "id": "e_cache_open", "from": "cache_hit", "to": "jni_open", "label": "首次打开" },
+    { "id": "e_open_tx", "from": "jni_open", "to": "api_tx", "label": "拿到句柄" },
+    { "id": "e_tx_commit", "from": "api_tx", "to": "jni_commit", "label": "写入后提交" },
+    { "id": "e_commit_where", "from": "jni_commit", "to": "api_where", "label": "版本推进" },
+    { "id": "e_where_build", "from": "api_where", "to": "cache_build", "label": "equalTo" },
+    { "id": "e_build_find", "from": "cache_build", "to": "jni_find", "label": "nativeFind" },
+    { "id": "e_find_results", "from": "jni_find", "to": "app_results", "label": "逐行读取" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "实例复用",
+      "items": [
+        "RealmCache 按 Realm 文件路径分桶，线程内实例用 ThreadLocal 计数，跨线程用 globalCount 计数",
+        "最后一个引用 close 后才真正释放 OsSharedRealm，避免同进程重复打开同一个文件"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "查询与结果",
+      "items": [
+        "RealmQuery 的方法只往 TableQuery 上追加条件，findAll 时才创建 OsResults，真正执行仍在 native 侧",
+        "RealmResults 是 OsResults 的薄包装，修改通过 OrderedRealmCollectionImpl 的 CollectionOperator 转发"
+      ]
+    }
+  ]
+}

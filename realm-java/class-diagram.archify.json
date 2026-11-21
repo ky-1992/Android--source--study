@@ -1,0 +1,761 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "realm-java 核心类型结构",
+    "subtitle": "Realm 继承 BaseRealm 并持有 OsSharedRealm；RealmQuery 包住 TableQuery，RealmResults 包住 OsResults，Java 层只做句柄与生命周期管理。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/27-realm-java/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/realm/realm-java",
+      "provider": "github",
+      "revision": "e5f4caac29d2ca36022352ef5c1f59045750e021"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "realm_configuration",
+      "label": "RealmConfiguration",
+      "kind": "class",
+      "sublabel": "不可变配置快照",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "realmDirectory",
+          "type": "File",
+          "visibility": "private"
+        },
+        {
+          "name": "realmFileName",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "schemaVersion",
+          "type": "long",
+          "visibility": "private"
+        },
+        {
+          "name": "schemaMediator",
+          "type": "RealmProxyMediator",
+          "visibility": "private"
+        },
+        {
+          "name": "deleteRealmIfMigrationNeeded",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getPath",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "getSchemaVersion",
+          "parameters": "",
+          "returns": "long",
+          "visibility": "public"
+        },
+        {
+          "name": "getDurability",
+          "parameters": "",
+          "returns": "Durability",
+          "visibility": "public"
+        },
+        {
+          "name": "isReadOnly",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmConfiguration.java",
+          "line": 68,
+          "end_line": 90
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmConfiguration.java",
+          "line": 167,
+          "end_line": 180
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmConfiguration.java",
+          "line": 247,
+          "end_line": 250
+        }
+      ]
+    },
+    {
+      "id": "realm_cache",
+      "label": "RealmCache",
+      "kind": "class",
+      "sublabel": "按路径复用实例",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "refAndCountMap",
+          "type": "Map<Pair<RealmCacheType, VersionID>, ReferenceCounter>",
+          "visibility": "private"
+        },
+        {
+          "name": "realmPath",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "configuration",
+          "type": "RealmConfiguration",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "createRealmOrGetFromCache",
+          "parameters": "configuration: RealmConfiguration, realmClass: Class<E>",
+          "returns": "E",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "doCreateRealmOrGetFromCache",
+          "parameters": "configuration, realmClass, version",
+          "returns": "E",
+          "visibility": "private"
+        },
+        {
+          "name": "invokeWithGlobalRefCount",
+          "parameters": "configuration, callback",
+          "returns": "void",
+          "visibility": "package",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmCache.java",
+          "line": 61,
+          "end_line": 80
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmCache.java",
+          "line": 420,
+          "end_line": 423
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmCache.java",
+          "line": 431,
+          "end_line": 443
+        }
+      ]
+    },
+    {
+      "id": "proxy_state",
+      "label": "ProxyState",
+      "kind": "class",
+      "sublabel": "被管对象运行态",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "realm",
+          "type": "BaseRealm",
+          "visibility": "private"
+        },
+        {
+          "name": "row",
+          "type": "Row",
+          "visibility": "private"
+        },
+        {
+          "name": "model",
+          "type": "E",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getRealm$realm",
+          "parameters": "",
+          "returns": "BaseRealm",
+          "visibility": "public"
+        },
+        {
+          "name": "getRow$realm",
+          "parameters": "",
+          "returns": "Row",
+          "visibility": "public"
+        },
+        {
+          "name": "setRow$realm",
+          "parameters": "row: Row",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "checkValidObject",
+          "parameters": "value: RealmModel",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/ProxyState.java",
+          "line": 35,
+          "end_line": 40
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/ProxyState.java",
+          "line": 95,
+          "end_line": 110
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/ProxyState.java",
+          "line": 211,
+          "end_line": 219
+        }
+      ]
+    },
+    {
+      "id": "base_realm",
+      "label": "BaseRealm",
+      "kind": "abstract",
+      "sublabel": "持有 native 句柄的基类",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "sharedRealm",
+          "type": "OsSharedRealm",
+          "visibility": "public"
+        },
+        {
+          "name": "configuration",
+          "type": "RealmConfiguration",
+          "visibility": "protected"
+        },
+        {
+          "name": "threadId",
+          "type": "long",
+          "visibility": "package"
+        }
+      ],
+      "methods": [
+        {
+          "name": "beginTransaction",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "commitTransaction",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "cancelTransaction",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "checkIfValid",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "close",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/BaseRealm.java",
+          "line": 59,
+          "end_line": 92
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/BaseRealm.java",
+          "line": 446,
+          "end_line": 453
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/BaseRealm.java",
+          "line": 457,
+          "end_line": 464
+        }
+      ]
+    },
+    {
+      "id": "realm",
+      "label": "Realm",
+      "kind": "class",
+      "sublabel": "线程内单例门面",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "defaultConfiguration",
+          "type": "RealmConfiguration",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "defaultConfigurationLock",
+          "type": "Object",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "init",
+          "parameters": "context: Context",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "getDefaultInstance",
+          "parameters": "",
+          "returns": "Realm",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "getInstance",
+          "parameters": "configuration: RealmConfiguration",
+          "returns": "Realm",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "where",
+          "parameters": "clazz: Class<E>",
+          "returns": "RealmQuery<E>",
+          "visibility": "public"
+        },
+        {
+          "name": "executeTransaction",
+          "parameters": "transaction: Transaction",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "addChangeListener",
+          "parameters": "listener: RealmChangeListener<Realm>",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/Realm.java",
+          "line": 434,
+          "end_line": 445
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/Realm.java",
+          "line": 459,
+          "end_line": 466
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/Realm.java",
+          "line": 1623,
+          "end_line": 1642
+        }
+      ]
+    },
+    {
+      "id": "realm_object",
+      "label": "RealmObject",
+      "kind": "abstract",
+      "sublabel": "受管对象基类",
+      "row": 1,
+      "col": 2,
+      "attributes": [],
+      "methods": [
+        {
+          "name": "deleteFromRealm",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "deleteFromRealm",
+          "parameters": "object: E",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmObject.java",
+          "line": 79,
+          "end_line": 85
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmObject.java",
+          "line": 94,
+          "end_line": 96
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmObject.java",
+          "line": 107,
+          "end_line": 110
+        }
+      ]
+    },
+    {
+      "id": "realm_query",
+      "label": "RealmQuery<E>",
+      "kind": "class",
+      "sublabel": "链式条件构造器",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "table",
+          "type": "Table",
+          "visibility": "private"
+        },
+        {
+          "name": "realm",
+          "type": "BaseRealm",
+          "visibility": "private"
+        },
+        {
+          "name": "query",
+          "type": "TableQuery",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "createQuery",
+          "parameters": "realm: Realm, clazz: Class<E>",
+          "returns": "RealmQuery<E>",
+          "visibility": "package",
+          "static": true
+        },
+        {
+          "name": "equalTo",
+          "parameters": "fieldName: String, value: String",
+          "returns": "RealmQuery<E>",
+          "visibility": "public"
+        },
+        {
+          "name": "findAll",
+          "parameters": "",
+          "returns": "RealmResults<E>",
+          "visibility": "public"
+        },
+        {
+          "name": "findFirst",
+          "parameters": "",
+          "returns": "E",
+          "visibility": "public"
+        },
+        {
+          "name": "count",
+          "parameters": "",
+          "returns": "long",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmQuery.java",
+          "line": 69,
+          "end_line": 80
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmQuery.java",
+          "line": 93,
+          "end_line": 95
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmQuery.java",
+          "line": 2462,
+          "end_line": 2467
+        }
+      ]
+    },
+    {
+      "id": "realm_results",
+      "label": "RealmResults<E>",
+      "kind": "class",
+      "sublabel": "懒执行的查询结果",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "osResults",
+          "type": "OsResults",
+          "visibility": "package"
+        }
+      ],
+      "methods": [
+        {
+          "name": "where",
+          "parameters": "",
+          "returns": "RealmQuery<E>",
+          "visibility": "public"
+        },
+        {
+          "name": "isLoaded",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "load",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmResults.java",
+          "line": 71,
+          "end_line": 80
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmResults.java",
+          "line": 98,
+          "end_line": 101
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/RealmResults.java",
+          "line": 134,
+          "end_line": 140
+        }
+      ]
+    },
+    {
+      "id": "realm_object_proxy",
+      "label": "RealmObjectProxy",
+      "kind": "interface",
+      "sublabel": "生成代理的契约",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "CacheData",
+          "type": "class<RealmModel>",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "methods": [
+        {
+          "name": "realm$injectObjectContext",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "realmGet$proxyState",
+          "parameters": "",
+          "returns": "ProxyState",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/internal/RealmObjectProxy.java",
+          "line": 29,
+          "end_line": 48
+        }
+      ]
+    },
+    {
+      "id": "os_shared_realm",
+      "label": "OsSharedRealm",
+      "kind": "class",
+      "sublabel": "JNI 句柄包装层",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "nativePtr",
+          "type": "long",
+          "visibility": "private"
+        },
+        {
+          "name": "isClosed",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getInstance",
+          "parameters": "config: RealmConfiguration, version: VersionID",
+          "returns": "OsSharedRealm",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "getTable",
+          "parameters": "name: String",
+          "returns": "Table",
+          "visibility": "public"
+        },
+        {
+          "name": "beginTransaction",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "nativeGetSharedRealm",
+          "parameters": "nativeConfigPtr, versionNo, versionIndex, notifier",
+          "returns": "long",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "nativeCommitTransaction",
+          "parameters": "nativeSharedRealmPtr",
+          "returns": "void",
+          "visibility": "private",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/internal/OsSharedRealm.java",
+          "line": 37,
+          "end_line": 45
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/internal/OsSharedRealm.java",
+          "line": 146,
+          "end_line": 150
+        },
+        {
+          "path": "realm/realm-library/src/main/java/io/realm/internal/OsSharedRealm.java",
+          "line": 595,
+          "end_line": 606
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r_realm_base",
+      "from": "realm",
+      "to": "base_realm",
+      "kind": "inheritance",
+      "label": "extends"
+    },
+    {
+      "id": "r_realm_config",
+      "from": "base_realm",
+      "to": "realm_configuration",
+      "kind": "association",
+      "label": "configuration"
+    },
+    {
+      "id": "r_realm_cache",
+      "from": "realm",
+      "to": "realm_cache",
+      "kind": "dependency",
+      "label": "getInstance"
+    },
+    {
+      "id": "r_cache_base",
+      "from": "realm_cache",
+      "to": "base_realm",
+      "kind": "dependency",
+      "label": "创建并复用"
+    },
+    {
+      "id": "r_base_shared",
+      "from": "base_realm",
+      "to": "os_shared_realm",
+      "kind": "composition",
+      "label": "持有 sharedRealm"
+    },
+    {
+      "id": "r_realm_query",
+      "from": "realm",
+      "to": "realm_query",
+      "kind": "dependency",
+      "label": "where()"
+    },
+    {
+      "id": "r_query_results",
+      "from": "realm_query",
+      "to": "realm_results",
+      "kind": "dependency",
+      "label": "findAll"
+    },
+    {
+      "id": "r_results_query",
+      "from": "realm_results",
+      "to": "realm_query",
+      "kind": "dependency",
+      "label": "where()"
+    },
+    {
+      "id": "r_obj_proxy",
+      "from": "realm_object",
+      "to": "realm_object_proxy",
+      "kind": "dependency",
+      "label": "子类被代理"
+    },
+    {
+      "id": "r_proxy_state",
+      "from": "realm_object_proxy",
+      "to": "proxy_state",
+      "kind": "association",
+      "label": "持有"
+    },
+    {
+      "id": "r_state_realm",
+      "from": "proxy_state",
+      "to": "realm",
+      "kind": "association",
+      "label": "getRealm$realm"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "受管对象与代理",
+      "items": [
+        "注解处理器为每个 RealmObject 子类生成 xxxRealmProxy，代理实现 RealmObjectProxy 并持有一个 ProxyState",
+        "ProxyState.row 指向 native 行；对象被删除或 Realm 关闭后 checkValidObject 抛 IllegalStateException"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "JNI 边界",
+      "items": [
+        "Java 层每个 native 对象都用 NativeObject 包裹一个 long 指针，由 NativeContext 引用队列负责释放",
+        "OsSharedRealm 把 RealmConfiguration 翻译成 OsRealmConfig，再调用 nativeGetSharedRealm 打开文件"
+      ]
+    }
+  ]
+}

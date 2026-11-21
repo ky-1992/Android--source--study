@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "d42781d8-ef37-43ae-8402-383d5662aa49",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/27-realm-java/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/27-realm-java/class-diagram.html",
+  "specification": {
+    "sha256": "372d706fa17b295bb168fd7208426ec0f7fb39d012b93c1bda2d5b05ba283593",
+    "bytes": 19316
+  },
+  "artifact": {
+    "sha256": "1a1f6090c5eae523856e9074e1356d040f28b034a0bf8bfc0667727391313169",
+    "bytes": 903045
+  }
+}

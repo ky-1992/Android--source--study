@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "b5651d2f-11ee-4e34-b7ee-4b338686f1f6",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/27-realm-java/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/27-realm-java/flow-diagram.html",
+  "specification": {
+    "sha256": "8db0a77b7d74f39f5389a56f6e9a83c71ea6c1c9443b39663de9344eadd42d41",
+    "bytes": 7232
+  },
+  "artifact": {
+    "sha256": "df40970c38108fba977b1304d5b6f0ba9300008cf981e8cc9b79ce46fb9976f7",
+    "bytes": 850667
+  }
+}
