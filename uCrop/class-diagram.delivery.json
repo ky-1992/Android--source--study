@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "e2f972a7-f697-44d9-984d-1fa325d7ebf0",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/47-uCrop/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/47-uCrop/class-diagram.html",
+  "specification": {
+    "sha256": "a96288db5b7749dab30aa2a7906fb5893043f94b2ef1d1d0c46924267f1b5bd0",
+    "bytes": 20966
+  },
+  "artifact": {
+    "sha256": "121d6dfe42b6ebe6aa1beab87be19c44a2f56b0e631f0a46fab1faf82bdea9fe",
+    "bytes": 913061
+  }
+}

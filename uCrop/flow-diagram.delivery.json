@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "fbf5439b-7505-4c45-ab01-34f4455cfb9b",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/47-uCrop/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/47-uCrop/flow-diagram.html",
+  "specification": {
+    "sha256": "1208e57640b596b707801257a7ddafdf023c81e9ca20598f327df5834e08be47",
+    "bytes": 7151
+  },
+  "artifact": {
+    "sha256": "a3b50ac0b00074f6977d319a171fa0db9b34a0f9f19e4c1faa463998d514beb8",
+    "bytes": 848067
+  }
+}

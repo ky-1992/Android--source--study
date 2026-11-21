@@ -1,0 +1,318 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "uCrop 裁剪主流程",
+    "subtitle": "UCrop 拼好 Intent，UCropActivity 解码图片并装配 UCropView；手势调整后点击裁剪，BitmapCropTask 在后台完成原生裁剪并把结果回传调用方。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/47-uCrop/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/Yalantis/uCrop",
+      "provider": "github",
+      "revision": "f788b534b48c144edf786c8cddbf0e029e637804"
+    }
+  },
+  "lanes": [
+    {
+      "id": "app",
+      "label": "调用方"
+    },
+    {
+      "id": "page",
+      "label": "编辑页"
+    },
+    {
+      "id": "view",
+      "label": "视图层"
+    },
+    {
+      "id": "task",
+      "label": "后台任务"
+    }
+  ],
+  "phases": [
+    {
+      "id": "p1",
+      "label": "启动",
+      "fromCol": 0,
+      "toCol": 1
+    },
+    {
+      "id": "p2",
+      "label": "载图",
+      "fromCol": 2,
+      "toCol": 2
+    },
+    {
+      "id": "p3",
+      "label": "编辑",
+      "fromCol": 3,
+      "toCol": 3
+    },
+    {
+      "id": "p4",
+      "label": "裁剪回传",
+      "fromCol": 4,
+      "toCol": 4
+    }
+  ],
+  "mainPath": [
+    "n1",
+    "n2",
+    "n3",
+    "n5",
+    "n6",
+    "n7",
+    "n8"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "发起裁剪",
+      "sublabel": "UCrop.start()",
+      "width": 148,
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCrop.java",
+          "line": 65,
+          "end_line": 74
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCrop.java",
+          "line": 129,
+          "end_line": 141
+        }
+      ]
+    },
+    {
+      "id": "n2",
+      "lane": "page",
+      "col": 1,
+      "type": "frontend",
+      "label": "解析参数",
+      "sublabel": "onCreate",
+      "width": 145,
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCropActivity.java",
+          "line": 124,
+          "end_line": 136
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCropActivity.java",
+          "line": 198,
+          "end_line": 214
+        }
+      ]
+    },
+    {
+      "id": "n3",
+      "lane": "task",
+      "col": 2,
+      "type": "backend",
+      "label": "后台解码",
+      "sublabel": "BitmapLoadTask",
+      "width": 150,
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/task/BitmapLoadTask.java",
+          "line": 80,
+          "end_line": 111
+        }
+      ]
+    },
+    {
+      "id": "n4",
+      "lane": "view",
+      "col": 2,
+      "type": "frontend",
+      "label": "显示裁剪框",
+      "sublabel": "OverlayView",
+      "width": 145,
+      "yOffset": 96,
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/OverlayView.java",
+          "line": 299,
+          "end_line": 354
+        }
+      ]
+    },
+    {
+      "id": "n5",
+      "lane": "view",
+      "col": 3,
+      "type": "frontend",
+      "label": "手势变换",
+      "sublabel": "缩放/旋转",
+      "width": 150,
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/GestureCropImageView.java",
+          "line": 77,
+          "end_line": 104
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/CropImageView.java",
+          "line": 240,
+          "end_line": 246
+        }
+      ]
+    },
+    {
+      "id": "n6",
+      "lane": "page",
+      "col": 3,
+      "type": "frontend",
+      "label": "点击裁剪",
+      "sublabel": "cropAndSave",
+      "width": 145,
+      "yOffset": 96,
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCropActivity.java",
+          "line": 679,
+          "end_line": 698
+        }
+      ]
+    },
+    {
+      "id": "n7",
+      "lane": "task",
+      "col": 4,
+      "type": "backend",
+      "label": "原生裁剪",
+      "sublabel": "BitmapCropTask",
+      "width": 150,
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/task/BitmapCropTask.java",
+          "line": 78,
+          "end_line": 99
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/task/BitmapCropTask.java",
+          "line": 131,
+          "end_line": 150
+        }
+      ]
+    },
+    {
+      "id": "n8",
+      "lane": "page",
+      "col": 4,
+      "type": "frontend",
+      "label": "回传结果",
+      "sublabel": "setResultUri",
+      "width": 145,
+      "yOffset": 96,
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCropActivity.java",
+          "line": 700,
+          "end_line": 709
+        }
+      ]
+    },
+    {
+      "id": "n9",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "取出结果",
+      "sublabel": "UCrop.getOutput",
+      "width": 148,
+      "yOffset": 192,
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCrop.java",
+          "line": 217,
+          "end_line": 225
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1",
+      "from": "n1",
+      "to": "n2",
+      "label": "startActivity"
+    },
+    {
+      "id": "e2",
+      "from": "n2",
+      "to": "n3",
+      "label": "setImageUri"
+    },
+    {
+      "id": "e3",
+      "from": "n3",
+      "to": "n5",
+      "label": "解码完成"
+    },
+    {
+      "id": "e4",
+      "from": "n3",
+      "to": "n4",
+      "label": "显示遮罩",
+      "variant": "dashed",
+      "role": "async"
+    },
+    {
+      "id": "e5",
+      "from": "n4",
+      "to": "n5",
+      "label": "裁剪框同步",
+      "variant": "dashed",
+      "role": "branch"
+    },
+    {
+      "id": "e6",
+      "from": "n5",
+      "to": "n6",
+      "label": "点按裁剪"
+    },
+    {
+      "id": "e7",
+      "from": "n6",
+      "to": "n7",
+      "label": "cropAndSave"
+    },
+    {
+      "id": "e8",
+      "from": "n7",
+      "to": "n8",
+      "label": "回调 Uri"
+    },
+    {
+      "id": "e9",
+      "from": "n8",
+      "to": "n9",
+      "label": "RESULT_OK",
+      "role": "return"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "手势与裁剪框",
+      "items": [
+        "GestureCropImageView.onTouchEvent 把事件同时分发给 ScaleGestureDetector、RotationGestureDetector 与 GestureDetector，抬手后 setImageToWrapCropBounds 让图片重新盖满裁剪框",
+        "OverlayView 只在 freestyle 模式下处理触摸，拖动四角改写 mCropViewRect，松手时通过 OverlayViewChangeListener 回调给 CropImageView.setCropRect"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "异步与回传",
+      "items": [
+        "BitmapLoadTask 按 maxBitmapSize 计算 inSampleSize 解码并修正 EXIF，成功后 UCropView 才真正显示图片",
+        "BitmapCropTask 先 resize 再调用 native cropCImg 落盘，onBitmapCropped 回传 Uri、offset 与宽高，UCropActivity.setResultUri 写入 RESULT_OK"
+      ]
+    }
+  ]
+}

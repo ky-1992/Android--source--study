@@ -1,0 +1,807 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "uCrop 核心类型结构",
+    "subtitle": "UCrop 负责拼 Intent 与参数；UCropActivity 装配 UCropView，GestureCropImageView 维护变换矩阵，OverlayView 维护裁剪框，两个 AsyncTask 完成解码与裁剪。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/47-uCrop/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/Yalantis/uCrop",
+      "provider": "github",
+      "revision": "f788b534b48c144edf786c8cddbf0e029e637804"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "ucrop",
+      "label": "UCrop",
+      "kind": "class",
+      "sublabel": "裁剪参数与 Intent 门面",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mCropIntent",
+          "type": "Intent",
+          "visibility": "private"
+        },
+        {
+          "name": "mCropOptionsBundle",
+          "type": "Bundle",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "of",
+          "parameters": "source: Uri, destination: Uri",
+          "returns": "UCrop",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "withAspectRatio",
+          "parameters": "x: float, y: float",
+          "returns": "UCrop",
+          "visibility": "public"
+        },
+        {
+          "name": "withOptions",
+          "parameters": "options: Options",
+          "returns": "UCrop",
+          "visibility": "public"
+        },
+        {
+          "name": "getIntent",
+          "parameters": "context: Context",
+          "returns": "Intent",
+          "visibility": "public"
+        },
+        {
+          "name": "start",
+          "parameters": "activity: Activity",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getOutput",
+          "parameters": "intent: Intent",
+          "returns": "Uri",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCrop.java",
+          "line": 33,
+          "end_line": 57
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCrop.java",
+          "line": 65,
+          "end_line": 87
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCrop.java",
+          "line": 197,
+          "end_line": 201
+        }
+      ]
+    },
+    {
+      "id": "options",
+      "label": "UCrop.Options",
+      "kind": "class",
+      "sublabel": "可选参数集合",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mOptionBundle",
+          "type": "Bundle",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setCompressionFormat",
+          "parameters": "format: Bitmap.CompressFormat",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setAllowedGestures",
+          "parameters": "tabScale: int, tabRotate: int, tabAspectRatio: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setMaxScaleMultiplier",
+          "parameters": "multiplier: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setFreeStyleCropEnabled",
+          "parameters": "enabled: boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getOptionBundle",
+          "parameters": "",
+          "returns": "Bundle",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCrop.java",
+          "line": 271,
+          "end_line": 326
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCrop.java",
+          "line": 345,
+          "end_line": 349
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCrop.java",
+          "line": 528,
+          "end_line": 530
+        }
+      ]
+    },
+    {
+      "id": "activity",
+      "label": "UCropActivity",
+      "kind": "class",
+      "sublabel": "页面编排与结果回传",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mUCropView",
+          "type": "UCropView",
+          "visibility": "private"
+        },
+        {
+          "name": "mGestureCropImageView",
+          "type": "GestureCropImageView",
+          "visibility": "private"
+        },
+        {
+          "name": "mOverlayView",
+          "type": "OverlayView",
+          "visibility": "private"
+        },
+        {
+          "name": "mCompressFormat",
+          "type": "Bitmap.CompressFormat",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onCreate",
+          "parameters": "savedInstanceState: Bundle",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setupViews",
+          "parameters": "intent: Intent",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "processOptions",
+          "parameters": "intent: Intent",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "setWidgetState",
+          "parameters": "stateViewId: int",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "cropAndSaveImage",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setResultUri",
+          "parameters": "uri: Uri, resultAspectRatio: float, ...",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCropActivity.java",
+          "line": 66,
+          "end_line": 118
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCropActivity.java",
+          "line": 304,
+          "end_line": 359
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/UCropActivity.java",
+          "line": 679,
+          "end_line": 698
+        }
+      ]
+    },
+    {
+      "id": "ucropview",
+      "label": "UCropView",
+      "kind": "class",
+      "sublabel": "图像层与覆盖层组装",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mGestureCropImageView",
+          "type": "GestureCropImageView",
+          "visibility": "private"
+        },
+        {
+          "name": "mViewOverlay",
+          "type": "OverlayView",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setListenersToViews",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "getCropImageView",
+          "parameters": "",
+          "returns": "GestureCropImageView",
+          "visibility": "public"
+        },
+        {
+          "name": "getOverlayView",
+          "parameters": "",
+          "returns": "OverlayView",
+          "visibility": "public"
+        },
+        {
+          "name": "resetCropImageView",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/UCropView.java",
+          "line": 16,
+          "end_line": 39
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/UCropView.java",
+          "line": 41,
+          "end_line": 54
+        }
+      ]
+    },
+    {
+      "id": "transform_image",
+      "label": "TransformImageView",
+      "kind": "class",
+      "sublabel": "Matrix 变换与图片加载",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mCurrentImageMatrix",
+          "type": "Matrix",
+          "visibility": "protected"
+        },
+        {
+          "name": "mCurrentImageCorners",
+          "type": "float[]",
+          "visibility": "protected"
+        },
+        {
+          "name": "mImageInputPath",
+          "type": "String",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setImageUri",
+          "parameters": "imageUri: Uri, outputUri: Uri",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "postTranslate",
+          "parameters": "deltaX: float, deltaY: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "postScale",
+          "parameters": "deltaScale: float, px: float, py: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "postRotate",
+          "parameters": "deltaAngle: float, px: float, py: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onImageLaidOut",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/TransformImageView.java",
+          "line": 29,
+          "end_line": 55
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/TransformImageView.java",
+          "line": 139,
+          "end_line": 163
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/TransformImageView.java",
+          "line": 218,
+          "end_line": 258
+        }
+      ]
+    },
+    {
+      "id": "overlay",
+      "label": "OverlayView",
+      "kind": "class",
+      "sublabel": "裁剪框绘制与拖拽",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mCropViewRect",
+          "type": "RectF",
+          "visibility": "private"
+        },
+        {
+          "name": "mGridPoints",
+          "type": "float[]",
+          "visibility": "private"
+        },
+        {
+          "name": "mFreestyleCropMode",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mCurrentTouchCornerIndex",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onTouchEvent",
+          "parameters": "event: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "onDraw",
+          "parameters": "canvas: Canvas",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "updateCropViewRect",
+          "parameters": "touchX: float, touchY: float",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "getCurrentTouchIndex",
+          "parameters": "touchX: float, touchY: float",
+          "returns": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "setTargetAspectRatio",
+          "parameters": "targetAspectRatio: float",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/OverlayView.java",
+          "line": 33,
+          "end_line": 74
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/OverlayView.java",
+          "line": 300,
+          "end_line": 354
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/OverlayView.java",
+          "line": 364,
+          "end_line": 405
+        }
+      ]
+    },
+    {
+      "id": "load_task",
+      "label": "BitmapLoadTask",
+      "kind": "class",
+      "sublabel": "后台解码与 EXIF 处理",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mRequiredWidth",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mRequiredHeight",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mBitmapLoadCallback",
+          "type": "BitmapLoadCallback",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "doInBackground",
+          "parameters": "params: Void...",
+          "returns": "BitmapWorkerResult",
+          "visibility": "protected"
+        },
+        {
+          "name": "onPostExecute",
+          "parameters": "result: BitmapWorkerResult",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/task/BitmapLoadTask.java",
+          "line": 37,
+          "end_line": 78
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/task/BitmapLoadTask.java",
+          "line": 82,
+          "end_line": 90
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/task/BitmapLoadTask.java",
+          "line": 254,
+          "end_line": 260
+        }
+      ]
+    },
+    {
+      "id": "crop_image",
+      "label": "CropImageView",
+      "kind": "class",
+      "sublabel": "裁剪框与缩放边界",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mCropRect",
+          "type": "RectF",
+          "visibility": "private"
+        },
+        {
+          "name": "mTargetAspectRatio",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mMaxScale",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mMinScale",
+          "type": "float",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "cropAndSaveImage",
+          "parameters": "format: Bitmap.CompressFormat, quality: int, callback: BitmapCropCallback",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setCropRect",
+          "parameters": "cropRect: RectF",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setTargetAspectRatio",
+          "parameters": "targetAspectRatio: float",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setImageToWrapCropBounds",
+          "parameters": "animate: boolean",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "isImageWrapCropBounds",
+          "parameters": "",
+          "returns": "boolean",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/CropImageView.java",
+          "line": 34,
+          "end_line": 55
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/CropImageView.java",
+          "line": 73,
+          "end_line": 89
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/CropImageView.java",
+          "line": 277,
+          "end_line": 324
+        }
+      ]
+    },
+    {
+      "id": "gesture_crop",
+      "label": "GestureCropImageView",
+      "kind": "class",
+      "sublabel": "缩放旋转与双击",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mMidPntX",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mMidPntY",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mIsRotateEnabled",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "mIsScaleEnabled",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onTouchEvent",
+          "parameters": "event: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "init",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "getDoubleTapTargetScale",
+          "parameters": "",
+          "returns": "float",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/GestureCropImageView.java",
+          "line": 14,
+          "end_line": 25
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/GestureCropImageView.java",
+          "line": 78,
+          "end_line": 104
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/view/GestureCropImageView.java",
+          "line": 121,
+          "end_line": 125
+        }
+      ]
+    },
+    {
+      "id": "crop_task",
+      "label": "BitmapCropTask",
+      "kind": "class",
+      "sublabel": "Native 裁剪与落盘",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mCropRect",
+          "type": "RectF",
+          "visibility": "private"
+        },
+        {
+          "name": "mCurrentScale",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mCompressQuality",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "doInBackground",
+          "parameters": "params: Void...",
+          "returns": "Throwable",
+          "visibility": "protected"
+        },
+        {
+          "name": "onPostExecute",
+          "parameters": "t: Throwable",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/task/BitmapCropTask.java",
+          "line": 31,
+          "end_line": 70
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/task/BitmapCropTask.java",
+          "line": 80,
+          "end_line": 95
+        },
+        {
+          "path": "ucrop/src/main/java/com/yalantis/ucrop/task/BitmapCropTask.java",
+          "line": 183,
+          "end_line": 192
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "r1",
+      "from": "ucrop",
+      "to": "options",
+      "kind": "composition",
+      "label": "mCropOptionsBundle"
+    },
+    {
+      "id": "r2",
+      "from": "ucrop",
+      "to": "activity",
+      "kind": "dependency",
+      "label": "getIntent 启动"
+    },
+    {
+      "id": "r3",
+      "from": "activity",
+      "to": "ucropview",
+      "kind": "composition",
+      "label": "mUCropView"
+    },
+    {
+      "id": "r4",
+      "from": "ucropview",
+      "to": "gesture_crop",
+      "kind": "composition",
+      "label": "mGestureCropImageView"
+    },
+    {
+      "id": "r5",
+      "from": "ucropview",
+      "to": "overlay",
+      "kind": "composition",
+      "label": "mViewOverlay"
+    },
+    {
+      "id": "r6",
+      "from": "gesture_crop",
+      "to": "crop_image",
+      "kind": "inheritance",
+      "label": "extends"
+    },
+    {
+      "id": "r7",
+      "from": "crop_image",
+      "to": "transform_image",
+      "kind": "inheritance",
+      "label": "extends"
+    },
+    {
+      "id": "r8",
+      "from": "crop_image",
+      "to": "crop_task",
+      "kind": "dependency",
+      "label": "cropAndSaveImage 创建"
+    },
+    {
+      "id": "r9",
+      "from": "transform_image",
+      "to": "load_task",
+      "kind": "dependency",
+      "label": "BitmapLoadUtils 解码"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "三层视图",
+      "items": [
+        "UCropView 是 FrameLayout：下层 GestureCropImageView 画图片，上层 OverlayView 画遮罩、裁剪框与九宫格",
+        "UCropView.setListenersToViews 把 CropBoundsChangeListener 与 OverlayViewChangeListener 交叉接起来，实现比例与裁剪框双向同步"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "变换模型",
+      "items": [
+        "TransformImageView 用 Matrix 维护 translate/scale/rotate，postScale/postRotate 后立即 setImageMatrix 并回调监听器",
+        "CropImageView 在 TransformImageView 之上叠加 mCropRect 与 mMinScale/mMaxScale，setImageToWrapCropBounds 保证图片始终盖住裁剪框"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "两个 AsyncTask",
+      "items": [
+        "BitmapLoadTask 在后台按 maxBitmapSize 解码并校正 EXIF，onPostExecute 回到主线程设置 Bitmap",
+        "BitmapCropTask 在 doInBackground 里 resize/rotate/裁剪并通过 native cropCImg 落盘，onPostExecute 回调 onBitmapCropped 或 onCropFailure"
+      ]
+    }
+  ]
+}
