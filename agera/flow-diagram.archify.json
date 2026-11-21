@@ -1,0 +1,189 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Agera 编译仓库的激活与数据流执行",
+    "subtitle": "首个 Updatable 加入后仓库被激活并启动指令流；goTo 之后切换执行线程，END 写值并通知订阅者。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/36-agera/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/google/agera",
+      "provider": "github",
+      "revision": "04045ccbf41ac5fc6806724127b33cbe0dda372c"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "event", "label": "事件源" },
+    { "id": "repo", "label": "仓库核心" },
+    { "id": "flow", "label": "指令执行" }
+  ],
+  "phases": [
+    { "id": "subscribe", "label": "订阅", "fromCol": 0, "toCol": 1 },
+    { "id": "start", "label": "启动", "fromCol": 2, "toCol": 2 },
+    { "id": "run", "label": "执行", "fromCol": 3, "toCol": 3 },
+    { "id": "finish", "label": "回写", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "n_observe",
+    "n_activate",
+    "n_start",
+    "n_run",
+    "n_async",
+    "n_value",
+    "n_callback"
+  ],
+  "nodes": [
+    {
+      "id": "n_observe",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "添加订阅者",
+      "sublabel": "addUpdatable",
+      "width": 148,
+      "sources": [
+        { "path": "agera/src/main/java/com/google/android/agera/BaseObservable.java", "line": 67, "end_line": 87 }
+      ]
+    },
+    {
+      "id": "n_activate",
+      "lane": "repo",
+      "col": 1,
+      "type": "backend",
+      "label": "激活仓库",
+      "sublabel": "激活回调",
+      "width": 152,
+      "sources": [
+        { "path": "agera/src/main/java/com/google/android/agera/CompiledRepository.java", "line": 134, "end_line": 138 }
+      ]
+    },
+    {
+      "id": "n_start",
+      "lane": "flow",
+      "col": 2,
+      "type": "backend",
+      "label": "启动数据流",
+      "sublabel": "maybeStartFlow",
+      "width": 152,
+      "sources": [
+        { "path": "agera/src/main/java/com/google/android/agera/CompiledRepository.java", "line": 156, "end_line": 173 }
+      ]
+    },
+    {
+      "id": "n_run",
+      "lane": "flow",
+      "col": 3,
+      "type": "backend",
+      "label": "逐条执行",
+      "sublabel": "runFlowFrom",
+      "width": 148,
+      "sources": [
+        { "path": "agera/src/main/java/com/google/android/agera/CompiledRepository.java", "line": 285, "end_line": 346 }
+      ]
+    },
+    {
+      "id": "n_async",
+      "lane": "flow",
+      "col": 4,
+      "type": "messagebus",
+      "label": "goTo 续跑",
+      "sublabel": "Runnable.run",
+      "width": 148,
+      "sources": [
+        { "path": "agera/src/main/java/com/google/android/agera/CompiledRepository.java", "line": 571, "end_line": 602 }
+      ]
+    },
+    {
+      "id": "n_value",
+      "lane": "repo",
+      "col": 4,
+      "type": "backend",
+      "label": "写值并通知",
+      "sublabel": "setNewValue",
+      "width": 150,
+      "sources": [
+        { "path": "agera/src/main/java/com/google/android/agera/CompiledRepository.java", "line": 536, "end_line": 563 }
+      ]
+    },
+    {
+      "id": "n_callback",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "回调 update",
+      "sublabel": "dispatchUpdate",
+      "width": 148,
+      "sources": [
+        { "path": "agera/src/main/java/com/google/android/agera/BaseObservable.java", "line": 106, "end_line": 113 },
+        { "path": "agera/src/main/java/com/google/android/agera/WorkerHandler.java", "line": 42, "end_line": 46 }
+      ]
+    },
+    {
+      "id": "n_event",
+      "lane": "event",
+      "col": 0,
+      "type": "external",
+      "label": "事件源更新",
+      "sublabel": "update()",
+      "width": 148,
+      "sources": [
+        { "path": "agera/src/main/java/com/google/android/agera/CompiledRepository.java", "line": 146, "end_line": 150 }
+      ]
+    },
+    {
+      "id": "n_cancel",
+      "lane": "repo",
+      "col": 2,
+      "type": "backend",
+      "label": "取消旧流",
+      "sublabel": "CANCEL_FLOW",
+      "width": 150,
+      "sources": [
+        { "path": "agera/src/main/java/com/google/android/agera/CompiledRepository.java", "line": 182, "end_line": 205 }
+      ]
+    },
+    {
+      "id": "n_lazy",
+      "lane": "app",
+      "col": 3,
+      "type": "external",
+      "label": "get() 读值",
+      "sublabel": "goLazy 续跑",
+      "width": 148,
+      "sources": [
+        { "path": "agera/src/main/java/com/google/android/agera/CompiledRepository.java", "line": 611, "end_line": 620 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_observe_activate", "from": "n_observe", "to": "n_activate", "label": "首次订阅", "role": "main" },
+    { "id": "e_activate_start", "from": "n_activate", "to": "n_start", "label": "激活", "role": "main" },
+    { "id": "e_start_run", "from": "n_start", "to": "n_run", "label": "指令", "role": "main" },
+    { "id": "e_run_async", "from": "n_run", "to": "n_async", "label": "goTo", "role": "main" },
+    { "id": "e_async_value", "from": "n_async", "to": "n_value", "label": "END", "role": "main" },
+    { "id": "e_value_callback", "from": "n_value", "to": "n_callback", "label": "通知", "role": "main" },
+    { "id": "e_event_cancel", "from": "n_event", "to": "n_cancel", "label": "重启前取消", "role": "branch", "variant": "dashed" },
+    { "id": "e_cancel_start", "from": "n_cancel", "to": "n_start", "label": "重启", "role": "branch", "variant": "dashed" },
+    { "id": "e_run_lazy", "from": "n_run", "to": "n_lazy", "label": "goLazy 暂停", "role": "branch", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "取消与重启",
+      "items": [
+        "update() 先 maybeCancelFlow 再 maybeStartFlow；CANCEL_FLOW 在指令边界生效（L146-150、L182-205）",
+        "被取消时经 MSG_CALL_ACKNOWLEDGE_CANCEL 丢弃中间值并回收（L230-249）"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "惰性与打断",
+      "items": [
+        "goLazy 之后数据流暂停，get() 时才在调用线程继续执行剩余指令（L604-620）",
+        "goTo 之前同步执行；之后可被 SEND_INTERRUPT 打断（L189-196、L285-308）"
+      ]
+    }
+  ]
+}

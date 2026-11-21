@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "dfbc429b-2a84-4722-b5c3-aea6bb772a58",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/36-agera/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/36-agera/class-diagram.html",
+  "specification": {
+    "sha256": "65bdfe58dc35d501a4d2fc7a957b6864a544970b1c97a604f8a0687b417ab72b",
+    "bytes": 15037
+  },
+  "artifact": {
+    "sha256": "deca307f8f7513bb39649ab3204e635471468432f0c1d2ffa623d6c4cd531c19",
+    "bytes": 884519
+  }
+}

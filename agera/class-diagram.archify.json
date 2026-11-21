@@ -1,0 +1,599 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Agera 核心类型结构",
+    "subtitle": "Repository 由 Observable + Supplier 合成；RepositoryCompiler 编译出 CompiledRepository，后者用指令数组驱动数据流。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/36-agera/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/google/agera",
+      "provider": "github",
+      "revision": "04045ccbf41ac5fc6806724127b33cbe0dda372c"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "updatable",
+      "label": "Updatable",
+      "kind": "interface",
+      "sublabel": "变更回调",
+      "row": 0,
+      "col": 0,
+      "methods": [
+        {
+          "name": "update",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "agera/src/main/java/com/google/android/agera/Updatable.java",
+          "line": 22,
+          "end_line": 28
+        }
+      ]
+    },
+    {
+      "id": "observable",
+      "label": "Observable",
+      "kind": "interface",
+      "sublabel": "可订阅的对象",
+      "row": 0,
+      "col": 1,
+      "methods": [
+        {
+          "name": "addUpdatable",
+          "parameters": "updatable: Updatable",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "removeUpdatable",
+          "parameters": "updatable: Updatable",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "agera/src/main/java/com/google/android/agera/Observable.java",
+          "line": 35,
+          "end_line": 51
+        }
+      ]
+    },
+    {
+      "id": "supplier",
+      "label": "Supplier<T>",
+      "kind": "interface",
+      "sublabel": "取数据",
+      "row": 0,
+      "col": 2,
+      "methods": [
+        {
+          "name": "get",
+          "parameters": "",
+          "returns": "T",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "agera/src/main/java/com/google/android/agera/Supplier.java",
+          "line": 24,
+          "end_line": 32
+        }
+      ]
+    },
+    {
+      "id": "mutable_repository",
+      "label": "MutableRepository<T>",
+      "kind": "interface",
+      "sublabel": "可写入的仓库",
+      "row": 2,
+      "col": 2,
+      "methods": [
+        {
+          "name": "accept",
+          "parameters": "reference: T",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "agera/src/main/java/com/google/android/agera/MutableRepository.java",
+          "line": 18,
+          "end_line": 25
+        }
+      ]
+    },
+    {
+      "id": "repository",
+      "label": "Repository<T>",
+      "kind": "interface",
+      "sublabel": "Observable + Supplier",
+      "row": 1,
+      "col": 1,
+      "sources": [
+        {
+          "path": "agera/src/main/java/com/google/android/agera/Repository.java",
+          "line": 18,
+          "end_line": 49
+        }
+      ]
+    },
+    {
+      "id": "compiler_states",
+      "label": "RepositoryCompilerStates",
+      "kind": "interface",
+      "sublabel": "链式 DSL 状态",
+      "row": 3,
+      "col": 1,
+      "methods": [
+        {
+          "name": "observe",
+          "parameters": "observables: Observable[]",
+          "returns": "RFrequency",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getFrom",
+          "parameters": "supplier: Supplier",
+          "returns": "RFlow",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "goTo",
+          "parameters": "executor: Executor",
+          "returns": "TSelf",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "goLazy",
+          "parameters": "",
+          "returns": "RSyncFlow",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "compile",
+          "parameters": "",
+          "returns": "Repository",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "agera/src/main/java/com/google/android/agera/RepositoryCompilerStates.java",
+          "line": 56,
+          "end_line": 71
+        },
+        {
+          "path": "agera/src/main/java/com/google/android/agera/RepositoryCompilerStates.java",
+          "line": 111,
+          "end_line": 117
+        },
+        {
+          "path": "agera/src/main/java/com/google/android/agera/RepositoryCompilerStates.java",
+          "line": 177,
+          "end_line": 187
+        }
+      ]
+    },
+    {
+      "id": "base_observable",
+      "label": "BaseObservable",
+      "kind": "abstract",
+      "sublabel": "Observable 骨架",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "updatablesAndHandlers",
+          "type": "Object[]",
+          "visibility": "private"
+        },
+        {
+          "name": "handler",
+          "type": "WorkerHandler",
+          "visibility": "private"
+        },
+        {
+          "name": "shortestUpdateWindowMillis",
+          "type": "int",
+          "visibility": "package"
+        },
+        {
+          "name": "pendingUpdate",
+          "type": "boolean",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "addUpdatable",
+          "parameters": "updatable: Updatable",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "removeUpdatable",
+          "parameters": "updatable: Updatable",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "dispatchUpdate",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "sendUpdate",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "observableActivated",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "agera/src/main/java/com/google/android/agera/BaseObservable.java",
+          "line": 30,
+          "end_line": 65
+        },
+        {
+          "path": "agera/src/main/java/com/google/android/agera/BaseObservable.java",
+          "line": 67,
+          "end_line": 113
+        },
+        {
+          "path": "agera/src/main/java/com/google/android/agera/BaseObservable.java",
+          "line": 149,
+          "end_line": 174
+        }
+      ]
+    },
+    {
+      "id": "repository_compiler",
+      "label": "RepositoryCompiler",
+      "kind": "class",
+      "sublabel": "编译期状态机",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "eventSources",
+          "type": "List<Observable>",
+          "visibility": "private"
+        },
+        {
+          "name": "directives",
+          "type": "List<Object>",
+          "visibility": "private"
+        },
+        {
+          "name": "expect",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "frequency",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "observe",
+          "parameters": "observables: Observable[]",
+          "returns": "RepositoryCompiler",
+          "visibility": "public"
+        },
+        {
+          "name": "getFrom",
+          "parameters": "supplier: Supplier",
+          "returns": "RepositoryCompiler",
+          "visibility": "public"
+        },
+        {
+          "name": "compile",
+          "parameters": "",
+          "returns": "Repository",
+          "visibility": "public"
+        },
+        {
+          "name": "compileIntoRepositoryWithInitialValue",
+          "parameters": "value: Object",
+          "returns": "RepositoryCompiler",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "agera/src/main/java/com/google/android/agera/RepositoryCompiler.java",
+          "line": 46,
+          "end_line": 52
+        },
+        {
+          "path": "agera/src/main/java/com/google/android/agera/RepositoryCompiler.java",
+          "line": 134,
+          "end_line": 145
+        },
+        {
+          "path": "agera/src/main/java/com/google/android/agera/RepositoryCompiler.java",
+          "line": 416,
+          "end_line": 447
+        }
+      ]
+    },
+    {
+      "id": "compiled_repository",
+      "label": "CompiledRepository",
+      "kind": "class",
+      "sublabel": "指令数组解释器",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "eventSource",
+          "type": "Observable",
+          "visibility": "private"
+        },
+        {
+          "name": "directives",
+          "type": "Object[]",
+          "visibility": "private"
+        },
+        {
+          "name": "runState",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "currentValue",
+          "type": "Object",
+          "visibility": "private"
+        },
+        {
+          "name": "intermediateValue",
+          "type": "Object",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "get",
+          "parameters": "",
+          "returns": "Object",
+          "visibility": "public"
+        },
+        {
+          "name": "update",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "run",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "maybeStartFlow",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "package"
+        },
+        {
+          "name": "runFlowFrom",
+          "parameters": "index: int, asynchronously: boolean",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "agera/src/main/java/com/google/android/agera/CompiledRepository.java",
+          "line": 39,
+          "end_line": 57
+        },
+        {
+          "path": "agera/src/main/java/com/google/android/agera/CompiledRepository.java",
+          "line": 134,
+          "end_line": 173
+        },
+        {
+          "path": "agera/src/main/java/com/google/android/agera/CompiledRepository.java",
+          "line": 285,
+          "end_line": 346
+        }
+      ]
+    },
+    {
+      "id": "result",
+      "label": "Result<T>",
+      "kind": "class",
+      "sublabel": "成功/失败/缺失",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "value",
+          "type": "T",
+          "visibility": "private"
+        },
+        {
+          "name": "failure",
+          "type": "Throwable",
+          "visibility": "private"
+        },
+        {
+          "name": "list",
+          "type": "List<T>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "success",
+          "parameters": "value: T",
+          "returns": "Result<T>",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "failure",
+          "parameters": "",
+          "returns": "Result<T>",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "get",
+          "parameters": "",
+          "returns": "T",
+          "visibility": "public"
+        },
+        {
+          "name": "ifSucceededMap",
+          "parameters": "function: Function<? super T, U>",
+          "returns": "Result<U>",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "agera/src/main/java/com/google/android/agera/Result.java",
+          "line": 41,
+          "end_line": 63
+        },
+        {
+          "path": "agera/src/main/java/com/google/android/agera/Result.java",
+          "line": 76,
+          "end_line": 121
+        },
+        {
+          "path": "agera/src/main/java/com/google/android/agera/Result.java",
+          "line": 412,
+          "end_line": 424
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "observable_notifies",
+      "from": "observable",
+      "to": "updatable",
+      "kind": "association",
+      "label": "通知"
+    },
+    {
+      "id": "repo_extends_observable",
+      "from": "repository",
+      "to": "observable",
+      "kind": "inheritance"
+    },
+    {
+      "id": "repo_extends_supplier",
+      "from": "repository",
+      "to": "supplier",
+      "kind": "inheritance"
+    },
+    {
+      "id": "mutable_extends_repo",
+      "from": "mutable_repository",
+      "to": "repository",
+      "kind": "inheritance"
+    },
+    {
+      "id": "base_realizes_observable",
+      "from": "base_observable",
+      "to": "observable",
+      "kind": "realization"
+    },
+    {
+      "id": "compiled_extends_base",
+      "from": "compiled_repository",
+      "to": "base_observable",
+      "kind": "inheritance",
+      "label": "继承"
+    },
+    {
+      "id": "compiled_realizes_repo",
+      "from": "compiled_repository",
+      "to": "repository",
+      "kind": "realization"
+    },
+    {
+      "id": "compiler_implements_states",
+      "from": "repository_compiler",
+      "to": "compiler_states",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "compiler_creates_compiled",
+      "from": "repository_compiler",
+      "to": "compiled_repository",
+      "kind": "dependency",
+      "label": "compile()"
+    },
+    {
+      "id": "compiled_uses_result",
+      "from": "compiled_repository",
+      "to": "result",
+      "kind": "dependency",
+      "label": "attempt/filter"
+    },
+    {
+      "id": "states_returns_repo",
+      "from": "compiler_states",
+      "to": "repository",
+      "kind": "dependency",
+      "label": "compile()"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "两个状态",
+      "items": [
+        "没有 Updatable 时，deferred 仓库处于 inactive，get() 不保证新鲜（Repository L30-47）",
+        "首个 Updatable 加入触发 observableActivated()，CompiledRepository 据此挂到事件源并启动数据流（L134-138）"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "编译期校验",
+      "items": [
+        "RepositoryCompiler 用 Expect 状态机逐条校验链式调用顺序（L75-86、L118-120）",
+        "compile() 把 directives 列表压成 Object[]，由 CompiledRepository 的 switch 解释执行（L312-344）"
+      ]
+    }
+  ]
+}
