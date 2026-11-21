@@ -1,0 +1,614 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "FlycoTabLayout 核心类型结构",
+    "subtitle": "三个 Tab 控件各自持有 LinearLayout 与指示器状态，通过 CustomTabEntity 取文案/图标，靠 onDraw 自绘指示器。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/64-FlycoTabLayout/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/H07000223/FlycoTabLayout",
+      "provider": "github",
+      "revision": "528fcffe88d54eeafbc85ffd1ce375df043b3a28"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "common",
+      "label": "CommonTabLayout",
+      "kind": "class",
+      "sublabel": "通用 Tab，不依赖 ViewPager",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mTabEntitys",
+          "type": "ArrayList<CustomTabEntity>",
+          "visibility": "private"
+        },
+        {
+          "name": "mTabsContainer",
+          "type": "LinearLayout",
+          "visibility": "private"
+        },
+        {
+          "name": "mIndicatorStyle",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mValueAnimator",
+          "type": "ValueAnimator",
+          "visibility": "private"
+        },
+        {
+          "name": "mFragmentChangeManager",
+          "type": "FragmentChangeManager",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setTabData",
+          "parameters": "tabEntitys: ArrayList<CustomTabEntity>",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setCurrentTab",
+          "parameters": "currentTab: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "showMsg",
+          "parameters": "position: int, num: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "calcOffset",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "calcIndicatorRect",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "onDraw",
+          "parameters": "canvas: Canvas",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/CommonTabLayout.java",
+          "line": 39,
+          "end_line": 52
+        },
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/CommonTabLayout.java",
+          "line": 194,
+          "end_line": 204
+        },
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/CommonTabLayout.java",
+          "line": 392,
+          "end_line": 401
+        }
+      ]
+    },
+    {
+      "id": "sliding",
+      "label": "SlidingTabLayout",
+      "kind": "class",
+      "sublabel": "随 ViewPager 滑动的横向 Tab",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mViewPager",
+          "type": "ViewPager",
+          "visibility": "private"
+        },
+        {
+          "name": "mTitles",
+          "type": "ArrayList<String>",
+          "visibility": "private"
+        },
+        {
+          "name": "mCurrentPositionOffset",
+          "type": "float",
+          "visibility": "private"
+        },
+        {
+          "name": "mIndicatorRect",
+          "type": "Rect",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setViewPager",
+          "parameters": "vp: ViewPager",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onPageScrolled",
+          "parameters": "position: int, positionOffset: float, positionOffsetPixels: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "scrollToCurrentTab",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "calcIndicatorRect",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "onDraw",
+          "parameters": "canvas: Canvas",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/SlidingTabLayout.java",
+          "line": 38,
+          "end_line": 56
+        },
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/SlidingTabLayout.java",
+          "line": 173,
+          "end_line": 184
+        },
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/SlidingTabLayout.java",
+          "line": 318,
+          "end_line": 328
+        }
+      ]
+    },
+    {
+      "id": "segment",
+      "label": "SegmentTabLayout",
+      "kind": "class",
+      "sublabel": "分段控件，指示器为圆角滑块",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "mTitles",
+          "type": "String[]",
+          "visibility": "private"
+        },
+        {
+          "name": "mRectDrawable",
+          "type": "GradientDrawable",
+          "visibility": "private"
+        },
+        {
+          "name": "mRadiusArr",
+          "type": "float[]",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setTabData",
+          "parameters": "titles: String[]",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setCurrentTab",
+          "parameters": "currentTab: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "calcOffset",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "onDraw",
+          "parameters": "canvas: Canvas",
+          "returns": "void",
+          "visibility": "protected"
+        }
+      ],
+      "sources": [
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/SegmentTabLayout.java",
+          "line": 35,
+          "end_line": 46
+        },
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/SegmentTabLayout.java",
+          "line": 164,
+          "end_line": 174
+        },
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/SegmentTabLayout.java",
+          "line": 349,
+          "end_line": 360
+        }
+      ]
+    },
+    {
+      "id": "customtabentity",
+      "label": "CustomTabEntity",
+      "kind": "interface",
+      "sublabel": "Tab 文案与图标的数据约定",
+      "row": 1,
+      "col": 0,
+      "attributes": [],
+      "methods": [
+        {
+          "name": "getTabTitle",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getTabSelectedIcon",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getTabUnselectedIcon",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/listener/CustomTabEntity.java",
+          "line": 5,
+          "end_line": 12
+        }
+      ]
+    },
+    {
+      "id": "ontabselect",
+      "label": "OnTabSelectListener",
+      "kind": "interface",
+      "sublabel": "选中与重复点击回调",
+      "row": 1,
+      "col": 2,
+      "attributes": [],
+      "methods": [
+        {
+          "name": "onTabSelect",
+          "parameters": "position: int",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onTabReselect",
+          "parameters": "position: int",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/listener/OnTabSelectListener.java",
+          "line": 3,
+          "end_line": 5
+        }
+      ]
+    },
+    {
+      "id": "fragmentchange",
+      "label": "FragmentChangeManager",
+      "kind": "class",
+      "sublabel": "用 show/hide 切换 Fragment",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mFragmentManager",
+          "type": "FragmentManager",
+          "visibility": "private"
+        },
+        {
+          "name": "mContainerViewId",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mFragments",
+          "type": "ArrayList<Fragment>",
+          "visibility": "private"
+        },
+        {
+          "name": "mCurrentTab",
+          "type": "int",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "initFragments",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "setFragments",
+          "parameters": "index: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getCurrentFragment",
+          "parameters": "",
+          "returns": "Fragment",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/utils/FragmentChangeManager.java",
+          "line": 9,
+          "end_line": 15
+        },
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/utils/FragmentChangeManager.java",
+          "line": 25,
+          "end_line": 31
+        },
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/utils/FragmentChangeManager.java",
+          "line": 34,
+          "end_line": 46
+        }
+      ]
+    },
+    {
+      "id": "tabentity",
+      "label": "TabEntity",
+      "kind": "class",
+      "sublabel": "示例中的实体实现",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "title",
+          "type": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "selectedIcon",
+          "type": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "unSelectedIcon",
+          "type": "int",
+          "visibility": "public"
+        }
+      ],
+      "methods": [
+        {
+          "name": "getTabTitle",
+          "parameters": "",
+          "returns": "String",
+          "visibility": "public"
+        },
+        {
+          "name": "getTabSelectedIcon",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "getTabUnselectedIcon",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "app/src/main/java/com/flyco/tablayoutsamples/entity/TabEntity.java",
+          "line": 5,
+          "end_line": 14
+        },
+        {
+          "path": "app/src/main/java/com/flyco/tablayoutsamples/entity/TabEntity.java",
+          "line": 16,
+          "end_line": 29
+        }
+      ]
+    },
+    {
+      "id": "unreadmsg",
+      "label": "UnreadMsgUtils",
+      "kind": "class",
+      "sublabel": "红点与数字角标的尺寸策略",
+      "row": 2,
+      "col": 1,
+      "attributes": [],
+      "methods": [
+        {
+          "name": "show",
+          "parameters": "msgView: MsgView, num: int",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        },
+        {
+          "name": "setSize",
+          "parameters": "rtv: MsgView, size: int",
+          "returns": "void",
+          "visibility": "public",
+          "static": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/utils/UnreadMsgUtils.java",
+          "line": 16,
+          "end_line": 30
+        },
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/utils/UnreadMsgUtils.java",
+          "line": 33,
+          "end_line": 46
+        }
+      ]
+    },
+    {
+      "id": "msgview",
+      "label": "MsgView",
+      "kind": "class",
+      "sublabel": "自绘背景的角标 TextView",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "gd_background",
+          "type": "GradientDrawable",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onMeasure",
+          "parameters": "widthMeasureSpec: int, heightMeasureSpec: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onLayout",
+          "parameters": "changed: boolean, l: int, t: int, r: int, b: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "setBackgroundColor",
+          "parameters": "backgroundColor: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setCornerRadius",
+          "parameters": "cornerRadius: int",
+          "returns": "void",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/widget/MsgView.java",
+          "line": 15,
+          "end_line": 24
+        },
+        {
+          "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/widget/MsgView.java",
+          "line": 52,
+          "end_line": 72
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "realize_entity",
+      "from": "tabentity",
+      "to": "customtabentity",
+      "kind": "realization",
+      "label": "实现"
+    },
+    {
+      "id": "common_holds_entity",
+      "from": "common",
+      "to": "customtabentity",
+      "kind": "association",
+      "label": "持有列表"
+    },
+    {
+      "id": "common_fragment",
+      "from": "common",
+      "to": "fragmentchange",
+      "kind": "composition",
+      "label": "切换页面"
+    },
+    {
+      "id": "sliding_fragment",
+      "from": "sliding",
+      "to": "fragmentchange",
+      "kind": "composition",
+      "label": "切换页面"
+    },
+    {
+      "id": "segment_fragment",
+      "from": "segment",
+      "to": "fragmentchange",
+      "kind": "composition",
+      "label": "切换页面"
+    },
+    {
+      "id": "segment_listener",
+      "from": "segment",
+      "to": "ontabselect",
+      "kind": "association",
+      "label": "选择回调"
+    },
+    {
+      "id": "unread_msgview",
+      "from": "unreadmsg",
+      "to": "msgview",
+      "kind": "dependency",
+      "label": "设置尺寸"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "三个控件的分工",
+      "items": [
+        "SlidingTabLayout 继承 HorizontalScrollView 并实现 ViewPager.OnPageChangeListener，靠 onPageScrolled 跟随翻页",
+        "CommonTabLayout 继承 FrameLayout，不依赖 ViewPager，可用 setTabData 直接接管 Fragment 切换",
+        "SegmentTabLayout 是分段控件，onDraw 先画整块圆角背景 mRectDrawable，再画滑块 mIndicatorDrawable"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "数据与回调",
+      "items": [
+        "CustomTabEntity 只暴露 title、选中图标、未选中图标三个取值方法，控件不关心实体如何存储",
+        "点击已选中的 Tab 走 onTabReselect，切到别的 Tab 走 onTabSelect",
+        "showMsg(position, num) 通过 R.id.rtv_msg_tip 拿到 MsgView，再交给 UnreadMsgUtils.show 处理 1 位/2 位/99+"
+      ]
+    }
+  ]
+}

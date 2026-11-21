@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "c1d38b3a-e8d2-4e35-98cf-16f23dca9271",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/64-FlycoTabLayout/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/64-FlycoTabLayout/flow-diagram.html",
+  "specification": {
+    "sha256": "c467398e6de49357589f4ed96640b9b366134d14386c20c9e756eaf88dd7a743",
+    "bytes": 5713
+  },
+  "artifact": {
+    "sha256": "2c33258cab947d091726ef1b238599c123f49149c116f63035f545a0b20a3acd",
+    "bytes": 846114
+  }
+}

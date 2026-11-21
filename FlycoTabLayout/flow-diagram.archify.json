@@ -1,0 +1,171 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "FlycoTabLayout 初始化与指示器绘制主流程",
+    "subtitle": "setTabData 重建 LinearLayout 子 Tab，点击后 setCurrentTab 触发偏移动画，onDraw 自绘指示器。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/64-FlycoTabLayout/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/H07000223/FlycoTabLayout",
+      "provider": "github",
+      "revision": "528fcffe88d54eeafbc85ffd1ce375df043b3a28"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "ctrl", "label": "Tab 控件" },
+    { "id": "entity", "label": "实体数据" },
+    { "id": "draw", "label": "绘制层" }
+  ],
+  "phases": [
+    { "id": "build", "label": "装配数据", "fromCol": 0, "toCol": 1 },
+    { "id": "style", "label": "样式与交互", "fromCol": 2, "toCol": 2 },
+    { "id": "paint", "label": "选中与绘制", "fromCol": 3, "toCol": 4 }
+  ],
+  "mainPath": [
+    "app_set",
+    "ctrl_build",
+    "entity_read",
+    "ctrl_style",
+    "app_click",
+    "ctrl_select",
+    "ctrl_offset",
+    "draw_paint"
+  ],
+  "nodes": [
+    {
+      "id": "app_set",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "传入 Tab 数据",
+      "sublabel": "setTabData",
+      "width": 150,
+      "sources": [
+        { "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/CommonTabLayout.java", "line": 194, "end_line": 204 }
+      ]
+    },
+    {
+      "id": "ctrl_build",
+      "lane": "ctrl",
+      "col": 1,
+      "type": "backend",
+      "label": "生成子 Tab",
+      "sublabel": "重建视图",
+      "width": 150,
+      "sources": [
+        { "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/CommonTabLayout.java", "line": 212, "end_line": 233 }
+      ]
+    },
+    {
+      "id": "entity_read",
+      "lane": "entity",
+      "col": 1,
+      "type": "database",
+      "label": "读取实体",
+      "sublabel": "getTabTitle",
+      "width": 140,
+      "sources": [
+        { "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/CommonTabLayout.java", "line": 235, "end_line": 241 }
+      ]
+    },
+    {
+      "id": "ctrl_style",
+      "lane": "ctrl",
+      "col": 2,
+      "type": "backend",
+      "label": "刷新样式",
+      "sublabel": "updateTabStyles",
+      "width": 156,
+      "sources": [
+        { "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/CommonTabLayout.java", "line": 268, "end_line": 309 }
+      ]
+    },
+    {
+      "id": "app_click",
+      "lane": "app",
+      "col": 2,
+      "type": "external",
+      "label": "点击 Tab",
+      "sublabel": "onClick",
+      "width": 140,
+      "sources": [
+        { "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/CommonTabLayout.java", "line": 243, "end_line": 258 }
+      ]
+    },
+    {
+      "id": "ctrl_select",
+      "lane": "ctrl",
+      "col": 3,
+      "type": "backend",
+      "label": "切换选中",
+      "sublabel": "setCurrentTab",
+      "width": 156,
+      "sources": [
+        { "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/CommonTabLayout.java", "line": 487, "end_line": 499 }
+      ]
+    },
+    {
+      "id": "ctrl_offset",
+      "lane": "ctrl",
+      "col": 4,
+      "type": "backend",
+      "label": "计算偏移",
+      "sublabel": "calcOffset",
+      "width": 150,
+      "sources": [
+        { "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/CommonTabLayout.java", "line": 326, "end_line": 351 }
+      ]
+    },
+    {
+      "id": "draw_paint",
+      "lane": "draw",
+      "col": 4,
+      "type": "frontend",
+      "label": "绘制指示器",
+      "sublabel": "onDraw",
+      "width": 150,
+      "sources": [
+        { "path": "FlycoTabLayout_Lib/src/main/java/com/flyco/tablayout/CommonTabLayout.java", "line": 392, "end_line": 486 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_set_build", "from": "app_set", "to": "ctrl_build", "label": "实体列表" },
+    { "id": "e_build_entity", "from": "ctrl_build", "to": "entity_read", "label": "逐个 addTab" },
+    { "id": "e_entity_style", "from": "entity_read", "to": "ctrl_style", "label": "文案与图标" },
+    { "id": "e_build_style", "from": "ctrl_build", "to": "ctrl_style", "label": "布局参数" },
+    { "id": "e_style_click", "from": "ctrl_style", "to": "app_click", "label": "等待交互" },
+    { "id": "e_click_select", "from": "app_click", "to": "ctrl_select", "label": "回调选中" },
+    { "id": "e_select_offset", "from": "ctrl_select", "to": "ctrl_offset", "label": "起动画" },
+    { "id": "e_offset_paint", "from": "ctrl_offset", "to": "draw_paint", "label": "invalidate" },
+    {
+      "id": "e_click_reselect",
+      "from": "app_click",
+      "to": "ctrl_select",
+      "label": "重复点击",
+      "variant": "dashed",
+      "role": "branch"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "指示器的三种形态",
+      "items": [
+        "onDraw 先按 mIndicatorStyle 分流：STYLE_TRIANGLE 画 Path 三角形，STYLE_BLOCK 画整块圆角矩形，STYLE_NORMAL 画底部短横条",
+        "indicatorWidth 小于 0 时指示器宽度等于整个 Tab，大于 0 时以 Tab 中心对齐到固定宽度"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "另外两个控件的差异",
+      "items": [
+        "SlidingTabLayout 没有 ValueAnimator，靠 ViewPager.onPageScrolled 的 positionOffset 在 calcIndicatorRect 里插值，并 scrollTo 让当前 Tab 居中",
+        "SegmentTabLayout 的 mIndicatorRect 由 calcIndicatorRect 按首/中/尾位置写 mRadiusArr，仅首尾外侧两角保留圆角"
+      ]
+    }
+  ]
+}
