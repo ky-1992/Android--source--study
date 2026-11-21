@@ -1,0 +1,168 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Universal Image Loader 一次加载的调度流程",
+    "subtitle": "displayImage 先查内存缓存，未命中则投递 LoadAndDisplayImageTask，经磁盘/网络解码后由 DisplayBitmapTask 回主线程显示。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/07-Android-Universal-Image-Loader/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/nostra13/Android-Universal-Image-Loader",
+      "provider": "github",
+      "revision": "ba33ec64d0daaa881d35852460e78c58d086bc18"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "调用方" },
+    { "id": "loader", "label": "Image 门面" },
+    { "id": "engine", "label": "任务与解码" },
+    { "id": "store", "label": "缓存与网络" }
+  ],
+  "phases": [
+    { "id": "init", "label": "取图入口", "fromCol": 0, "toCol": 1 },
+    { "id": "submit", "label": "缓存判定与投递", "fromCol": 2, "toCol": 3 },
+    { "id": "load", "label": "加载与显示", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": ["app_start", "loader_key", "engine_submit", "engine_run", "store_disk", "store_net", "engine_decode", "app_show"],
+  "nodes": [
+    {
+      "id": "app_start",
+      "lane": "app",
+      "col": 0,
+      "type": "frontend",
+      "label": "发起加载",
+      "sublabel": "displayImage",
+      "width": 142,
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoader.java", "line": 234, "end_line": 302 }
+      ]
+    },
+    {
+      "id": "loader_key",
+      "lane": "loader",
+      "col": 1,
+      "type": "backend",
+      "label": "生成缓存键",
+      "sublabel": "targetSize",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoader.java", "line": 259, "end_line": 263 }
+      ]
+    },
+    {
+      "id": "loader_mem",
+      "lane": "loader",
+      "col": 2,
+      "type": "backend",
+      "label": "查内存缓存",
+      "sublabel": "memoryCache",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoader.java", "line": 267, "end_line": 284 }
+      ]
+    },
+    {
+      "id": "engine_submit",
+      "lane": "engine",
+      "col": 2,
+      "type": "backend",
+      "label": "投递任务",
+      "sublabel": "submit()",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoaderEngine.java", "line": 70, "end_line": 85 }
+      ]
+    },
+    {
+      "id": "engine_run",
+      "lane": "engine",
+      "col": 3,
+      "type": "backend",
+      "label": "加锁执行",
+      "sublabel": "task.run()",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/LoadAndDisplayImageTask.java", "line": 118, "end_line": 177 }
+      ]
+    },
+    {
+      "id": "store_disk",
+      "lane": "store",
+      "col": 3,
+      "type": "database",
+      "label": "读磁盘缓存",
+      "sublabel": "diskCache.get",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/LoadAndDisplayImageTask.java", "line": 217, "end_line": 235 }
+      ]
+    },
+    {
+      "id": "store_net",
+      "lane": "store",
+      "col": 4,
+      "type": "cloud",
+      "label": "下载原图",
+      "sublabel": "downloader",
+      "width": 146,
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/LoadAndDisplayImageTask.java", "line": 269, "end_line": 300 }
+      ]
+    },
+    {
+      "id": "engine_decode",
+      "lane": "engine",
+      "col": 4,
+      "type": "backend",
+      "label": "解码缩放",
+      "sublabel": "decoder.decode",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/LoadAndDisplayImageTask.java", "line": 261, "end_line": 266 }
+      ]
+    },
+    {
+      "id": "app_show",
+      "lane": "app",
+      "col": 4,
+      "type": "frontend",
+      "label": "显示图片",
+      "sublabel": "回主线程",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/DisplayBitmapTask.java", "line": 61, "end_line": 73 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_start_key", "from": "app_start", "to": "loader_key", "label": "取图" },
+    { "id": "e_key_mem", "from": "loader_key", "to": "loader_mem", "label": "查内存", "variant": "dashed", "role": "branch" },
+    { "id": "e_mem_show", "from": "loader_mem", "to": "app_show", "label": "命中直显", "variant": "dashed", "role": "return" },
+    { "id": "e_key_submit", "from": "loader_key", "to": "engine_submit", "label": "未命中" },
+    { "id": "e_submit_run", "from": "engine_submit", "to": "engine_run", "label": "线程池" },
+    { "id": "e_run_disk", "from": "engine_run", "to": "store_disk", "label": "查磁盘" },
+    { "id": "e_disk_net", "from": "store_disk", "to": "store_net", "label": "未命中" },
+    { "id": "e_net_decode", "from": "store_net", "to": "engine_decode", "label": "落盘后解码" },
+    { "id": "e_disk_decode", "from": "store_disk", "to": "engine_decode", "label": "磁盘命中", "variant": "dashed", "role": "branch" },
+    { "id": "e_decode_show", "from": "engine_decode", "to": "app_show", "label": "回调" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "内存优先",
+      "items": [
+        "ImageLoader.displayImage 先按 URI + targetSize 生成 key 查内存缓存，命中且未被回收就直接 displayer.display",
+        "只有未命中才构造 ImageLoadingInfo 并 engine.submit，避免无谓线程切换"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "任务内二次判定",
+      "items": [
+        "任务在 URI 锁内再查一次内存缓存，然后按磁盘命中、网络下载、解码的顺序取图",
+        "最终结果包成 DisplayBitmapTask，经 Handler 回主线程写入 ImageAware"
+      ]
+    }
+  ]
+}

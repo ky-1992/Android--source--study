@@ -1,0 +1,250 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Universal Image Loader 核心类型结构",
+    "subtitle": "ImageLoader 门面持有配置与引擎；引擎把 LoadAndDisplayImageTask 投进线程池，任务经内存/磁盘缓存与解码器取图。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/07-Android-Universal-Image-Loader/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/nostra13/Android-Universal-Image-Loader",
+      "provider": "github",
+      "revision": "ba33ec64d0daaa881d35852460e78c58d086bc18"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "image_loader",
+      "label": "ImageLoader",
+      "kind": "class",
+      "sublabel": "单例门面与入口",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "configuration", "type": "ImageLoaderConfiguration", "visibility": "private" },
+        { "name": "engine", "type": "ImageLoaderEngine", "visibility": "private" },
+        { "name": "defaultListener", "type": "ImageLoadingListener", "visibility": "private" },
+        { "name": "instance", "type": "ImageLoader", "visibility": "private", "static": true }
+      ],
+      "methods": [
+        { "name": "getInstance", "parameters": "", "returns": "ImageLoader", "visibility": "public", "static": true },
+        { "name": "init", "parameters": "configuration: ImageLoaderConfiguration", "returns": "void", "visibility": "public" },
+        { "name": "displayImage", "parameters": "uri: String, imageAware: ImageAware, options: DisplayImageOptions", "returns": "void", "visibility": "public" },
+        { "name": "defineHandler", "parameters": "options: DisplayImageOptions", "returns": "Handler", "visibility": "private", "static": true }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoader.java", "line": 49, "end_line": 67 },
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoader.java", "line": 92, "end_line": 103 },
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoader.java", "line": 234, "end_line": 302 }
+      ]
+    },
+    {
+      "id": "image_loader_configuration",
+      "label": "ImageLoaderConfiguration",
+      "kind": "class",
+      "sublabel": "不可变全局配置",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "memoryCache", "type": "MemoryCache", "visibility": "package" },
+        { "name": "diskCache", "type": "DiskCache", "visibility": "package" },
+        { "name": "decoder", "type": "ImageDecoder", "visibility": "package" },
+        { "name": "taskExecutor", "type": "Executor", "visibility": "package" },
+        { "name": "defaultDisplayImageOptions", "type": "DisplayImageOptions", "visibility": "package" }
+      ],
+      "methods": [],
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoaderConfiguration.java", "line": 50, "end_line": 78 },
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoaderConfiguration.java", "line": 558, "end_line": 598 }
+      ]
+    },
+    {
+      "id": "base_memory_cache",
+      "label": "BaseMemoryCache",
+      "kind": "abstract",
+      "sublabel": "Bitmap 弱引用骨架",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        { "name": "softMap", "type": "Map<String, Reference<Bitmap>>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "createReference", "parameters": "value: Bitmap", "returns": "Reference<Bitmap>", "visibility": "protected", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/cache/memory/BaseMemoryCache.java", "line": 30, "end_line": 70 }
+      ]
+    },
+    {
+      "id": "memory_cache",
+      "label": "MemoryCache",
+      "kind": "interface",
+      "sublabel": "内存缓存契约",
+      "row": 1,
+      "col": 0,
+      "methods": [
+        { "name": "put", "parameters": "key: String, value: Bitmap", "returns": "boolean", "visibility": "public", "abstract": true },
+        { "name": "get", "parameters": "key: String", "returns": "Bitmap", "visibility": "public", "abstract": true },
+        { "name": "remove", "parameters": "key: String", "returns": "Bitmap", "visibility": "public", "abstract": true },
+        { "name": "keys", "parameters": "", "returns": "Collection<String>", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/cache/memory/MemoryCache.java", "line": 28, "end_line": 48 }
+      ]
+    },
+    {
+      "id": "image_loader_engine",
+      "label": "ImageLoaderEngine",
+      "kind": "class",
+      "sublabel": "线程池与任务分发",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "taskExecutor", "type": "Executor", "visibility": "private" },
+        { "name": "taskDistributor", "type": "Executor", "visibility": "private" },
+        { "name": "cacheKeysForImageAwares", "type": "Map<Integer, String>", "visibility": "private" },
+        { "name": "uriLocks", "type": "Map<String, ReentrantLock>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "submit", "parameters": "task: LoadAndDisplayImageTask", "returns": "void", "visibility": "package" },
+        { "name": "prepareDisplayTaskFor", "parameters": "imageAware: ImageAware, memoryCacheKey: String", "returns": "void", "visibility": "package" },
+        { "name": "cancelDisplayTaskFor", "parameters": "imageAware: ImageAware", "returns": "void", "visibility": "package" },
+        { "name": "getLockForUri", "parameters": "uri: String", "returns": "ReentrantLock", "visibility": "package" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoaderEngine.java", "line": 42, "end_line": 67 },
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoaderEngine.java", "line": 70, "end_line": 85 },
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/ImageLoaderEngine.java", "line": 125, "end_line": 137 }
+      ]
+    },
+    {
+      "id": "disk_cache",
+      "label": "DiskCache",
+      "kind": "interface",
+      "sublabel": "磁盘缓存契约",
+      "row": 2,
+      "col": 0,
+      "methods": [
+        { "name": "get", "parameters": "imageUri: String", "returns": "File", "visibility": "public", "abstract": true },
+        { "name": "save", "parameters": "imageUri: String, imageStream: InputStream, listener: IoUtils.CopyListener", "returns": "boolean", "visibility": "public", "abstract": true },
+        { "name": "remove", "parameters": "imageUri: String", "returns": "boolean", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/cache/disc/DiskCache.java", "line": 31, "end_line": 84 }
+      ]
+    },
+    {
+      "id": "image_aware",
+      "label": "ImageAware",
+      "kind": "interface",
+      "sublabel": "取图目标的抽象",
+      "row": 3,
+      "col": 0,
+      "methods": [
+        { "name": "getWidth", "parameters": "", "returns": "int", "visibility": "public", "abstract": true },
+        { "name": "getScaleType", "parameters": "", "returns": "ViewScaleType", "visibility": "public", "abstract": true },
+        { "name": "isCollected", "parameters": "", "returns": "boolean", "visibility": "public", "abstract": true },
+        { "name": "getId", "parameters": "", "returns": "int", "visibility": "public", "abstract": true },
+        { "name": "setImageBitmap", "parameters": "bitmap: Bitmap", "returns": "boolean", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/imageaware/ImageAware.java", "line": 36, "end_line": 113 }
+      ]
+    },
+    {
+      "id": "load_task",
+      "label": "LoadAndDisplayImageTask",
+      "kind": "class",
+      "sublabel": "一次加载的完整流水线",
+      "row": 3,
+      "col": 1,
+      "attributes": [
+        { "name": "engine", "type": "ImageLoaderEngine", "visibility": "private" },
+        { "name": "imageLoadingInfo", "type": "ImageLoadingInfo", "visibility": "private" },
+        { "name": "decoder", "type": "ImageDecoder", "visibility": "private" },
+        { "name": "downloader", "type": "ImageDownloader", "visibility": "private" },
+        { "name": "loadedFrom", "type": "LoadedFrom", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "run", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "tryLoadBitmap", "parameters": "", "returns": "Bitmap", "visibility": "private" },
+        { "name": "decodeImage", "parameters": "imageUri: String", "returns": "Bitmap", "visibility": "private" },
+        { "name": "tryCacheImageOnDisk", "parameters": "", "returns": "boolean", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/LoadAndDisplayImageTask.java", "line": 51, "end_line": 116 },
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/LoadAndDisplayImageTask.java", "line": 118, "end_line": 177 },
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/LoadAndDisplayImageTask.java", "line": 214, "end_line": 259 }
+      ]
+    },
+    {
+      "id": "image_decoder",
+      "label": "ImageDecoder",
+      "kind": "interface",
+      "sublabel": "按目标尺寸解码",
+      "row": 1,
+      "col": 2,
+      "methods": [
+        { "name": "decode", "parameters": "imageDecodingInfo: ImageDecodingInfo", "returns": "Bitmap", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/decode/ImageDecoder.java", "line": 29, "end_line": 38 }
+      ]
+    },
+    {
+      "id": "base_image_decoder",
+      "label": "BaseImageDecoder",
+      "kind": "class",
+      "sublabel": "采样缩放与 EXIF 旋转",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        { "name": "loggingEnabled", "type": "boolean", "visibility": "protected" }
+      ],
+      "methods": [
+        { "name": "decode", "parameters": "decodingInfo: ImageDecodingInfo", "returns": "Bitmap", "visibility": "public" },
+        { "name": "defineImageSizeAndRotation", "parameters": "imageStream: InputStream, decodingInfo: ImageDecodingInfo", "returns": "ImageFileInfo", "visibility": "protected" },
+        { "name": "prepareDecodingOptions", "parameters": "imageSize: ImageSize, decodingInfo: ImageDecodingInfo", "returns": "Options", "visibility": "protected" }
+      ],
+      "sources": [
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/decode/BaseImageDecoder.java", "line": 40, "end_line": 70 },
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/decode/BaseImageDecoder.java", "line": 70, "end_line": 95 },
+        { "path": "library/src/main/java/com/nostra13/universalimageloader/core/decode/BaseImageDecoder.java", "line": 155, "end_line": 186 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "loader_holds_config", "from": "image_loader", "to": "image_loader_configuration", "kind": "aggregation", "label": "持有" },
+    { "id": "loader_creates_engine", "from": "image_loader", "to": "image_loader_engine", "kind": "composition", "label": "init 创建" },
+    { "id": "loader_targets_aware", "from": "image_loader", "to": "image_aware", "kind": "dependency", "label": "绑定显示" },
+    { "id": "config_holds_memory", "from": "image_loader_configuration", "to": "memory_cache", "kind": "aggregation", "label": "memoryCache" },
+    { "id": "config_holds_disk", "from": "image_loader_configuration", "to": "disk_cache", "kind": "aggregation", "label": "diskCache" },
+    { "id": "config_holds_decoder", "from": "image_loader_configuration", "to": "image_decoder", "kind": "aggregation", "label": "decoder" },
+    { "id": "engine_submits_task", "from": "image_loader_engine", "to": "load_task", "kind": "dependency", "label": "submit" },
+    { "id": "task_decodes", "from": "load_task", "to": "image_decoder", "kind": "dependency", "label": "decode" },
+    { "id": "base_memory_realizes", "from": "base_memory_cache", "to": "memory_cache", "kind": "realization" },
+    { "id": "base_decoder_realizes", "from": "base_image_decoder", "to": "image_decoder", "kind": "realization" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "门面与配置",
+      "items": [
+        "ImageLoader 是进程级单例，init 只接受一次配置；重复 init 只告警不覆盖",
+        "ImageLoaderConfiguration 字段全部 package 可见且不可变，Builder.build 时才补默认缓存、下载器与解码器"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "任务与缓存",
+      "items": [
+        "Engine 用 taskDistributor 先判断图片是否已落盘，再决定投给普通还是缓存专用线程池",
+        "LoadAndDisplayImageTask 在 URI 锁内先查内存缓存，未命中才走磁盘/网络解码，最后交给 DisplayBitmapTask 回主线程显示"
+      ]
+    }
+  ]
+}
