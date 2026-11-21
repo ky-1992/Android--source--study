@@ -1,0 +1,194 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Luban 单图压缩主流程",
+    "subtitle": "先只读图片边界算出目标尺寸，再按 inSampleSize 解码，最后用 TurboJPEG 二分质量逼近预估体积并落盘。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/51-Luban/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/Curzibn/Luban",
+      "provider": "github",
+      "revision": "250ab4d13c723ea037b51a2c3d7dae14881a94cd"
+    }
+  },
+  "lanes": [
+    { "id": "caller", "label": "调用方" },
+    { "id": "pipeline", "label": "压缩管线" },
+    { "id": "algo", "label": "参数计算" },
+    { "id": "codec", "label": "原生编码" }
+  ],
+  "phases": [
+    { "id": "bounds", "label": "读取与预算", "fromCol": 0, "toCol": 1 },
+    { "id": "sample", "label": "采样与编码", "fromCol": 2, "toCol": 2 },
+    { "id": "native", "label": "原生调用", "fromCol": 3, "toCol": 3 },
+    { "id": "save", "label": "落盘返回", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": [
+    "app_call",
+    "read_bounds",
+    "calc_target",
+    "decode",
+    "pick_quality",
+    "jpeg",
+    "turbo",
+    "write",
+    "ret"
+  ],
+  "nodes": [
+    {
+      "id": "app_call",
+      "lane": "caller",
+      "col": 0,
+      "type": "frontend",
+      "label": "发起压缩",
+      "sublabel": "Luban.compress",
+      "width": 148,
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/api/Luban.kt", "line": 200, "end_line": 203 }
+      ]
+    },
+    {
+      "id": "read_bounds",
+      "lane": "pipeline",
+      "col": 1,
+      "type": "backend",
+      "label": "读取尺寸",
+      "sublabel": "仅解码边界",
+      "width": 148,
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/api/Luban.kt", "line": 278, "end_line": 282 }
+      ]
+    },
+    {
+      "id": "calc_target",
+      "lane": "algo",
+      "col": 1,
+      "type": "backend",
+      "label": "计算目标",
+      "sublabel": "calculateTarget",
+      "width": 152,
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/algorithm/CompressionCalculator.kt", "line": 23, "end_line": 47 },
+        { "path": "luban/src/main/java/top/zibin/luban/algorithm/CompressionCalculator.kt", "line": 88, "end_line": 98 }
+      ]
+    },
+    {
+      "id": "decode",
+      "lane": "pipeline",
+      "col": 2,
+      "type": "backend",
+      "label": "采样解码",
+      "sublabel": "inSampleSize",
+      "width": 152,
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/io/ImageLoader.kt", "line": 96, "end_line": 114 },
+        { "path": "luban/src/main/java/top/zibin/luban/io/ImageLoader.kt", "line": 116, "end_line": 142 }
+      ]
+    },
+    {
+      "id": "pick_quality",
+      "lane": "algo",
+      "col": 2,
+      "type": "backend",
+      "label": "定质量策略",
+      "sublabel": "长图走目标大小",
+      "width": 152,
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/api/Luban.kt", "line": 288, "end_line": 298 }
+      ]
+    },
+    {
+      "id": "jpeg",
+      "lane": "codec",
+      "col": 2,
+      "type": "backend",
+      "label": "质量二分",
+      "sublabel": "二分查找",
+      "width": 150,
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/compression/JpegCompressor.kt", "line": 17, "end_line": 49 }
+      ]
+    },
+    {
+      "id": "turbo",
+      "lane": "codec",
+      "col": 3,
+      "type": "external",
+      "label": "原生编码",
+      "sublabel": "turbojpeg",
+      "width": 150,
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/compression/TurboJpegNative.kt", "line": 10, "end_line": 16 },
+        { "path": "luban/src/main/java/top/zibin/luban/compression/TurboJpegNative.kt", "line": 21, "end_line": 36 }
+      ]
+    },
+    {
+      "id": "write",
+      "lane": "pipeline",
+      "col": 4,
+      "type": "backend",
+      "label": "写出文件",
+      "sublabel": "更小才覆盖",
+      "width": 148,
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/api/Luban.kt", "line": 300, "end_line": 313 }
+      ]
+    },
+    {
+      "id": "ret",
+      "lane": "caller",
+      "col": 4,
+      "type": "frontend",
+      "label": "返回结果",
+      "sublabel": "Result<File>",
+      "width": 148,
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/api/Luban.kt", "line": 180, "end_line": 184 }
+      ]
+    },
+    {
+      "id": "fail",
+      "lane": "codec",
+      "col": 4,
+      "type": "security",
+      "label": "编码失败",
+      "sublabel": "抛异常",
+      "width": 150,
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/compression/JpegCompressor.kt", "line": 45, "end_line": 49 },
+        { "path": "luban/src/main/java/top/zibin/luban/compression/TurboJpegNative.kt", "line": 27, "end_line": 36 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_compress", "from": "app_call", "to": "read_bounds", "label": "compress()" },
+    { "id": "e_bounds", "from": "read_bounds", "to": "calc_target", "label": "outWidth" },
+    { "id": "e_target", "from": "calc_target", "to": "decode", "label": "目标尺寸" },
+    { "id": "e_decode", "from": "decode", "to": "pick_quality", "label": "RGB_565 位图" },
+    { "id": "e_quality", "from": "pick_quality", "to": "jpeg", "label": "quality" },
+    { "id": "e_jni", "from": "jpeg", "to": "turbo", "label": "JNI" },
+    { "id": "e_bytes", "from": "turbo", "to": "write", "label": "JPEG 字节" },
+    { "id": "e_result", "from": "write", "to": "ret", "label": "Result<File>" },
+    { "id": "e_fail", "from": "turbo", "to": "fail", "label": "返回 null", "variant": "dashed", "role": "error" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "尺寸预算",
+      "items": [
+        "短边基准 1440；长边超过 10800 且比例大于 0.4 时改以长边为基准，避免超长图算得过大",
+        "像素数超过 40960000 时短边压到原短边的 1/4；结果再以 10240000 像素为上限等比收缩，最后对齐到偶数"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "质量与体积",
+      "items": [
+        "普通图固定 quality=60 一次编码；长图（比例 ≤ 0.4）传 estimatedSizeKb 走质量二分 5~95",
+        "压缩后字节数不小于原图时直接拷贝原文件，保证输出不会比输入更大"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "Luban 核心类型结构",
+    "subtitle": "Luban 把压缩拆成三件可替换的协作者：Compressor 编码、ImageLoader 解码、CompressionCalculator 算目标尺寸。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/51-Luban/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/Curzibn/Luban",
+      "provider": "github",
+      "revision": "250ab4d13c723ea037b51a2c3d7dae14881a94cd"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "luban_dsl",
+      "label": "LubanDsl",
+      "kind": "class",
+      "sublabel": "DSL 式批量任务收集",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        { "name": "outputDir", "type": "File?", "visibility": "public" },
+        { "name": "tasks", "type": "MutableList<suspend () -> Result<File>>", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "compress", "parameters": "input: File", "returns": "LubanDsl", "visibility": "public" },
+        { "name": "compress", "parameters": "input: Uri", "returns": "LubanDsl", "visibility": "public" },
+        { "name": "execute", "parameters": "", "returns": "List<Result<File>>", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/api/Luban.kt", "line": 356, "end_line": 359 },
+        { "path": "luban/src/main/java/top/zibin/luban/api/Luban.kt", "line": 405, "end_line": 414 }
+      ]
+    },
+    {
+      "id": "luban",
+      "label": "Luban",
+      "kind": "class",
+      "sublabel": "压缩门面与主流程",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "compressor", "type": "Compressor", "visibility": "private" },
+        { "name": "imageLoader", "type": "ImageLoader", "visibility": "private" },
+        { "name": "calculator", "type": "CompressionCalculator", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "compress", "parameters": "context: Context, input: Uri, outputDir: File", "returns": "Result<File>", "visibility": "public" },
+        { "name": "compressInternal", "parameters": "context: Context, input: Uri, output: File", "returns": "File", "visibility": "private" },
+        { "name": "processImage", "parameters": "imageData, output, target, originalFile", "returns": "File", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/api/Luban.kt", "line": 39, "end_line": 43 },
+        { "path": "luban/src/main/java/top/zibin/luban/api/Luban.kt", "line": 266, "end_line": 286 },
+        { "path": "luban/src/main/java/top/zibin/luban/api/Luban.kt", "line": 288, "end_line": 319 }
+      ]
+    },
+    {
+      "id": "luban_compat",
+      "label": "LubanCompat",
+      "kind": "class",
+      "sublabel": "Builder 与回调兼容层",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        { "name": "context", "type": "Context?", "visibility": "private" },
+        { "name": "targetDir", "type": "File?", "visibility": "private" },
+        { "name": "compressListener", "type": "OnCompressListener?", "visibility": "private" },
+        { "name": "lifecycleOwner", "type": "LifecycleOwner?", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "launch", "parameters": "", "returns": "CompressionTask", "visibility": "public" },
+        { "name": "cancel", "parameters": "", "returns": "void", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/api/LubanCompat.kt", "line": 25, "end_line": 32 },
+        { "path": "luban/src/main/java/top/zibin/luban/api/LubanCompat.kt", "line": 34, "end_line": 95 }
+      ]
+    },
+    {
+      "id": "compressor",
+      "label": "Compressor",
+      "kind": "interface",
+      "sublabel": "位图到字节的编码抽象",
+      "row": 1,
+      "col": 0,
+      "methods": [
+        { "name": "compress", "parameters": "bitmap: Bitmap, targetSizeKb: Int?, fixedQuality: Int?", "returns": "ByteArray", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/compression/Compressor.kt", "line": 5, "end_line": 7 }
+      ]
+    },
+    {
+      "id": "image_loader",
+      "label": "ImageLoader",
+      "kind": "class",
+      "sublabel": "采样解码与 EXIF 旋转",
+      "row": 1,
+      "col": 1,
+      "methods": [
+        { "name": "loadFromUri", "parameters": "context, uri, targetWidth, targetHeight", "returns": "ImageData", "visibility": "public" },
+        { "name": "loadFromFile", "parameters": "file, targetWidth, targetHeight", "returns": "ImageData", "visibility": "public" },
+        { "name": "decodeStream", "parameters": "stream, targetWidth, targetHeight, openStream", "returns": "Bitmap?", "visibility": "private" },
+        { "name": "calculateInSampleSize", "parameters": "options: BitmapFactory.Options, reqWidth, reqHeight", "returns": "Int", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/io/ImageLoader.kt", "line": 19, "end_line": 25 },
+        { "path": "luban/src/main/java/top/zibin/luban/io/ImageLoader.kt", "line": 68, "end_line": 114 },
+        { "path": "luban/src/main/java/top/zibin/luban/io/ImageLoader.kt", "line": 116, "end_line": 142 }
+      ]
+    },
+    {
+      "id": "calculator",
+      "label": "CompressionCalculator",
+      "kind": "class",
+      "sublabel": "目标尺寸与预估体积",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        { "name": "baseShort", "type": "Int", "visibility": "private" },
+        { "name": "wallLong", "type": "Int", "visibility": "private" },
+        { "name": "trapPixels", "type": "Long", "visibility": "private" },
+        { "name": "capPixels", "type": "Long", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "calculateTarget", "parameters": "width: Int, height: Int", "returns": "CompressionTarget", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/algorithm/CompressionCalculator.kt", "line": 16, "end_line": 21 },
+        { "path": "luban/src/main/java/top/zibin/luban/algorithm/CompressionCalculator.kt", "line": 23, "end_line": 99 }
+      ]
+    },
+    {
+      "id": "jpeg_compressor",
+      "label": "JpegCompressor",
+      "kind": "class",
+      "sublabel": "质量二分逼近目标体积",
+      "row": 2,
+      "col": 0,
+      "methods": [
+        { "name": "compress", "parameters": "bitmap, targetSizeKb, fixedQuality", "returns": "ByteArray", "visibility": "public" },
+        { "name": "bitmapToRgb", "parameters": "bitmap: Bitmap", "returns": "ByteArray", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/compression/JpegCompressor.kt", "line": 5, "end_line": 6 },
+        { "path": "luban/src/main/java/top/zibin/luban/compression/JpegCompressor.kt", "line": 6, "end_line": 50 },
+        { "path": "luban/src/main/java/top/zibin/luban/compression/JpegCompressor.kt", "line": 52, "end_line": 68 }
+      ]
+    },
+    {
+      "id": "turbo_jpeg_native",
+      "label": "TurboJpegNative",
+      "kind": "class",
+      "sublabel": "libturbojpeg 的 JNI 入口",
+      "row": 2,
+      "col": 1,
+      "methods": [
+        { "name": "compress", "parameters": "rgbData, width, height, quality", "returns": "ByteArray?", "visibility": "public", "static": true },
+        { "name": "compressOrThrow", "parameters": "rgbData, width, height, quality", "returns": "ByteArray", "visibility": "public", "static": true }
+      ],
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/compression/TurboJpegNative.kt", "line": 5, "end_line": 16 },
+        { "path": "luban/src/main/java/top/zibin/luban/compression/TurboJpegNative.kt", "line": 21, "end_line": 36 }
+      ]
+    },
+    {
+      "id": "compression_target",
+      "label": "CompressionTarget",
+      "kind": "record",
+      "sublabel": "一次压缩的目标参数",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        { "name": "width", "type": "Int", "visibility": "public" },
+        { "name": "height", "type": "Int", "visibility": "public" },
+        { "name": "estimatedSizeKb", "type": "Int", "visibility": "public" },
+        { "name": "isLongImage", "type": "Boolean", "visibility": "public" },
+        { "name": "targetSizeKb", "type": "Int?", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "luban/src/main/java/top/zibin/luban/algorithm/CompressionCalculator.kt", "line": 8, "end_line": 14 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "dsl_uses_luban", "from": "luban_dsl", "to": "luban", "kind": "dependency", "label": "调用" },
+    { "id": "compat_uses_luban", "from": "luban_compat", "to": "luban", "kind": "dependency", "label": "委托" },
+    { "id": "luban_compressor", "from": "luban", "to": "compressor", "kind": "aggregation", "label": "持有" },
+    { "id": "luban_loader", "from": "luban", "to": "image_loader", "kind": "composition", "label": "持有" },
+    { "id": "luban_calculator", "from": "luban", "to": "calculator", "kind": "composition", "label": "持有" },
+    { "id": "jpeg_implements", "from": "jpeg_compressor", "to": "compressor", "kind": "realization" },
+    { "id": "jpeg_turbo", "from": "jpeg_compressor", "to": "turbo_jpeg_native", "kind": "dependency", "label": "JNI 编码" },
+    { "id": "calculator_target", "from": "calculator", "to": "compression_target", "kind": "dependency", "label": "生成" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "三个可替换的协作者",
+      "items": [
+        "Luban 构造参数默认 JpegCompressor / ImageLoader / CompressionCalculator，三者都是普通类或接口，可在测试中替换",
+        "解耦后压缩主流程只剩 decode → calculate → compress → 落盘，主文件不足 350 行"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "两套调用 API",
+      "items": [
+        "协程 API：Luban.compress / compressTo / luban { } DSL 都以 suspend 函数返回 Result<File>",
+        "回调 API：LubanCompat.Builder().load(...).setCompressListener(...).launch() 返回 CompressionTask，可依 Lifecycle ON_DESTROY 自动取消"
+      ]
+    }
+  ]
+}
