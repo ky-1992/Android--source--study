@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "0a6f2ddd-a09f-49a7-afdf-83c512ab1eea",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/33-Android-ObservableScrollView/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/33-Android-ObservableScrollView/class-diagram.html",
+  "specification": {
+    "sha256": "64757bb3f68a82a24868cbc98f3f6e78b3743f2cdc5f6ad18d416219f5c7ad6f",
+    "bytes": 15902
+  },
+  "artifact": {
+    "sha256": "eedf94fffc45ef0017b7abf9f65583c52b3f328f3f85d88e2bfbd155d1a276f1",
+    "bytes": 892511
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "825a2ff2-ad03-44ff-977c-3c6f6f41d104",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/33-Android-ObservableScrollView/flow-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/33-Android-ObservableScrollView/flow-diagram.html",
+  "specification": {
+    "sha256": "b21709c97ef0c280ed43662a9f43f33d5c68ff7746c86ce1125b3150756fc9ac",
+    "bytes": 6878
+  },
+  "artifact": {
+    "sha256": "e5ca4ef69f4587b5d14bd386d7e00ad9a08914f290433b54b506d0dc0ef0a587",
+    "bytes": 850360
+  }
+}

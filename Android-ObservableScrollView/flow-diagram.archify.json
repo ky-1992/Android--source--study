@@ -1,0 +1,172 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "ObservableScrollView 滚动事件处理流程",
+    "subtitle": "手势进来先判拦截，滚动时把父容器坐标换算成 scrollY，再以回调交给界面做视差与工具栏联动。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/33-Android-ObservableScrollView/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/ksoichiro/Android-ObservableScrollView",
+      "provider": "github",
+      "revision": "47a5fb2db5e93d923a8c6772cde48bbb7d932345"
+    }
+  },
+  "lanes": [
+    { "id": "gesture", "label": "用户手势" },
+    { "id": "widget", "label": "可观察控件" },
+    { "id": "callback", "label": "滚动回调" },
+    { "id": "effect", "label": "界面效果" }
+  ],
+  "phases": [
+    { "id": "g", "label": "按下", "fromCol": 0, "toCol": 1 },
+    { "id": "detect", "label": "滚动检测", "fromCol": 2, "toCol": 2 },
+    { "id": "calc", "label": "位置换算", "fromCol": 3, "toCol": 3 },
+    { "id": "apply", "label": "回调与联动", "fromCol": 4, "toCol": 4 }
+  ],
+  "mainPath": ["down", "intercept", "scroll", "compute", "dispatch", "effect"],
+  "nodes": [
+    {
+      "id": "down",
+      "lane": "gesture",
+      "col": 0,
+      "type": "external",
+      "label": "按下",
+      "sublabel": "ACTION_DOWN",
+      "width": 140,
+      "sources": [
+        { "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollView.java", "line": 111, "end_line": 123 },
+        { "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollViewCallbacks.java", "line": 38, "end_line": 38 }
+      ]
+    },
+    {
+      "id": "intercept",
+      "lane": "widget",
+      "col": 1,
+      "type": "backend",
+      "label": "拦截判定",
+      "sublabel": "onInterceptTouch",
+      "width": 148,
+      "sources": [
+        { "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollView.java", "line": 107, "end_line": 124 }
+      ]
+    },
+    {
+      "id": "scroll",
+      "lane": "widget",
+      "col": 2,
+      "type": "backend",
+      "label": "滚动检测",
+      "sublabel": "onScrollChanged",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollView.java", "line": 79, "end_line": 104 }
+      ]
+    },
+    {
+      "id": "compute",
+      "lane": "widget",
+      "col": 3,
+      "type": "backend",
+      "label": "游标换算",
+      "sublabel": "mScrollY",
+      "width": 144,
+      "sources": [
+        { "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableListView.java", "line": 274, "end_line": 340 }
+      ]
+    },
+    {
+      "id": "dispatch",
+      "lane": "callback",
+      "col": 4,
+      "type": "messagebus",
+      "label": "派发回调",
+      "sublabel": "firstScroll",
+      "width": 146,
+      "sources": [
+        { "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollView.java", "line": 253, "end_line": 263 },
+        { "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollViewCallbacks.java", "line": 33, "end_line": 33 }
+      ]
+    },
+    {
+      "id": "effect",
+      "lane": "effect",
+      "col": 4,
+      "type": "frontend",
+      "label": "联动视图",
+      "sublabel": "Toolbar/FAB",
+      "width": 150,
+      "sources": [
+        { "path": "samples/src/main/java/com/github/ksoichiro/android/observablescrollview/samples/FlexibleSpaceWithImageScrollViewActivity.java", "line": 95, "end_line": 115 },
+        { "path": "samples/src/main/java/com/github/ksoichiro/android/observablescrollview/samples/ToolbarControlBaseActivity.java", "line": 53, "end_line": 70 }
+      ]
+    },
+    {
+      "id": "up",
+      "lane": "gesture",
+      "col": 3,
+      "type": "external",
+      "label": "抬手",
+      "sublabel": "UP/CANCEL",
+      "width": 138,
+      "sources": [
+        { "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollView.java", "line": 131, "end_line": 138 }
+      ]
+    },
+    {
+      "id": "state",
+      "lane": "callback",
+      "col": 3,
+      "type": "messagebus",
+      "label": "方向判定",
+      "sublabel": "ScrollState",
+      "width": 146,
+      "sources": [
+        { "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollView.java", "line": 88, "end_line": 103 },
+        { "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ScrollState.java", "line": 22, "end_line": 38 }
+      ]
+    },
+    {
+      "id": "delegate",
+      "lane": "widget",
+      "col": 4,
+      "type": "backend",
+      "label": "触顶转发",
+      "sublabel": "父容器",
+      "width": 146,
+      "sources": [
+        { "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollView.java", "line": 138, "end_line": 193 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e_down_intercept", "from": "down", "to": "intercept", "label": "按下" },
+    { "id": "e_intercept_scroll", "from": "intercept", "to": "scroll", "label": "开始滑动" },
+    { "id": "e_scroll_compute", "from": "scroll", "to": "compute", "label": "位移量" },
+    { "id": "e_compute_dispatch", "from": "compute", "to": "dispatch", "label": "通知监听" },
+    { "id": "e_dispatch_effect", "from": "dispatch", "to": "effect", "label": "更新 UI" },
+    { "id": "e_scroll_up", "from": "scroll", "to": "up", "label": "手指抬起", "variant": "dashed", "role": "branch" },
+    { "id": "e_up_state", "from": "up", "to": "state", "label": "判定方向", "variant": "dashed", "role": "branch" },
+    { "id": "e_state_effect", "from": "state", "to": "effect", "label": "收起/展开", "variant": "dashed", "role": "branch" },
+    { "id": "e_compute_delegate", "from": "compute", "to": "delegate", "label": "已到顶部", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "回调有三段",
+      "items": [
+        "onDownMotionEvent 在 ACTION_DOWN 触发，用来复位动画；onScrollChanged 带 firstScroll、dragging 两个标志",
+        "onUpOrCancelMotionEvent 只在抬手时给一次 ScrollState，界面据此决定工具栏收起还是展开"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "触顶后交还父容器",
+      "items": [
+        "滑到顶部仍继续下拉时，控件把 MotionEvent 转成 ACTION_DOWN 再交给 setTouchInterceptionViewGroup 指定的祖先",
+        "默认接收方是直接父布局；可用该方法指到更外层容器，配合 TouchInterceptionFrameLayout 做整页上滑"
+      ]
+    }
+  ]
+}

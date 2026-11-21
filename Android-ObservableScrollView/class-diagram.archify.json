@@ -1,0 +1,576 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "ObservableScrollView 核心类型结构",
+    "subtitle": "Scrollable 统一可观察滚动协议，三个控件实现它；滚动位置换算后统一派发给 ObservableScrollViewCallbacks。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/33-Android-ObservableScrollView/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/ksoichiro/Android-ObservableScrollView",
+      "provider": "github",
+      "revision": "47a5fb2db5e93d923a8c6772cde48bbb7d932345"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "scrollable",
+      "label": "Scrollable",
+      "kind": "interface",
+      "sublabel": "可观察滚动控件协议",
+      "row": 0,
+      "col": 1,
+      "methods": [
+        {
+          "name": "addScrollViewCallbacks",
+          "parameters": "listener: ObservableScrollViewCallbacks",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "removeScrollViewCallbacks",
+          "parameters": "listener: ObservableScrollViewCallbacks",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "clearScrollViewCallbacks",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "scrollVerticallyTo",
+          "parameters": "y: int",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "getCurrentScrollY",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "setTouchInterceptionViewGroup",
+          "parameters": "viewGroup: ViewGroup",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/Scrollable.java",
+          "line": 24,
+          "end_line": 82
+        }
+      ]
+    },
+    {
+      "id": "callbacks",
+      "label": "ObservableScrollViewCallbacks",
+      "kind": "interface",
+      "sublabel": "滚动事件回调",
+      "row": 2,
+      "col": 1,
+      "methods": [
+        {
+          "name": "onScrollChanged",
+          "parameters": "scrollY: int, firstScroll: boolean, dragging: boolean",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onDownMotionEvent",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onUpOrCancelMotionEvent",
+          "parameters": "scrollState: ScrollState",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollViewCallbacks.java",
+          "line": 22,
+          "end_line": 46
+        }
+      ]
+    },
+    {
+      "id": "scroll_state",
+      "label": "ScrollState",
+      "kind": "enum",
+      "sublabel": "滚动方向枚举",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "STOP"
+        },
+        {
+          "name": "UP"
+        },
+        {
+          "name": "DOWN"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ScrollState.java",
+          "line": 22,
+          "end_line": 38
+        }
+      ]
+    },
+    {
+      "id": "observable_scroll_view",
+      "label": "ObservableScrollView",
+      "kind": "class",
+      "sublabel": "ScrollView 的可观察版本",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mScrollY",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mPrevScrollY",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mCallbacks",
+          "type": "ObservableScrollViewCallbacks",
+          "visibility": "private"
+        },
+        {
+          "name": "mCallbackCollection",
+          "type": "List<ObservableScrollViewCallbacks>",
+          "visibility": "private"
+        },
+        {
+          "name": "mScrollState",
+          "type": "ScrollState",
+          "visibility": "private"
+        },
+        {
+          "name": "mTouchInterceptionViewGroup",
+          "type": "ViewGroup",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onScrollChanged",
+          "parameters": "l: int, t: int, oldl: int, oldt: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "onInterceptTouchEvent",
+          "parameters": "ev: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "onTouchEvent",
+          "parameters": "ev: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "addScrollViewCallbacks",
+          "parameters": "listener: ObservableScrollViewCallbacks",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "setTouchInterceptionViewGroup",
+          "parameters": "viewGroup: ViewGroup",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getCurrentScrollY",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollView.java",
+          "line": 34,
+          "end_line": 48
+        },
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollView.java",
+          "line": 80,
+          "end_line": 104
+        },
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableScrollView.java",
+          "line": 127,
+          "end_line": 197
+        }
+      ]
+    },
+    {
+      "id": "observable_list_view",
+      "label": "ObservableListView",
+      "kind": "class",
+      "sublabel": "ListView 的高度累加换算",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        {
+          "name": "mScrollY",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mPrevFirstVisiblePosition",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mChildrenHeights",
+          "type": "SparseIntArray",
+          "visibility": "private"
+        },
+        {
+          "name": "mCallbackCollection",
+          "type": "List<ObservableScrollViewCallbacks>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onScrollChanged",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "init",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        },
+        {
+          "name": "scrollVerticallyTo",
+          "parameters": "y: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getCurrentScrollY",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableListView.java",
+          "line": 36,
+          "end_line": 55
+        },
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableListView.java",
+          "line": 269,
+          "end_line": 280
+        },
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableListView.java",
+          "line": 223,
+          "end_line": 280
+        }
+      ]
+    },
+    {
+      "id": "observable_recycler_view",
+      "label": "ObservableRecyclerView",
+      "kind": "class",
+      "sublabel": "RecyclerView 的可观察版本",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        {
+          "name": "recyclerViewLibraryVersion",
+          "type": "int",
+          "visibility": "private",
+          "static": true
+        },
+        {
+          "name": "mScrollY",
+          "type": "int",
+          "visibility": "private"
+        },
+        {
+          "name": "mChildrenHeights",
+          "type": "SparseIntArray",
+          "visibility": "private"
+        },
+        {
+          "name": "mCallbackCollection",
+          "type": "List<ObservableScrollViewCallbacks>",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "onScrollChanged",
+          "parameters": "l: int, t: int, oldl: int, oldt: int",
+          "returns": "void",
+          "visibility": "protected"
+        },
+        {
+          "name": "scrollVerticallyTo",
+          "parameters": "y: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "scrollVerticallyToPosition",
+          "parameters": "position: int",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "getCurrentScrollY",
+          "parameters": "",
+          "returns": "int",
+          "visibility": "public"
+        },
+        {
+          "name": "init",
+          "parameters": "",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableRecyclerView.java",
+          "line": 38,
+          "end_line": 55
+        },
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableRecyclerView.java",
+          "line": 101,
+          "end_line": 110
+        },
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/ObservableRecyclerView.java",
+          "line": 311,
+          "end_line": 355
+        }
+      ]
+    },
+    {
+      "id": "touch_layout",
+      "label": "TouchInterceptionFrameLayout",
+      "kind": "class",
+      "sublabel": "触顶事件的二次分发容器",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        {
+          "name": "mIntercepting",
+          "type": "boolean",
+          "visibility": "private"
+        },
+        {
+          "name": "mInitialPoint",
+          "type": "PointF",
+          "visibility": "private"
+        },
+        {
+          "name": "mPendingDownMotionEvent",
+          "type": "MotionEvent",
+          "visibility": "private"
+        },
+        {
+          "name": "mTouchInterceptionListener",
+          "type": "TouchInterceptionListener",
+          "visibility": "private"
+        }
+      ],
+      "methods": [
+        {
+          "name": "setScrollInterceptionListener",
+          "parameters": "listener: TouchInterceptionListener",
+          "returns": "void",
+          "visibility": "public"
+        },
+        {
+          "name": "onInterceptTouchEvent",
+          "parameters": "ev: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "onTouchEvent",
+          "parameters": "ev: MotionEvent",
+          "returns": "boolean",
+          "visibility": "public"
+        },
+        {
+          "name": "duplicateTouchEventForChildren",
+          "parameters": "ev: MotionEvent, pendingEvents: MotionEvent",
+          "returns": "void",
+          "visibility": "private"
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/TouchInterceptionFrameLayout.java",
+          "line": 36,
+          "end_line": 83
+        },
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/TouchInterceptionFrameLayout.java",
+          "line": 107,
+          "end_line": 138
+        },
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/TouchInterceptionFrameLayout.java",
+          "line": 141,
+          "end_line": 236
+        }
+      ]
+    },
+    {
+      "id": "touch_listener",
+      "label": "TouchInterceptionListener",
+      "kind": "interface",
+      "sublabel": "拦截判定与事件回调",
+      "row": 3,
+      "col": 0,
+      "methods": [
+        {
+          "name": "shouldInterceptTouchEvent",
+          "parameters": "ev: MotionEvent, moving: boolean, diffX: float, diffY: float",
+          "returns": "boolean",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onDownMotionEvent",
+          "parameters": "ev: MotionEvent",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onMoveMotionEvent",
+          "parameters": "ev: MotionEvent, diffX: float, diffY: float",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        },
+        {
+          "name": "onUpOrCancelMotionEvent",
+          "parameters": "ev: MotionEvent",
+          "returns": "void",
+          "visibility": "public",
+          "abstract": true
+        }
+      ],
+      "sources": [
+        {
+          "path": "library/src/main/java/com/github/ksoichiro/android/observablescrollview/TouchInterceptionFrameLayout.java",
+          "line": 41,
+          "end_line": 75
+        }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "sv_realizes",
+      "from": "observable_scroll_view",
+      "to": "scrollable",
+      "kind": "realization"
+    },
+    {
+      "id": "lv_realizes",
+      "from": "observable_list_view",
+      "to": "scrollable",
+      "kind": "realization"
+    },
+    {
+      "id": "rv_realizes",
+      "from": "observable_recycler_view",
+      "to": "scrollable",
+      "kind": "realization"
+    },
+    {
+      "id": "sv_dispatches",
+      "from": "observable_scroll_view",
+      "to": "callbacks",
+      "kind": "dependency",
+      "label": "派发事件"
+    },
+    {
+      "id": "callbacks_state",
+      "from": "callbacks",
+      "to": "scroll_state",
+      "kind": "dependency",
+      "label": "onUpOrCancel"
+    },
+    {
+      "id": "sv_delegates_touch",
+      "from": "observable_scroll_view",
+      "to": "touch_layout",
+      "kind": "dependency",
+      "label": "触顶转发"
+    },
+    {
+      "id": "touch_uses_listener",
+      "from": "touch_layout",
+      "to": "touch_listener",
+      "kind": "composition",
+      "label": "持有"
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Scrollable 只定协议",
+      "items": [
+        "add / remove / clear 三件套支持多个监听者；setScrollViewCallbacks 仅为兼容旧版保留的弃用入口",
+        "scrollVerticallyTo 与 getCurrentScrollY 让调用方不必关心 ScrollView、ListView 还是 RecyclerView"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "两种位置换算",
+      "items": [
+        "ScrollView 直接读取 onScrollChanged 的 t 并和 mPrevScrollY 比较，得出 UP / DOWN",
+        "ListView / RecyclerView 以第一个可见子项为锚点，累加已滚过子项高度再减去 getTop，估算出连续 scrollY"
+      ]
+    }
+  ]
+}
