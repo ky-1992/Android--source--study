@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "android-testing 代表性示例类型结构",
+    "subtitle": "仓库本身不提供测试框架实现，而是用 5 组“用例类 ↔ 被测类/替身”示范 Espresso、UI Automator、自定义 Matcher 与 IdlingResource 的组织方式。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/65-android-testing/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/googlesamples/android-testing",
+      "provider": "github",
+      "revision": "8c9df3a534ef99e44d481d96c00a5fc1970f7c70"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "espresso_test",
+      "label": "ChangeTextBehaviorTest",
+      "kind": "class",
+      "sublabel": "Espresso 基础用例",
+      "row": 0,
+      "col": 0,
+      "attributes": [
+        { "name": "STRING_TO_BE_TYPED", "type": "String", "visibility": "public", "static": true },
+        { "name": "activityScenarioRule", "type": "ActivityScenarioRule<MainActivity>", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "changeText_sameActivity", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "changeText_newActivity", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "ui/espresso/BasicSample/app/src/androidTest/java/com/example/android/testing/espresso/BasicSample/ChangeTextBehaviorTest.java", "line": 46, "end_line": 57 },
+        { "path": "ui/espresso/BasicSample/app/src/androidTest/java/com/example/android/testing/espresso/BasicSample/ChangeTextBehaviorTest.java", "line": 59, "end_line": 79 }
+      ]
+    },
+    {
+      "id": "uia_test",
+      "label": "ChangeTextBehaviorTest",
+      "kind": "class",
+      "sublabel": "UI Automator 用例",
+      "row": 0,
+      "col": 1,
+      "attributes": [
+        { "name": "LAUNCH_TIMEOUT", "type": "int", "visibility": "private", "static": true },
+        { "name": "mDevice", "type": "UiDevice", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "startMainActivityFromHomeScreen", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "testChangeText_sameActivity", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "getLauncherPackageName", "parameters": "", "returns": "String", "visibility": "private" }
+      ],
+      "sources": [
+        { "path": "ui/uiautomator/BasicSample/app/src/androidTest/java/com/example/android/testing/uiautomator/BasicSample/ChangeTextBehaviorTest.java", "line": 45, "end_line": 61 },
+        { "path": "ui/uiautomator/BasicSample/app/src/androidTest/java/com/example/android/testing/uiautomator/BasicSample/ChangeTextBehaviorTest.java", "line": 87, "end_line": 100 }
+      ]
+    },
+    {
+      "id": "long_list_test",
+      "label": "LongListActivityTest",
+      "kind": "class",
+      "sublabel": "onData 列表用例",
+      "row": 0,
+      "col": 2,
+      "attributes": [
+        { "name": "rule", "type": "ActivityScenarioRule<LongListActivity>", "visibility": "public" }
+      ],
+      "methods": [
+        { "name": "list_Scrolls", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "row_Click", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "toggle_ClickDoesntPropagate", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "onRow", "parameters": "str: String", "returns": "DataInteraction", "visibility": "private", "static": true }
+      ],
+      "sources": [
+        { "path": "ui/espresso/DataAdapterSample/app/src/sharedTest/java/com/example/android/testing/espresso/DataAdapterSample/LongListActivityTest.java", "line": 54, "end_line": 73 },
+        { "path": "ui/espresso/DataAdapterSample/app/src/sharedTest/java/com/example/android/testing/espresso/DataAdapterSample/LongListActivityTest.java", "line": 143, "end_line": 145 }
+      ]
+    },
+    {
+      "id": "espresso_main",
+      "label": "MainActivity",
+      "kind": "class",
+      "sublabel": "Espresso 示例被测界面",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        { "name": "mTextView", "type": "TextView", "visibility": "private" },
+        { "name": "mEditText", "type": "EditText", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onCreate", "parameters": "savedInstanceState: Bundle", "returns": "void", "visibility": "protected" },
+        { "name": "onClick", "parameters": "view: View", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "ui/espresso/BasicSample/app/src/main/java/com/example/android/testing/espresso/BasicSample/MainActivity.java", "line": 31, "end_line": 50 },
+        { "path": "ui/espresso/BasicSample/app/src/main/java/com/example/android/testing/espresso/BasicSample/MainActivity.java", "line": 52, "end_line": 69 }
+      ]
+    },
+    {
+      "id": "uia_main",
+      "label": "MainActivity",
+      "kind": "class",
+      "sublabel": "UIAutomator 示例被测界面",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "mTextView", "type": "TextView", "visibility": "private" },
+        { "name": "mEditText", "type": "EditText", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onCreate", "parameters": "savedInstanceState: Bundle", "returns": "void", "visibility": "protected" },
+        { "name": "onClick", "parameters": "view: View", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "ui/uiautomator/BasicSample/app/src/main/java/com/example/android/testing/uiautomator/BasicSample/MainActivity.java", "line": 31, "end_line": 49 },
+        { "path": "ui/uiautomator/BasicSample/app/src/main/java/com/example/android/testing/uiautomator/BasicSample/MainActivity.java", "line": 52, "end_line": 68 }
+      ]
+    },
+    {
+      "id": "long_list_activity",
+      "label": "LongListActivity",
+      "kind": "class",
+      "sublabel": "百行长列表被测界面",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        { "name": "ROW_TEXT", "type": "String", "visibility": "protected", "static": true },
+        { "name": "ROW_ENABLED", "type": "String", "visibility": "protected", "static": true },
+        { "name": "NUMBER_OF_ITEMS", "type": "int", "visibility": "protected", "static": true }
+      ],
+      "methods": [
+        { "name": "onCreate", "parameters": "bundle: Bundle", "returns": "void", "visibility": "public" },
+        { "name": "makeItem", "parameters": "forRow: int", "returns": "Map<String, Object>", "visibility": "protected", "static": true }
+      ],
+      "sources": [
+        { "path": "ui/espresso/DataAdapterSample/app/src/main/java/com/example/android/testing/espresso/DataAdapterSample/LongListActivity.java", "line": 40, "end_line": 52 },
+        { "path": "ui/espresso/DataAdapterSample/app/src/main/java/com/example/android/testing/espresso/DataAdapterSample/LongListActivity.java", "line": 76, "end_line": 80 }
+      ]
+    },
+    {
+      "id": "hint_test",
+      "label": "HintMatchersTest",
+      "kind": "class",
+      "sublabel": "自定义 Matcher 用例",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        { "name": "mValidStringToBeTyped", "type": "String", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "hint_isDisplayedInEditText", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "hint_endsWith", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "editText_canBeTypedInto", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "ui/espresso/CustomMatcherSample/app/src/sharedTest/java/com/example/android/testing/espresso/CustomMatcherSample/HintMatchersTest.java", "line": 46, "end_line": 79 },
+        { "path": "ui/espresso/CustomMatcherSample/app/src/sharedTest/java/com/example/android/testing/espresso/CustomMatcherSample/HintMatchersTest.java", "line": 84, "end_line": 94 }
+      ]
+    },
+    {
+      "id": "idling_test",
+      "label": "ChangeTextBehaviorTest",
+      "kind": "class",
+      "sublabel": "空闲等待用例",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "mIdlingResource", "type": "IdlingResource", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "registerIdlingResource", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "unregisterIdlingResource", "parameters": "", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "ui/espresso/IdlingResourceSample/app/src/androidTest/java/com/example/android/testing/espresso/IdlingResourceSample/ChangeTextBehaviorTest.java", "line": 42, "end_line": 67 },
+        { "path": "ui/espresso/IdlingResourceSample/app/src/androidTest/java/com/example/android/testing/espresso/IdlingResourceSample/ChangeTextBehaviorTest.java", "line": 80, "end_line": 85 }
+      ]
+    },
+    {
+      "id": "simple_idling",
+      "label": "SimpleIdlingResource",
+      "kind": "class",
+      "sublabel": "布尔态空闲资源替身",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        { "name": "mCallback", "type": "ResourceCallback", "visibility": "private" },
+        { "name": "mIsIdleNow", "type": "AtomicBoolean", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "getName", "parameters": "", "returns": "String", "visibility": "public" },
+        { "name": "isIdleNow", "parameters": "", "returns": "boolean", "visibility": "public" },
+        { "name": "registerIdleTransitionCallback", "parameters": "callback: ResourceCallback", "returns": "void", "visibility": "public" },
+        { "name": "setIdleState", "parameters": "isIdleNow: boolean", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "ui/espresso/IdlingResourceSample/app/src/main/java/com/example/android/testing/espresso/IdlingResourceSample/IdlingResource/SimpleIdlingResource.java", "line": 31, "end_line": 51 },
+        { "path": "ui/espresso/IdlingResourceSample/app/src/main/java/com/example/android/testing/espresso/IdlingResourceSample/IdlingResource/SimpleIdlingResource.java", "line": 53, "end_line": 62 }
+      ]
+    },
+    {
+      "id": "hint_matcher",
+      "label": "HintMatcher",
+      "kind": "class",
+      "sublabel": "扩展 BoundedMatcher",
+      "row": 3,
+      "col": 0,
+      "attributes": [],
+      "methods": [
+        { "name": "withHint", "parameters": "substring: String", "returns": "Matcher<View>", "visibility": "package", "static": true },
+        { "name": "withHint", "parameters": "stringMatcher: Matcher<String>", "returns": "Matcher<View>", "visibility": "package", "static": true }
+      ],
+      "sources": [
+        { "path": "ui/espresso/CustomMatcherSample/app/src/sharedTest/java/com/example/android/testing/espresso/CustomMatcherSample/HintMatcher.java", "line": 32, "end_line": 54 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "espresso_pair", "from": "espresso_test", "to": "espresso_main", "kind": "association", "label": "Rule 启动" },
+    { "id": "uia_pair", "from": "uia_test", "to": "uia_main", "kind": "dependency", "label": "By.res 定位" },
+    { "id": "list_pair", "from": "long_list_test", "to": "long_list_activity", "kind": "association", "label": "onData 取行" },
+    { "id": "hint_pair", "from": "hint_test", "to": "hint_matcher", "kind": "dependency", "label": "withHint" },
+    { "id": "idling_pair", "from": "idling_test", "to": "simple_idling", "kind": "dependency", "label": "IdlingRegistry" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "示例的组织约定",
+      "items": [
+        "每个示例是独立 Gradle 工程（自己的 settings.gradle + gradle wrapper），共用 projects.conf 列出的目录名",
+        "用例放 androidTest 或 sharedTest，被测 Activity 放 main，ROOT_TEXT 之类常量用 @VisibleForTesting 暴露给测试"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "关键 API 落点",
+      "items": [
+        "Espresso：onView / onData / perform / check(matches(...))，ActivityScenarioRule 取代旧 ActivityTestRule",
+        "UI Automator：UiDevice.getInstance，By.res(pkg, id) 与 Until.findObject 轮询，跨进程不依赖被测代码",
+        "IdlingResource：SimpleIdlingResource 用 AtomicBoolean 记状态，setIdleState(true) 时回调 onTransitionToIdle 通知 Espresso 继续"
+      ]
+    }
+  ]
+}
