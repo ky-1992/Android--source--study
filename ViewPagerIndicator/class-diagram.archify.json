@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "diagram_type": "class",
+  "meta": {
+    "title": "ViewPagerIndicator 核心类型结构",
+    "subtitle": "PageIndicator 把指示器约束成 ViewPager.OnPageChangeListener；六种指示器各自绘制，Tab / Icon 复用 IcsLinearLayout 排布子项。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/22-ViewPagerIndicator/class-diagram.html",
+    "repository": {
+      "url": "https://github.com/JakeWharton/ViewPagerIndicator",
+      "provider": "github",
+      "revision": "8cd549f23f3d20ff920e19a2345c54983f65e26b"
+    }
+  },
+  "layout": {
+    "mode": "grid"
+  },
+  "types": [
+    {
+      "id": "page_indicator",
+      "label": "PageIndicator",
+      "kind": "interface",
+      "sublabel": "指示器统一契约",
+      "row": 0,
+      "col": 1,
+      "methods": [
+        { "name": "setViewPager", "parameters": "view: ViewPager", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "setCurrentItem", "parameters": "item: int", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "setOnPageChangeListener", "parameters": "listener", "returns": "void", "visibility": "public", "abstract": true },
+        { "name": "notifyDataSetChanged", "parameters": "", "returns": "void", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/PageIndicator.java", "line": 26, "end_line": 62 }
+      ]
+    },
+    {
+      "id": "circle",
+      "label": "CirclePageIndicator",
+      "kind": "class",
+      "sublabel": "圆点式页码",
+      "row": 1,
+      "col": 0,
+      "attributes": [
+        { "name": "mViewPager", "type": "ViewPager", "visibility": "private" },
+        { "name": "mListener", "type": "OnPageChangeListener", "visibility": "private" },
+        { "name": "mCurrentPage", "type": "int", "visibility": "private" },
+        { "name": "mPageOffset", "type": "float", "visibility": "private" },
+        { "name": "mSnap", "type": "boolean", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onDraw", "parameters": "canvas: Canvas", "returns": "void", "visibility": "protected" },
+        { "name": "setViewPager", "parameters": "view: ViewPager", "returns": "void", "visibility": "public" },
+        { "name": "onPageScrolled", "parameters": "position, offset", "returns": "void", "visibility": "public" },
+        { "name": "onPageSelected", "parameters": "position: int", "returns": "void", "visibility": "public" },
+        { "name": "onTouchEvent", "parameters": "ev: MotionEvent", "returns": "boolean", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/CirclePageIndicator.java", "line": 47, "end_line": 64 },
+        { "path": "library/src/com/viewpagerindicator/CirclePageIndicator.java", "line": 198, "end_line": 279 },
+        { "path": "library/src/com/viewpagerindicator/CirclePageIndicator.java", "line": 365, "end_line": 378 }
+      ]
+    },
+    {
+      "id": "title",
+      "label": "TitlePageIndicator",
+      "kind": "class",
+      "sublabel": "标题 + 底部指示",
+      "row": 1,
+      "col": 1,
+      "attributes": [
+        { "name": "mViewPager", "type": "ViewPager", "visibility": "private" },
+        { "name": "mListener", "type": "OnPageChangeListener", "visibility": "private" },
+        { "name": "mCurrentPage", "type": "int", "visibility": "private" },
+        { "name": "mPageOffset", "type": "float", "visibility": "private" },
+        { "name": "mFooterIndicatorStyle", "type": "IndicatorStyle", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onDraw", "parameters": "canvas: Canvas", "returns": "void", "visibility": "protected" },
+        { "name": "setViewPager", "parameters": "view: ViewPager", "returns": "void", "visibility": "public" },
+        { "name": "calculateAllBounds", "parameters": "paint: Paint", "returns": "ArrayList", "visibility": "private" },
+        { "name": "onPageSelected", "parameters": "position: int", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/TitlePageIndicator.java", "line": 47, "end_line": 148 },
+        { "path": "library/src/com/viewpagerindicator/TitlePageIndicator.java", "line": 354, "end_line": 400 },
+        { "path": "library/src/com/viewpagerindicator/TitlePageIndicator.java", "line": 708, "end_line": 721 }
+      ]
+    },
+    {
+      "id": "underline",
+      "label": "UnderlinePageIndicator",
+      "kind": "class",
+      "sublabel": "滑动下划线",
+      "row": 1,
+      "col": 2,
+      "attributes": [
+        { "name": "mPaint", "type": "Paint", "visibility": "private" },
+        { "name": "mFades", "type": "boolean", "visibility": "private" },
+        { "name": "mCurrentPage", "type": "int", "visibility": "private" },
+        { "name": "mPositionOffset", "type": "float", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onDraw", "parameters": "canvas: Canvas", "returns": "void", "visibility": "protected" },
+        { "name": "setViewPager", "parameters": "viewPager: ViewPager", "returns": "void", "visibility": "public" },
+        { "name": "onPageScrolled", "parameters": "position, offset", "returns": "void", "visibility": "public" },
+        { "name": "setFades", "parameters": "fades: boolean", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/UnderlinePageIndicator.java", "line": 38, "end_line": 58 },
+        { "path": "library/src/com/viewpagerindicator/UnderlinePageIndicator.java", "line": 156, "end_line": 179 },
+        { "path": "library/src/com/viewpagerindicator/UnderlinePageIndicator.java", "line": 265, "end_line": 278 }
+      ]
+    },
+    {
+      "id": "line",
+      "label": "LinePageIndicator",
+      "kind": "class",
+      "sublabel": "线段式页码",
+      "row": 2,
+      "col": 0,
+      "attributes": [
+        { "name": "mPaintUnselected", "type": "Paint", "visibility": "private" },
+        { "name": "mPaintSelected", "type": "Paint", "visibility": "private" },
+        { "name": "mCurrentPage", "type": "int", "visibility": "private" },
+        { "name": "mPageOffset", "type": "float", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onDraw", "parameters": "canvas: Canvas", "returns": "void", "visibility": "protected" },
+        { "name": "setViewPager", "parameters": "viewPager: ViewPager", "returns": "void", "visibility": "public" },
+        { "name": "onPageScrolled", "parameters": "position, offset", "returns": "void", "visibility": "public" },
+        { "name": "onTouchEvent", "parameters": "ev: MotionEvent", "returns": "boolean", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/LinePageIndicator.java", "line": 39, "end_line": 50 },
+        { "path": "library/src/com/viewpagerindicator/LinePageIndicator.java", "line": 157, "end_line": 178 },
+        { "path": "library/src/com/viewpagerindicator/LinePageIndicator.java", "line": 277, "end_line": 292 }
+      ]
+    },
+    {
+      "id": "tab",
+      "label": "TabPageIndicator",
+      "kind": "class",
+      "sublabel": "标签页式标题",
+      "row": 2,
+      "col": 1,
+      "attributes": [
+        { "name": "mTabLayout", "type": "IcsLinearLayout", "visibility": "private" },
+        { "name": "mViewPager", "type": "ViewPager", "visibility": "private" },
+        { "name": "mListener", "type": "OnPageChangeListener", "visibility": "private" },
+        { "name": "mSelectedTabIndex", "type": "int", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "setViewPager", "parameters": "view: ViewPager", "returns": "void", "visibility": "public" },
+        { "name": "notifyDataSetChanged", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "addTab", "parameters": "index, text, iconResId", "returns": "void", "visibility": "private" },
+        { "name": "onPageSelected", "parameters": "position: int", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/TabPageIndicator.java", "line": 37, "end_line": 75 },
+        { "path": "library/src/com/viewpagerindicator/TabPageIndicator.java", "line": 189, "end_line": 230 }
+      ]
+    },
+    {
+      "id": "icon",
+      "label": "IconPageIndicator",
+      "kind": "class",
+      "sublabel": "图标式页码",
+      "row": 2,
+      "col": 2,
+      "attributes": [
+        { "name": "mIconsLayout", "type": "IcsLinearLayout", "visibility": "private" },
+        { "name": "mViewPager", "type": "ViewPager", "visibility": "private" },
+        { "name": "mSelectedIndex", "type": "int", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "setViewPager", "parameters": "view: ViewPager", "returns": "void", "visibility": "public" },
+        { "name": "notifyDataSetChanged", "parameters": "", "returns": "void", "visibility": "public" },
+        { "name": "onPageSelected", "parameters": "position: int", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/IconPageIndicator.java", "line": 36, "end_line": 54 },
+        { "path": "library/src/com/viewpagerindicator/IconPageIndicator.java", "line": 111, "end_line": 141 }
+      ]
+    },
+    {
+      "id": "icon_adapter",
+      "label": "IconPagerAdapter",
+      "kind": "interface",
+      "sublabel": "图标数据契约",
+      "row": 3,
+      "col": 1,
+      "methods": [
+        { "name": "getIconResId", "parameters": "index: int", "returns": "int", "visibility": "public", "abstract": true },
+        { "name": "getCount", "parameters": "", "returns": "int", "visibility": "public", "abstract": true }
+      ],
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/IconPagerAdapter.java", "line": 3, "end_line": 10 }
+      ]
+    },
+    {
+      "id": "ics_layout",
+      "label": "IcsLinearLayout",
+      "kind": "class",
+      "sublabel": "兼容分隔线的容器",
+      "row": 3,
+      "col": 2,
+      "attributes": [
+        { "name": "mDivider", "type": "Drawable", "visibility": "private" },
+        { "name": "mDividerHeight", "type": "int", "visibility": "private" }
+      ],
+      "methods": [
+        { "name": "onDraw", "parameters": "canvas: Canvas", "returns": "void", "visibility": "protected" },
+        { "name": "onMeasure", "parameters": "widthSpec, heightSpec", "returns": "void", "visibility": "protected" },
+        { "name": "setDividerDrawable", "parameters": "divider: Drawable", "returns": "void", "visibility": "public" }
+      ],
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/IcsLinearLayout.java", "line": 17, "end_line": 48 }
+      ]
+    },
+    {
+      "id": "indicator_style",
+      "label": "IndicatorStyle",
+      "kind": "enum",
+      "sublabel": "底部指示样式",
+      "row": 3,
+      "col": 0,
+      "attributes": [
+        { "name": "None" },
+        { "name": "Triangle" },
+        { "name": "Underline" }
+      ],
+      "methods": [
+        { "name": "fromValue", "parameters": "value: int", "returns": "IndicatorStyle", "visibility": "public", "static": true }
+      ],
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/TitlePageIndicator.java", "line": 79, "end_line": 96 }
+      ]
+    }
+  ],
+  "relationships": [
+    { "id": "circle_impl", "from": "circle", "to": "page_indicator", "kind": "realization", "label": "实现" },
+    { "id": "title_impl", "from": "title", "to": "page_indicator", "kind": "realization", "label": "实现" },
+    { "id": "underline_impl", "from": "underline", "to": "page_indicator", "kind": "realization", "label": "实现" },
+    { "id": "line_impl", "from": "line", "to": "page_indicator", "kind": "realization", "label": "实现" },
+    { "id": "tab_impl", "from": "tab", "to": "page_indicator", "kind": "realization", "label": "实现" },
+    { "id": "icon_impl", "from": "icon", "to": "page_indicator", "kind": "realization", "label": "实现" },
+    { "id": "title_has_style", "from": "title", "to": "indicator_style", "kind": "association", "label": "样式" },
+    { "id": "tab_owns_layout", "from": "tab", "to": "ics_layout", "kind": "composition", "label": "持有" },
+    { "id": "icon_owns_layout", "from": "icon", "to": "ics_layout", "kind": "composition", "label": "持有" },
+    { "id": "tab_uses_adapter", "from": "tab", "to": "icon_adapter", "kind": "dependency", "label": "取图标" },
+    { "id": "icon_uses_adapter", "from": "icon", "to": "icon_adapter", "kind": "dependency", "label": "取图标" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "统一契约",
+      "items": [
+        "PageIndicator 继承 ViewPager.OnPageChangeListener，指示器本身就是监听器，绑定即注册",
+        "setOnPageChangeListener 只做事件二次转发，不改变内部状态"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "两种渲染风格",
+      "items": [
+        "Circle / Line / Underline / Title 直接继承 View，靠 onDraw 用 Canvas 画",
+        "Tab / Icon 继承 HorizontalScrollView，用 IcsLinearLayout 装子 View，靠点击反推页码"
+      ]
+    }
+  ]
+}

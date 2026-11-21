@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "class",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/22-ViewPagerIndicator/class-diagram.archify.json",
+    "sha256": "3a419d48ec0b74f93a05cf5391a8c7463d87450008251c1f216ea9e2989e2ea4",
+    "bytes": 13379
+  },
+  "artifact": {
+    "path": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/22-ViewPagerIndicator/class-diagram.html",
+    "sha256": "a9b3c1d8f0c9bf7c4d099435d9136e3791c96daff79c316e1a7ab2b1fe6b2b59",
+    "bytes": 897417
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/22-ViewPagerIndicator/class-diagram.finalize.json",
+    "summaryReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/22-ViewPagerIndicator/class-diagram.finalize-summary.json",
+    "browserCheckReceipt": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/22-ViewPagerIndicator/class-diagram.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.2.0",
+    "availableVersion": "3.2.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-11-19T14:45:18.953Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 11263,
+  "browserCheck": {
+    "requested": true,
+    "ran": true
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "ViewPagerIndicator 绑定与滚动回绘流程",
+    "subtitle": "宿主调 setViewPager 把指示器注册成 OnPageChangeListener；滑动回调更新页码偏移后 invalidate，再在 onDraw 里重画并转发外部监听。",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "output": "Android--source--study/22-ViewPagerIndicator/flow-diagram.html",
+    "repository": {
+      "url": "https://github.com/JakeWharton/ViewPagerIndicator",
+      "provider": "github",
+      "revision": "8cd549f23f3d20ff920e19a2345c54983f65e26b"
+    }
+  },
+  "lanes": [
+    { "id": "app", "label": "宿主页面" },
+    { "id": "pager", "label": "ViewPager" },
+    { "id": "indicator", "label": "指示器" },
+    { "id": "draw", "label": "绘制" }
+  ],
+  "phases": [
+    { "id": "init", "label": "初始化", "fromCol": 0, "toCol": 1 },
+    { "id": "bind", "label": "绑定", "fromCol": 2, "toCol": 3 },
+    { "id": "redraw", "label": "滚动回绘", "fromCol": 4, "toCol": 4, "variant": "emphasis" }
+  ],
+  "mainPath": [
+    "n_init",
+    "n_adapter",
+    "n_bind",
+    "n_register",
+    "n_scroll",
+    "n_state",
+    "n_draw"
+  ],
+  "nodes": [
+    {
+      "id": "n_init",
+      "lane": "app",
+      "col": 0,
+      "type": "external",
+      "label": "初始化布局",
+      "sublabel": "inflate",
+      "width": 146,
+      "sources": [
+        { "path": "sample/src/com/viewpagerindicator/sample/SampleCirclesDefault.java", "line": 9, "end_line": 20 }
+      ]
+    },
+    {
+      "id": "n_adapter",
+      "lane": "pager",
+      "col": 1,
+      "type": "backend",
+      "label": "设置适配器",
+      "sublabel": "setAdapter",
+      "width": 146,
+      "sources": [
+        { "path": "sample/src/com/viewpagerindicator/sample/SampleCirclesDefault.java", "line": 15, "end_line": 16 }
+      ]
+    },
+    {
+      "id": "n_bind",
+      "lane": "indicator",
+      "col": 2,
+      "type": "frontend",
+      "label": "绑定指示器",
+      "sublabel": "setViewPager",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/CirclePageIndicator.java", "line": 365, "end_line": 378 },
+        { "path": "library/src/com/viewpagerindicator/TitlePageIndicator.java", "line": 708, "end_line": 721 }
+      ]
+    },
+    {
+      "id": "n_register",
+      "lane": "pager",
+      "col": 3,
+      "type": "backend",
+      "label": "注册监听",
+      "sublabel": "注册回调",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/CirclePageIndicator.java", "line": 375, "end_line": 377 }
+      ]
+    },
+    {
+      "id": "n_touch",
+      "lane": "indicator",
+      "col": 3,
+      "type": "frontend",
+      "label": "触摸翻页",
+      "sublabel": "fakeDrag",
+      "width": 140,
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/CirclePageIndicator.java", "line": 281, "end_line": 315 }
+      ]
+    },
+    {
+      "id": "n_scroll",
+      "lane": "pager",
+      "col": 4,
+      "type": "backend",
+      "label": "滚动回调",
+      "sublabel": "onPageScrolled",
+      "width": 152,
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/CirclePageIndicator.java", "line": 410, "end_line": 419 }
+      ]
+    },
+    {
+      "id": "n_state",
+      "lane": "indicator",
+      "col": 4,
+      "type": "frontend",
+      "label": "更新页码",
+      "sublabel": "记录偏移",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/CirclePageIndicator.java", "line": 410, "end_line": 419 },
+        { "path": "library/src/com/viewpagerindicator/UnderlinePageIndicator.java", "line": 319, "end_line": 331 }
+      ]
+    },
+    {
+      "id": "n_draw",
+      "lane": "draw",
+      "col": 4,
+      "type": "frontend",
+      "label": "重绘指示器",
+      "sublabel": "onDraw",
+      "width": 150,
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/CirclePageIndicator.java", "line": 198, "end_line": 279 },
+        { "path": "library/src/com/viewpagerindicator/UnderlinePageIndicator.java", "line": 156, "end_line": 179 }
+      ]
+    },
+    {
+      "id": "n_forward",
+      "lane": "app",
+      "col": 4,
+      "type": "external",
+      "label": "转发监听",
+      "sublabel": "mListener",
+      "width": 146,
+      "sources": [
+        { "path": "library/src/com/viewpagerindicator/CirclePageIndicator.java", "line": 410, "end_line": 419 }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e1", "from": "n_init", "to": "n_adapter", "label": "setAdapter" },
+    { "id": "e2", "from": "n_adapter", "to": "n_bind", "label": "setViewPager" },
+    { "id": "e3", "from": "n_bind", "to": "n_register", "label": "绑定监听" },
+    { "id": "e4", "from": "n_register", "to": "n_scroll", "label": "滑动" },
+    { "id": "e5", "from": "n_scroll", "to": "n_state", "label": "位置偏移" },
+    { "id": "e6", "from": "n_state", "to": "n_draw", "label": "invalidate" },
+    { "id": "e7", "from": "n_scroll", "to": "n_forward", "label": "转发" },
+    { "id": "e8", "from": "n_touch", "to": "n_scroll", "label": "拖拽", "variant": "dashed", "role": "branch" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "绑定即注册",
+      "items": [
+        "setViewPager 先解绑旧 Pager，再 view.setOnPageChangeListener(this)，指示器自身就是监听器",
+        "Pager 无 adapter 时直接抛 IllegalStateException，避免画不出页数"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "绘制与转发",
+      "items": [
+        "回调只记录 mCurrentPage / mPageOffset，然后 invalidate 交给 onDraw 统一重画",
+        "若 setOnPageChangeListener 传入了外部监听，回调末尾原样转发三个方法"
+      ]
+    }
+  ]
+}

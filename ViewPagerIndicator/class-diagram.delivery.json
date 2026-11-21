@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "a9fc6fd6-d9db-4b1f-b30d-89e22f2e3266",
+  "status": "current",
+  "command": "deliver",
+  "type": "class",
+  "input": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/22-ViewPagerIndicator/class-diagram.archify.json",
+  "output": "/Users/kuangyu/Documents/Claude/Projects/ky/Android--source--study/22-ViewPagerIndicator/class-diagram.html",
+  "specification": {
+    "sha256": "3a419d48ec0b74f93a05cf5391a8c7463d87450008251c1f216ea9e2989e2ea4",
+    "bytes": 13379
+  },
+  "artifact": {
+    "sha256": "a9b3c1d8f0c9bf7c4d099435d9136e3791c96daff79c316e1a7ab2b1fe6b2b59",
+    "bytes": 897417
+  }
+}
